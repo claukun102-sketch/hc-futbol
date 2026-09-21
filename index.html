@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HC - Compromiso y Responsabilidad</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f5f7;
+      color: #17202a;
+    }
+
+    .container {
+      max-width: 430px;
+      margin: 0 auto;
+      padding: 24px 18px;
+    }
+
+    .logo {
+      text-align: center;
+      font-size: 54px;
+      margin-top: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 8px 0 4px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #667085;
+      margin-bottom: 28px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 4px 18px rgba(0,0,0,.07);
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 7px;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #d0d5dd;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      border: 0;
+      border-radius: 11px;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      background: #111827;
+      color: white;
+    }
+
+    button.secondary {
+      background: #e5e7eb;
+      color: #111827;
+      margin-top: 10px;
+    }
+
+    .error {
+      color: #b42318;
+      background: #fef3f2;
+      padding: 10px;
+      border-radius: 10px;
+      margin-bottom: 14px;
+      display: none;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .welcome {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .muted {
+      color: #667085;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="logo">⚽</div>
+
+  <h1>HC</h1>
+
+  <div class="subtitle">
+    Compromiso y Responsabilidad
+  </div>
+
+  <!-- LOGIN -->
+  <div id="loginCard" class="card">
+
+    <h2>Ingresar</h2>
+
+    <div id="error" class="error"></div>
+
+    <label>Email</label>
+    <input
+      id="email"
+      type="email"
+      placeholder="tu@email.com"
+      autocomplete="email"
+    >
+
+    <label>Contraseña</label>
+    <input
+      id="password"
+      type="password"
+      placeholder="Tu contraseña"
+      autocomplete="current-password"
+    >
+
+    <button id="loginButton">
+      Ingresar
+    </button>
+
+  </div>
+
+  <!-- APP -->
+  <div id="appCard" class="card hidden">
+
+    <div class="welcome">
+      ¡Bienvenido a HC! ⚽
+    </div>
+
+    <div class="muted">
+      Sistema de pagos del equipo
+    </div>
+
+    <hr style="margin:20px 0;border:0;border-top:1px solid #eee">
+
+    <p>
+      Tu cuenta está correctamente conectada.
+    </p>
+
+    <p class="muted">
+      Próximamente acá vas a poder ver tus cuotas,
+      registrar pagos y subir comprobantes.
+    </p>
+
+    <button id="logoutButton" class="secondary">
+      Cerrar sesión
+    </button>
+
+  </div>
+
+</div>
+
+<script>
+
+const SUPABASE_URL = https://kyuwzcmrdylrhjrblcuw.supabase.co;
+const SUPABASE_KEY = sb_publishable_Skz1JtNhc11MsOLS-V_X-A_6GkBwFw0;
+
+const { createClient } = supabase;
+
+const client = createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+const loginCard = document.getElementById("loginCard");
+const appCard = document.getElementById("appCard");
+const errorBox = document.getElementById("error");
+
+function showError(message) {
+  errorBox.textContent = message;
+  errorBox.style.display = "block";
+}
+
+async function login() {
+
+  errorBox.style.display = "none";
+
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  if (!email || !password) {
+    showError("Completá email y contraseña.");
+    return;
+  }
+
+  const { error } = await client.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    showError(error.message);
+    return;
+  }
+
+  showApp();
+}
+
+async function showApp() {
+
+  loginCard.classList.add("hidden");
+  appCard.classList.remove("hidden");
+}
+
+async function logout() {
+
+  await client.auth.signOut();
+
+  appCard.classList.add("hidden");
+  loginCard.classList.remove("hidden");
+}
+
+document
+  .getElementById("loginButton")
+  .addEventListener("click", login);
+
+document
+  .getElementById("logoutButton")
+  .addEventListener("click", logout);
+
+client.auth.getSession().then(({ data }) => {
+
+  if (data.session) {
+    showApp();
+  }
+
+});
+
+</script>
+
+</body>
+</html>
