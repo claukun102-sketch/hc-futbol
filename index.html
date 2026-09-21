@@ -18,18 +18,24 @@
     }
 
     .container {
-      max-width: 900px;
-      margin: 0 auto;
+      max-width: 950px;
+      margin: auto;
       padding: 24px 18px 50px;
+    }
+
+    .login-container {
+      max-width: 430px;
+      margin: 40px auto;
+      padding: 18px;
     }
 
     .header {
       text-align: center;
-      margin-bottom: 24px;
+      margin-bottom: 25px;
     }
 
     .logo {
-      font-size: 50px;
+      font-size: 52px;
     }
 
     h1 {
@@ -46,24 +52,6 @@
       padding: 22px;
       box-shadow: 0 4px 18px rgba(0,0,0,.07);
       margin-bottom: 18px;
-    }
-
-    .error {
-      color: #b42318;
-      background: #fef3f2;
-      padding: 12px;
-      border-radius: 10px;
-      margin-bottom: 14px;
-      display: none;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .login-container {
-      max-width: 430px;
-      margin: 40px auto;
     }
 
     label {
@@ -97,8 +85,39 @@
       color: #111827;
     }
 
-    button.danger {
+    button.approve {
+      background: #087443;
+    }
+
+    button.reject {
       background: #b42318;
+    }
+
+    button.small {
+      padding: 8px 12px;
+      font-size: 13px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .error {
+      color: #b42318;
+      background: #fef3f2;
+      padding: 12px;
+      border-radius: 10px;
+      margin-bottom: 14px;
+      display: none;
+    }
+
+    .success {
+      color: #067647;
+      background: #ecfdf3;
+      padding: 12px;
+      border-radius: 10px;
+      margin-bottom: 14px;
+      display: none;
     }
 
     .topbar {
@@ -111,7 +130,7 @@
     }
 
     .welcome {
-      font-size: 24px;
+      font-size: 25px;
       font-weight: bold;
     }
 
@@ -121,7 +140,7 @@
 
     .stats {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 14px;
       margin-bottom: 18px;
     }
@@ -135,12 +154,12 @@
 
     .stat-title {
       color: #667085;
-      font-size: 14px;
+      font-size: 13px;
       margin-bottom: 8px;
     }
 
     .stat-value {
-      font-size: 25px;
+      font-size: 23px;
       font-weight: bold;
     }
 
@@ -156,11 +175,12 @@
       padding: 15px;
       border: 1px solid #eaecf0;
       border-radius: 12px;
-      gap: 10px;
+      gap: 12px;
     }
 
     .player-name {
       font-weight: bold;
+      font-size: 16px;
     }
 
     .badge {
@@ -172,13 +192,51 @@
       white-space: nowrap;
     }
 
-    .loading {
+    .payment {
+      border: 1px solid #eaecf0;
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .payment-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .payment-amount {
+      font-size: 21px;
+      font-weight: bold;
+    }
+
+    .payment-info {
+      color: #667085;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .payment-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .empty {
       text-align: center;
-      padding: 20px;
+      padding: 25px;
       color: #667085;
     }
 
-    @media (max-width: 650px) {
+    @media (max-width: 750px) {
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 500px) {
       .stats {
         grid-template-columns: 1fr;
       }
@@ -194,19 +252,25 @@
 <body>
 
 <!-- LOGIN -->
+
 <div id="loginPage" class="login-container">
+
   <div class="header">
     <div class="logo">⚽</div>
     <h1>HC</h1>
-    <div class="subtitle">Compromiso y Responsabilidad</div>
+    <div class="subtitle">
+      Compromiso y Responsabilidad
+    </div>
   </div>
 
   <div class="card">
+
     <h2>Ingresar</h2>
 
     <div id="loginError" class="error"></div>
 
     <label>Email</label>
+
     <input
       id="email"
       type="email"
@@ -215,6 +279,7 @@
     >
 
     <label>Contraseña</label>
+
     <input
       id="password"
       type="password"
@@ -225,360 +290,1145 @@
     <button id="loginButton" style="width:100%;">
       Ingresar
     </button>
+
   </div>
+
 </div>
 
 
 <!-- ADMIN -->
+
 <div id="adminPage" class="container hidden">
 
   <div class="topbar">
+
     <div>
-      <div class="welcome">⚽ HC</div>
-      <div class="muted">Panel de administración</div>
+      <div class="welcome">
+        ⚽ HC
+      </div>
+
+      <div class="muted">
+        Panel de administración
+      </div>
     </div>
 
-    <button id="logoutButton" class="secondary">
+    <button
+      id="logoutButton"
+      class="secondary"
+    >
       Cerrar sesión
     </button>
+
   </div>
 
+
   <div id="adminError" class="error"></div>
+
+  <div id="adminSuccess" class="success"></div>
+
+
+  <!-- ESTADÍSTICAS -->
 
   <div class="stats">
 
     <div class="stat">
-      <div class="stat-title">Jugadores</div>
-      <div id="playersCount" class="stat-value">-</div>
+
+      <div class="stat-title">
+        Jugadores
+      </div>
+
+      <div
+        id="playersCount"
+        class="stat-value"
+      >
+        -
+      </div>
+
     </div>
 
-    <div class="stat">
-      <div class="stat-title">Inscripción total</div>
-      <div id="registrationTotal" class="stat-value">$0</div>
-    </div>
 
     <div class="stat">
-      <div class="stat-title">Cargado</div>
-      <div id="chargedTotal" class="stat-value">$0</div>
+
+      <div class="stat-title">
+        Inscripción total
+      </div>
+
+      <div
+        id="registrationTotal"
+        class="stat-value"
+      >
+        $0
+      </div>
+
+    </div>
+
+
+    <div class="stat">
+
+      <div class="stat-title">
+        Pagos aprobados
+      </div>
+
+      <div
+        id="approvedTotal"
+        class="stat-value"
+      >
+        $0
+      </div>
+
+    </div>
+
+
+    <div class="stat">
+
+      <div class="stat-title">
+        Pendientes
+      </div>
+
+      <div
+        id="pendingCount"
+        class="stat-value"
+      >
+        0
+      </div>
+
     </div>
 
   </div>
 
-  <div class="card">
-    <h2>👥 Jugadores</h2>
 
-    <div id="playersList" class="players">
-      <div class="loading">Cargando jugadores...</div>
+  <!-- PAGOS PENDIENTES -->
+
+  <div class="card">
+
+    <h2>
+      ⏳ Pagos pendientes
+    </h2>
+
+    <div id="pendingPayments">
+
+      <div class="empty">
+        Cargando pagos...
+      </div>
+
     </div>
+
+  </div>
+
+
+  <!-- JUGADORES -->
+
+  <div class="card">
+
+    <h2>
+      👥 Jugadores
+    </h2>
+
+    <div
+      id="playersList"
+      class="players"
+    >
+
+      <div class="empty">
+        Cargando jugadores...
+      </div>
+
+    </div>
+
   </div>
 
 </div>
 
 
 <script>
-const SUPABASE_URL = "https://kyuwzcmrdylrhjrblcuw.supabase.co";
+
+/* =====================================================
+   SUPABASE
+===================================================== */
+
+const SUPABASE_URL =
+  "https://kyuwzcmrdylrhjrblcuw.supabase.co";
+
 
 /*
   IMPORTANTE:
-  Mantené acá TU clave publishable actual.
-  No uses nunca una service_role key.
+  Pegá acá TU CLAVE PUBLISHABLE actual.
+  NO uses service_role.
 */
-const SUPABASE_KEY = "sb_publishable_Skz1JtNhc11MsOLS-V_X-A_6GkBwFw0";
+
+const SUPABASE_KEY =
+  "sb_publishable_Skz1JtNhc11MsOLS-V_X-A_6GkBwFw0";
+
 
 const { createClient } = supabase;
-const client = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const loginPage = document.getElementById("loginPage");
-const adminPage = document.getElementById("adminPage");
-const loginError = document.getElementById("loginError");
-const adminError = document.getElementById("adminError");
+const client =
+  createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
 
+
+/* =====================================================
+   ELEMENTOS
+===================================================== */
+
+const loginPage =
+  document.getElementById("loginPage");
+
+const adminPage =
+  document.getElementById("adminPage");
+
+const loginError =
+  document.getElementById("loginError");
+
+const adminError =
+  document.getElementById("adminError");
+
+const adminSuccess =
+  document.getElementById("adminSuccess");
+
+
+/* =====================================================
+   UTILIDADES
+===================================================== */
 
 function formatMoney(value) {
-  return new Intl.NumberFormat("es-AR", {
-    style: "currency",
-    currency: "ARS",
-    maximumFractionDigits: 0
-  }).format(value || 0);
+
+  return new Intl.NumberFormat(
+    "es-AR",
+    {
+      style: "currency",
+      currency: "ARS",
+      maximumFractionDigits: 0
+    }
+  ).format(value || 0);
+
 }
 
 
 function showLoginError(message) {
-  loginError.textContent = message;
-  loginError.style.display = "block";
+
+  loginError.textContent =
+    message;
+
+  loginError.style.display =
+    "block";
+
 }
 
 
 function showAdminError(message) {
-  adminError.textContent = message;
-  adminError.style.display = "block";
+
+  adminError.textContent =
+    message;
+
+  adminError.style.display =
+    "block";
+
 }
 
+
+function showAdminSuccess(message) {
+
+  adminSuccess.textContent =
+    message;
+
+  adminSuccess.style.display =
+    "block";
+
+  setTimeout(() => {
+
+    adminSuccess.style.display =
+      "none";
+
+  }, 4000);
+
+}
+
+
+/* =====================================================
+   LOGIN
+===================================================== */
 
 async function login() {
 
-  loginError.style.display = "none";
+  loginError.style.display =
+    "none";
 
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value;
+  const email =
+    document
+      .getElementById("email")
+      .value
+      .trim();
+
+  const password =
+    document
+      .getElementById("password")
+      .value;
+
 
   if (!email || !password) {
-    showLoginError("Completá email y contraseña.");
+
+    showLoginError(
+      "Completá email y contraseña."
+    );
+
     return;
+
   }
 
-  const { error } = await client.auth.signInWithPassword({
-    email,
-    password
-  });
+
+  const { error } =
+    await client.auth.signInWithPassword({
+
+      email,
+      password
+
+    });
+
 
   if (error) {
-    showLoginError(error.message);
+
+    showLoginError(
+      error.message
+    );
+
     return;
+
   }
 
+
   await loadApplication();
+
 }
 
+
+/* =====================================================
+   CARGAR APLICACIÓN
+===================================================== */
 
 async function loadApplication() {
 
   const {
-    data: { user },
+
+    data: {
+      user
+    },
+
     error: userError
+
   } = await client.auth.getUser();
 
-  if (userError || !user) {
-    loginPage.classList.remove("hidden");
-    adminPage.classList.add("hidden");
+
+  if (
+    userError ||
+    !user
+  ) {
+
+    loginPage.classList.remove(
+      "hidden"
+    );
+
+    adminPage.classList.add(
+      "hidden"
+    );
+
     return;
+
   }
+
 
   const {
+
     data: account,
     error: accountError
+
   } = await client
+
     .from("player_accounts")
-    .select("role, player_id")
-    .eq("auth_user_id", user.id)
+
+    .select(
+      "role, player_id"
+    )
+
+    .eq(
+      "auth_user_id",
+      user.id
+    )
+
     .single();
 
+
   if (accountError) {
-    showAdminError(
-      "No pudimos encontrar tu cuenta en player_accounts."
+
+    showLoginError(
+      "No encontramos tu cuenta de HC."
     );
+
     return;
+
   }
 
-  if (account.role === "admin") {
 
-    loginPage.classList.add("hidden");
-    adminPage.classList.remove("hidden");
+  if (
+    account.role ===
+    "admin"
+  ) {
+
+    loginPage.classList.add(
+      "hidden"
+    );
+
+    adminPage.classList.remove(
+      "hidden"
+    );
 
     await loadAdminDashboard();
 
-  } else {
-
-    loginPage.classList.add("hidden");
-    adminPage.classList.remove("hidden");
-
-    adminPage.innerHTML = `
-      <div class="card">
-        <h2>👤 Cuenta de jugador</h2>
-        <p>Tu cuenta está correctamente conectada.</p>
-        <p class="muted">
-          El panel del jugador todavía está en construcción.
-        </p>
-        <button onclick="logout()" class="secondary">
-          Cerrar sesión
-        </button>
-      </div>
-    `;
   }
+
 }
 
+
+/* =====================================================
+   PANEL ADMIN
+===================================================== */
 
 async function loadAdminDashboard() {
 
-  adminError.style.display = "none";
+  adminError.style.display =
+    "none";
 
-  /*
-    Cargar jugadores
-  */
+
+  /* ---------------------------------
+     JUGADORES
+  --------------------------------- */
+
   const {
+
     data: players,
     error: playersError
+
   } = await client
+
     .from("players")
+
     .select("*")
-    .order("id");
+
+    .eq(
+      "active",
+      true
+    )
+
+    .order(
+      "name"
+    );
+
 
   if (playersError) {
+
     showAdminError(
-      "Error cargando jugadores: " + playersError.message
+      playersError.message
     );
+
     return;
+
   }
 
 
-  /*
-    Cargar cargos
-  */
+  /* ---------------------------------
+     CARGOS
+  --------------------------------- */
+
   const {
+
     data: charges,
     error: chargesError
+
   } = await client
+
     .from("charges")
+
     .select("*");
+
 
   if (chargesError) {
+
     showAdminError(
-      "Error cargando cargos: " + chargesError.message
+      chargesError.message
     );
+
     return;
+
   }
 
 
-  /*
-    Cargar pagos
-  */
+  /* ---------------------------------
+     PAGOS
+  --------------------------------- */
+
   const {
+
     data: payments,
     error: paymentsError
+
   } = await client
+
     .from("payments")
-    .select("*");
+
+    .select("*")
+
+    .order(
+      "created_at",
+      {
+        ascending: false
+      }
+    );
+
 
   if (paymentsError) {
+
     showAdminError(
-      "Error cargando pagos: " + paymentsError.message
+      paymentsError.message
     );
+
     return;
+
   }
 
 
-  /*
-    Estadísticas
-  */
-  const registrationCharges = (charges || [])
-    .filter(c => {
-      const type = String(c.charge_type || "").toLowerCase();
-      return type.includes("registration")
-        || type.includes("inscrip");
-    });
+  /* ---------------------------------
+     ESTADÍSTICAS
+  --------------------------------- */
 
-  const registrationTotal = registrationCharges
-    .reduce((sum, c) => sum + Number(c.amount || 0), 0);
+  const registrationTotal =
+    (charges || [])
+
+      .filter(
+        c =>
+          c.charge_type ===
+          "registration"
+      )
+
+      .reduce(
+        (sum, c) =>
+          sum +
+          Number(
+            c.amount || 0
+          ),
+        0
+      );
 
 
-  const approvedPayments = (payments || [])
-    .filter(p => p.status === "approved");
+  const approvedPayments =
+    (payments || [])
+      .filter(
+        p =>
+          p.status ===
+          "approved"
+      );
 
-  const chargedTotal = approvedPayments
-    .reduce((sum, p) => sum + Number(p.amount || 0), 0);
+
+  const pendingPayments =
+    (payments || [])
+      .filter(
+        p =>
+          p.status ===
+          "pending"
+      );
 
 
-  document.getElementById("playersCount").textContent =
+  const approvedTotal =
+    approvedPayments
+      .reduce(
+        (sum, p) =>
+          sum +
+          Number(
+            p.amount || 0
+          ),
+        0
+      );
+
+
+  document
+    .getElementById(
+      "playersCount"
+    )
+    .textContent =
     players.length;
 
-  document.getElementById("registrationTotal").textContent =
-    formatMoney(registrationTotal);
 
-  document.getElementById("chargedTotal").textContent =
-    formatMoney(chargedTotal);
+  document
+    .getElementById(
+      "registrationTotal"
+    )
+    .textContent =
+    formatMoney(
+      registrationTotal
+    );
 
 
-  /*
-    Lista de jugadores
-  */
-  const playersList = document.getElementById("playersList");
+  document
+    .getElementById(
+      "approvedTotal"
+    )
+    .textContent =
+    formatMoney(
+      approvedTotal
+    );
 
-  if (!players.length) {
-    playersList.innerHTML =
-      '<div class="loading">No hay jugadores cargados.</div>';
+
+  document
+    .getElementById(
+      "pendingCount"
+    )
+    .textContent =
+    pendingPayments.length;
+
+
+  /* ---------------------------------
+     MOSTRAR PAGOS
+  --------------------------------- */
+
+  renderPendingPayments(
+    pendingPayments,
+    players
+  );
+
+
+  /* ---------------------------------
+     MOSTRAR JUGADORES
+  --------------------------------- */
+
+  renderPlayers(
+    players,
+    charges,
+    payments
+  );
+
+}
+
+
+/* =====================================================
+   PAGOS PENDIENTES
+===================================================== */
+
+function renderPendingPayments(
+  payments,
+  players
+) {
+
+  const container =
+    document.getElementById(
+      "pendingPayments"
+    );
+
+
+  if (!payments.length) {
+
+    container.innerHTML = `
+
+      <div class="empty">
+
+        No hay pagos pendientes. ✅
+
+      </div>
+
+    `;
+
     return;
+
   }
 
 
-  playersList.innerHTML = players.map(player => {
+  container.innerHTML =
+    payments.map(
+      payment => {
 
-    const playerCharges = (charges || [])
-      .filter(c => c.player_id === player.id);
+        const player =
+          players.find(
+            p =>
+              p.id ===
+              payment.player_id
+          );
 
-    const playerPayments = (payments || [])
-      .filter(p => p.player_id === player.id && p.status === "approved");
 
-    const totalCharged = playerCharges
-      .reduce((sum, c) => sum + Number(c.amount || 0), 0);
+        const playerName =
+          player
+            ? player.name
+            : "Jugador";
 
-    const totalPaid = playerPayments
-      .reduce((sum, p) => sum + Number(p.amount || 0), 0);
 
-    const balance = totalCharged - totalPaid;
+        return `
 
-    let badgeText = "Al día";
+          <div class="payment">
 
-    if (balance > 0) {
-      badgeText = "Debe " + formatMoney(balance);
-    }
+            <div class="payment-header">
 
-    if (balance < 0) {
-      badgeText = "A favor " + formatMoney(Math.abs(balance));
-    }
+              <div>
 
-    return `
-      <div class="player">
+                <div class="player-name">
 
-        <div>
-          <div class="player-name">
-            ${player.name}
+                  ${playerName}
+
+                </div>
+
+                <div class="payment-info">
+
+                  ${payment.payment_method || "Medio no indicado"}
+
+                  ·
+
+                  ${payment.payment_date || ""}
+
+                </div>
+
+              </div>
+
+
+              <div class="payment-amount">
+
+                ${formatMoney(
+                  payment.amount
+                )}
+
+              </div>
+
+            </div>
+
+
+            <div class="payment-info">
+
+              ${payment.notes || "Sin observaciones"}
+
+            </div>
+
+
+            <div class="payment-actions">
+
+              <button
+                class="approve small"
+                onclick="approvePayment('${payment.id}')"
+              >
+
+                ✓ Aprobar
+
+              </button>
+
+
+              <button
+                class="reject small"
+                onclick="rejectPayment('${payment.id}')"
+              >
+
+                ✕ Rechazar
+
+              </button>
+
+
+              ${
+                payment.receipt_url
+                  ? `
+
+                    <button
+                      class="secondary small"
+                      onclick="viewReceipt('${payment.receipt_url}')"
+                    >
+
+                      📸 Comprobante
+
+                    </button>
+
+                  `
+                  : ""
+              }
+
+            </div>
+
           </div>
 
-          <div class="muted">
-            Cargos: ${formatMoney(totalCharged)}
-            · Pagado: ${formatMoney(totalPaid)}
-          </div>
-        </div>
+        `;
 
-        <div class="badge">
-          ${badgeText}
-        </div>
+      }
+    ).join("");
 
-      </div>
-    `;
-
-  }).join("");
 }
 
+
+/* =====================================================
+   JUGADORES
+===================================================== */
+
+function renderPlayers(
+  players,
+  charges,
+  payments
+) {
+
+  const container =
+    document.getElementById(
+      "playersList"
+    );
+
+
+  if (!players.length) {
+
+    container.innerHTML =
+      `<div class="empty">
+        No hay jugadores.
+      </div>`;
+
+    return;
+
+  }
+
+
+  container.innerHTML =
+    players.map(
+      player => {
+
+        const playerCharges =
+          charges.filter(
+            c =>
+              c.player_id ===
+              player.id
+          );
+
+
+        const playerPayments =
+          payments.filter(
+            p =>
+              p.player_id ===
+              player.id &&
+              p.status ===
+              "approved"
+          );
+
+
+        const totalCharges =
+          playerCharges.reduce(
+            (sum, c) =>
+              sum +
+              Number(
+                c.amount || 0
+              ),
+            0
+          );
+
+
+        const totalPaid =
+          playerPayments.reduce(
+            (sum, p) =>
+              sum +
+              Number(
+                p.amount || 0
+              ),
+            0
+          );
+
+
+        const balance =
+          totalCharges -
+          totalPaid;
+
+
+        let badge =
+          "Al día";
+
+
+        if (balance > 0) {
+
+          badge =
+            "Debe " +
+            formatMoney(
+              balance
+            );
+
+        }
+
+
+        if (balance < 0) {
+
+          badge =
+            "A favor " +
+            formatMoney(
+              Math.abs(
+                balance
+              )
+            );
+
+        }
+
+
+        return `
+
+          <div class="player">
+
+            <div>
+
+              <div class="player-name">
+
+                ${player.name}
+
+              </div>
+
+              <div class="muted">
+
+                Cargos:
+                ${formatMoney(
+                  totalCharges
+                )}
+
+                ·
+
+                Pagado:
+                ${formatMoney(
+                  totalPaid
+                )}
+
+              </div>
+
+            </div>
+
+
+            <div class="badge">
+
+              ${badge}
+
+            </div>
+
+          </div>
+
+        `;
+
+      }
+    ).join("");
+
+}
+
+
+/* =====================================================
+   APROBAR PAGO
+===================================================== */
+
+async function approvePayment(
+  paymentId
+) {
+
+  const {
+    error
+  } = await client
+
+    .from("payments")
+
+    .update({
+
+      status:
+        "approved",
+
+      approved_at:
+        new Date()
+          .toISOString()
+
+    })
+
+    .eq(
+      "id",
+      paymentId
+    );
+
+
+  if (error) {
+
+    showAdminError(
+      "No se pudo aprobar: " +
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  showAdminSuccess(
+    "Pago aprobado correctamente."
+  );
+
+
+  await loadAdminDashboard();
+
+}
+
+
+/* =====================================================
+   RECHAZAR PAGO
+===================================================== */
+
+async function rejectPayment(
+  paymentId
+) {
+
+  const confirmed =
+    confirm(
+      "¿Seguro que querés rechazar este pago?"
+    );
+
+
+  if (!confirmed)
+    return;
+
+
+  const {
+    error
+  } = await client
+
+    .from("payments")
+
+    .update({
+
+      status:
+        "rejected",
+
+      approved_at:
+        null
+
+    })
+
+    .eq(
+      "id",
+      paymentId
+    );
+
+
+  if (error) {
+
+    showAdminError(
+      "No se pudo rechazar: " +
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  showAdminSuccess(
+    "Pago rechazado."
+  );
+
+
+  await loadAdminDashboard();
+
+}
+
+
+/* =====================================================
+   COMPROBANTE
+===================================================== */
+
+async function viewReceipt(
+  path
+) {
+
+  const {
+    data,
+    error
+  } = await client.storage
+
+    .from("comprobantes")
+
+    .createSignedUrl(
+      path,
+      300
+    );
+
+
+  if (error) {
+
+    showAdminError(
+      "No se pudo abrir el comprobante: " +
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  window.open(
+    data.signedUrl,
+    "_blank"
+  );
+
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
 
 async function logout() {
 
   await client.auth.signOut();
 
-  adminPage.classList.add("hidden");
-  loginPage.classList.remove("hidden");
+  adminPage.classList.add(
+    "hidden"
+  );
+
+  loginPage.classList.remove(
+    "hidden"
+  );
+
 }
 
 
-document
-  .getElementById("loginButton")
-  .addEventListener("click", login);
+/* =====================================================
+   EVENTOS
+===================================================== */
 
 document
-  .getElementById("logoutButton")
-  .addEventListener("click", logout);
+  .getElementById(
+    "loginButton"
+  )
+  .addEventListener(
+    "click",
+    login
+  );
 
 
-/*
-  Si ya existe una sesión, cargar automáticamente.
-*/
-client.auth.getSession().then(({ data }) => {
+document
+  .getElementById(
+    "logoutButton"
+  )
+  .addEventListener(
+    "click",
+    logout
+  );
 
-  if (data.session) {
-    loadApplication();
-  }
 
-});
+/* =====================================================
+   SESIÓN EXISTENTE
+===================================================== */
+
+client.auth
+  .getSession()
+  .then(
+    ({
+      data
+    }) => {
+
+      if (
+        data.session
+      ) {
+
+        loadApplication();
+
+      }
+
+    }
+  );
+
 </script>
 
 </body>
