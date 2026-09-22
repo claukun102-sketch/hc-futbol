@@ -173,6 +173,27 @@ html lang="es">
       flex-wrap: wrap;
     }
 
+    .concept-row {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .concept-actions {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 700px) {
+      .concept-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
     .error {
       background: #fee2e2;
       color: #991b1b;
@@ -411,6 +432,60 @@ html lang="es">
       <button class="btn-primary" type="button" onclick="saveTeamSettings()">
         💾 Guardar cambios
       </button>
+
+    </div>
+
+
+    <!-- CONCEPTOS DE COBRO -->
+
+    <div class="card">
+
+      <h2>💰 Conceptos de cobro</h2>
+
+      <p class="muted">
+        Creá conceptos personalizados para este equipo.
+      </p>
+
+      <div id="chargeConcepts">
+        Cargando...
+      </div>
+
+      <hr style="margin:20px 0; opacity:.2;">
+
+      <h3>➕ Agregar concepto</h3>
+
+      <form id="conceptForm" onsubmit="saveChargeConcept(event)">
+
+        <label>Nombre</label>
+        <input
+          id="conceptName"
+          type="text"
+          placeholder="Ej.: Seguro mensual"
+          required
+        >
+
+        <label>Monto</label>
+        <input
+          id="conceptAmount"
+          type="number"
+          min="0"
+          step="1"
+          placeholder="Ej.: 8000"
+          required
+        >
+
+        <label>Tipo</label>
+        <select id="conceptFrequency">
+          <option value="one_time">Único</option>
+          <option value="monthly">Mensual</option>
+          <option value="match">Por partido</option>
+        </select>
+
+        <button class="btn-primary" type="submit">
+          Guardar concepto
+        </button>
+
+      </form>
 
     </div>
 
@@ -1087,6 +1162,181 @@ html lang="es">
 
 
   /* =====================================================
+     CONCEPTOS DE COBRO
+  ===================================================== */
+
+  async function loadChargeConcepts() {
+
+    if (!currentTeam) return;
+
+    const container =
+      document.getElementById("chargeConcepts");
+
+    if (!container) return;
+
+    const {
+      data: concepts,
+      error
+    } = await client
+      .from("charge_concepts")
+      .select("*")
+      .eq("team_id", currentTeam.id)
+      .eq("active", true)
+      .order("created_at");
+
+    if (error) {
+      container.innerHTML =
+        `<p class="muted">No se pudieron cargar los conceptos.</p>`;
+      showAdminError(
+        "No pudimos cargar los conceptos: " +
+        error.message
+      );
+      return;
+    }
+
+    if (!concepts.length) {
+      container.innerHTML =
+        `<p class="muted">Todavía no hay conceptos creados.</p>`;
+      return;
+    }
+
+    container.innerHTML = concepts.map(concept => `
+      <div class="concept-row">
+        <div>
+          <strong>${escapeHtml(concept.name)}</strong>
+        </div>
+
+        <div>
+          ${money(concept.amount)}
+        </div>
+
+        <div class="muted">
+          ${conceptFrequencyLabel(concept.frequency)}
+        </div>
+
+        <div class="concept-actions">
+          <button
+            class="btn-danger"
+            type="button"
+            onclick="deactivateConcept('${concept.id}')"
+          >
+            Quitar
+          </button>
+        </div>
+      </div>
+    `).join("");
+  }
+
+
+  function conceptFrequencyLabel(frequency) {
+
+    if (frequency === "monthly") {
+      return "Mensual";
+    }
+
+    if (frequency === "match") {
+      return "Por partido";
+    }
+
+    return "Único";
+  }
+
+
+  async function saveChargeConcept(event) {
+
+    event.preventDefault();
+
+    if (!currentTeam) {
+      showAdminError("No hay un equipo seleccionado.");
+      return;
+    }
+
+    const name =
+      document.getElementById("conceptName")
+        .value
+        .trim();
+
+    const amount =
+      Number(
+        document.getElementById("conceptAmount")
+          .value
+      );
+
+    const frequency =
+      document.getElementById("conceptFrequency")
+        .value;
+
+    if (!name) {
+      showAdminError("Ingresá un nombre para el concepto.");
+      return;
+    }
+
+    if (amount < 0) {
+      showAdminError("El monto no puede ser negativo.");
+      return;
+    }
+
+    const {
+      error
+    } = await client
+      .from("charge_concepts")
+      .insert({
+        team_id: currentTeam.id,
+        name: name,
+        amount: amount,
+        frequency: frequency,
+        active: true
+      });
+
+    if (error) {
+      showAdminError(
+        "No se pudo guardar el concepto: " +
+        error.message
+      );
+      return;
+    }
+
+    document.getElementById("conceptForm").reset();
+
+    showAdminSuccess(
+      "Concepto creado correctamente."
+    );
+
+    await loadChargeConcepts();
+  }
+
+
+  async function deactivateConcept(conceptId) {
+
+    if (!currentTeam) return;
+
+    const {
+      error
+    } = await client
+      .from("charge_concepts")
+      .update({
+        active: false
+      })
+      .eq("id", conceptId)
+      .eq("team_id", currentTeam.id);
+
+    if (error) {
+      showAdminError(
+        "No se pudo quitar el concepto: " +
+        error.message
+      );
+      return;
+    }
+
+    showAdminSuccess(
+      "Concepto quitado."
+    );
+
+    await loadChargeConcepts();
+  }
+
+
+  /* =====================================================
      CONFIGURACIÓN DEL EQUIPO
   ===================================================== */
 
@@ -1192,6 +1442,7 @@ html lang="es">
     hideAdminMessages();
 
     await loadTeamSettings();
+    await loadChargeConcepts();
 
 
     const {
