@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -613,6 +612,20 @@
         💾 Guardar cambios
       </button>
 
+      <hr style="margin: 24px 0; opacity: .2;">
+
+      <button
+        type="button"
+        class="btn-danger"
+        onclick="archiveCurrentTeam()"
+      >
+        🗄️ Archivar este equipo
+      </button>
+
+      <p class="muted" style="margin-top: 8px;">
+        El equipo dejará de estar activo, pero se conservarán sus jugadores, cargos y pagos.
+      </p>
+
     </div>
 
 
@@ -1139,7 +1152,9 @@
       }
 
       myAdminTeams =
-        (adminTeams || []).map(normalizeTeam);
+        (adminTeams || [])
+          .map(normalizeTeam)
+          .filter(team => team.active !== false);
 
       if (!myAdminTeams.length) {
         showLoginError(
@@ -1734,6 +1749,54 @@
     );
 
     await loadChargeConcepts();
+  }
+
+
+  async function archiveCurrentTeam() {
+
+    if (!currentTeam) {
+      showAdminError("No hay un equipo seleccionado.");
+      return;
+    }
+
+    const teamName = currentTeam.name;
+
+    const confirmed = confirm(
+      `¿Querés archivar el equipo "${teamName}"?\n\n` +
+      `El equipo dejará de estar activo, pero se conservarán todos sus jugadores, cargos y pagos.\n\n` +
+      `Esta acción no elimina los datos.`
+    );
+
+    if (!confirmed) return;
+
+    hideAdminMessages();
+
+    const { error } = await client.rpc(
+      "archive_team",
+      { p_team_id: currentTeam.id }
+    );
+
+    if (error) {
+      showAdminError("No se pudo archivar el equipo: " + error.message);
+      return;
+    }
+
+    myAdminTeams = myAdminTeams.filter(
+      team => team.id !== currentTeam.id
+    );
+
+    if (!myAdminTeams.length) {
+      currentTeam = null;
+      showAdminError(
+        `El equipo "${teamName}" fue archivado correctamente. Ya no tenés equipos activos para administrar.`
+      );
+      return;
+    }
+
+    currentTeam = myAdminTeams[0];
+    renderCurrentTeam();
+    await loadAdminDashboard();
+    showAdminSuccess(`El equipo "${teamName}" fue archivado correctamente.`);
   }
 
 
