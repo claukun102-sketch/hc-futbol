@@ -390,6 +390,32 @@
     </div>
 
 
+    <!-- CONFIGURACIÓN DEL EQUIPO -->
+
+    <div class="card">
+
+      <h2>⚙️ Configuración del equipo</h2>
+
+      <p class="muted">
+        Estos valores pertenecen al equipo seleccionado.
+      </p>
+
+      <label>💵 Valor de inscripción</label>
+      <input id="teamRegistrationFee" type="number" min="0" step="1" placeholder="Ej.: 30000">
+
+      <label>🛡️ Seguro mensual</label>
+      <input id="teamMonthlyInsurance" type="number" min="0" step="1" placeholder="Ej.: 8000">
+
+      <label>⚽ Valor por partido</label>
+      <input id="teamMatchFee" type="number" min="0" step="1" placeholder="Ej.: 8000">
+
+      <button class="btn-primary" type="button" onclick="saveTeamSettings()">
+        💾 Guardar cambios
+      </button>
+
+    </div>
+
+
     <!-- PAGOS PENDIENTES -->
 
     <div class="card">
@@ -1062,12 +1088,111 @@
 
 
   /* =====================================================
+     CONFIGURACIÓN DEL EQUIPO
+  ===================================================== */
+
+  async function loadTeamSettings() {
+
+    if (!currentTeam) return;
+
+    const { data: settings, error } = await client
+      .from("team_settings")
+      .select("*")
+      .eq("team_id", currentTeam.id)
+      .maybeSingle();
+
+    if (error) {
+      showAdminError("No pudimos cargar la configuración: " + error.message);
+      return;
+    }
+
+    document.getElementById("teamRegistrationFee").value =
+      settings ? Number(settings.registration_fee || 0) : 0;
+
+    document.getElementById("teamMonthlyInsurance").value =
+      settings ? Number(settings.monthly_insurance || 0) : 0;
+
+    document.getElementById("teamMatchFee").value =
+      settings ? Number(settings.match_fee || 0) : 0;
+  }
+
+
+  async function saveTeamSettings() {
+
+    if (!currentTeam) {
+      showAdminError("No hay un equipo seleccionado.");
+      return;
+    }
+
+    const registrationFee = Number(document.getElementById("teamRegistrationFee").value);
+    const monthlyInsurance = Number(document.getElementById("teamMonthlyInsurance").value);
+    const matchFee = Number(document.getElementById("teamMatchFee").value);
+
+    if (registrationFee < 0 || monthlyInsurance < 0 || matchFee < 0) {
+      showAdminError("Los valores no pueden ser negativos.");
+      return;
+    }
+
+    const { data: existing, error: existingError } = await client
+      .from("team_settings")
+      .select("id")
+      .eq("team_id", currentTeam.id)
+      .maybeSingle();
+
+    if (existingError) {
+      showAdminError("No pudimos comprobar la configuración: " + existingError.message);
+      return;
+    }
+
+    let error;
+
+    if (existing) {
+      const result = await client
+        .from("team_settings")
+        .update({
+          team_name: currentTeam.name,
+          registration_fee: registrationFee,
+          monthly_insurance: monthlyInsurance,
+          match_fee: matchFee
+        })
+        .eq("id", existing.id)
+        .eq("team_id", currentTeam.id);
+
+      error = result.error;
+
+    } else {
+      const result = await client
+        .from("team_settings")
+        .insert({
+          team_id: currentTeam.id,
+          team_name: currentTeam.name,
+          description: currentTeam.description || "",
+          registration_fee: registrationFee,
+          monthly_insurance: monthlyInsurance,
+          match_fee: matchFee
+        });
+
+      error = result.error;
+    }
+
+    if (error) {
+      showAdminError("No se pudieron guardar los cambios: " + error.message);
+      return;
+    }
+
+    showAdminSuccess("Configuración guardada correctamente.");
+  }
+
+
+  /* =====================================================
      ADMIN
   ===================================================== */
 
   async function loadAdminDashboard() {
 
     hideAdminMessages();
+
+    await loadTeamSettings();
 
 
     const {
