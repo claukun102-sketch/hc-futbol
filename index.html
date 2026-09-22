@@ -461,6 +461,16 @@
         Cargando...
       </div>
 
+      <div id="applyConceptPanel" style="display:none; margin-top:18px; padding:16px; border:1px solid rgba(127,127,127,.25); border-radius:12px;">
+        <h3 id="applyConceptTitle">Aplicar concepto</h3>
+        <p class="muted">Seleccioná los jugadores a los que querés generarles el cargo.</p>
+        <div id="applyConceptPlayers"></div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;">
+          <button class="btn-primary" type="button" onclick="applyConceptToSelected()">💾 Generar cargos</button>
+          <button class="btn-secondary" type="button" onclick="closeApplyConcept()">Cancelar</button>
+        </div>
+      </div>
+
       <hr style="margin:20px 0; opacity:.2;">
 
       <h3>➕ Agregar concepto</h3>
@@ -1237,6 +1247,13 @@
 
         <div class="concept-actions">
           <button
+            class="btn-primary"
+            type="button"
+            onclick="openApplyConcept('${concept.id}')"
+          >
+            ➕ Aplicar
+          </button>
+          <button
             class="btn-danger"
             type="button"
             onclick="deactivateConcept('${concept.id}')"
@@ -1326,6 +1343,116 @@
     await loadChargeConcepts();
   }
 
+
+  let conceptToApply = null;
+
+  async function openApplyConcept(conceptId) {
+
+    if (!currentTeam) return;
+
+    const { data: concept, error: conceptError } = await client
+      .from("charge_concepts")
+      .select("*")
+      .eq("id", conceptId)
+      .eq("team_id", currentTeam.id)
+      .eq("active", true)
+      .single();
+
+    if (conceptError) {
+      showAdminError("No pudimos cargar el concepto: " + conceptError.message);
+      return;
+    }
+
+    const { data: players, error: playersError } = await client
+      .from("players")
+      .select("id, name, nickname")
+      .eq("team_id", currentTeam.id)
+      .eq("active", true)
+      .order("name");
+
+    if (playersError) {
+      showAdminError("No pudimos cargar los jugadores: " + playersError.message);
+      return;
+    }
+
+    conceptToApply = concept;
+
+    document.getElementById("applyConceptTitle").textContent =
+      "Aplicar: " + concept.name + " — " + money(concept.amount);
+
+    const container = document.getElementById("applyConceptPlayers");
+
+    if (!players.length) {
+      container.innerHTML = `<p class="muted">No hay jugadores activos en este equipo.</p>`;
+    } else {
+      container.innerHTML = players.map(player => `
+        <label style="display:flex; align-items:center; gap:10px; margin:8px 0; cursor:pointer;">
+          <input type="checkbox" class="apply-player-checkbox" value="${player.id}">
+          <span>${escapeHtml(player.name)}${player.nickname ? ` (${escapeHtml(player.nickname)})` : ""}</span>
+        </label>
+      `).join("");
+    }
+
+    document.getElementById("applyConceptPanel").style.display = "block";
+    document.getElementById("applyConceptPanel").scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+
+  function closeApplyConcept() {
+    conceptToApply = null;
+    const panel = document.getElementById("applyConceptPanel");
+    if (panel) panel.style.display = "none";
+  }
+
+
+  async function applyConceptToSelected() {
+
+    if (!currentTeam || !conceptToApply) {
+      showAdminError("No hay un concepto seleccionado.");
+      return;
+    }
+
+    const selected = Array.from(
+      document.querySelectorAll(".apply-player-checkbox:checked")
+    ).map(input => input.value);
+
+    if (!selected.length) {
+      showAdminError("Seleccioná al menos un jugador.");
+      return;
+    }
+
+    const confirmed = confirm(
+      `¿Generar el cargo de ${money(conceptToApply.amount)} para ${selected.length} jugador(es) por “${conceptToApply.name}”?`
+    );
+
+    if (!confirmed) return;
+
+    const rows = selected.map(playerId => ({
+      team_id: currentTeam.id,
+      player_id: playerId,
+      charge_type: "concept",
+      description: conceptToApply.name,
+      amount: Number(conceptToApply.amount),
+      match_id: null,
+      due_date: null
+    }));
+
+    const { error } = await client
+      .from("charges")
+      .insert(rows);
+
+    if (error) {
+      showAdminError("No se pudieron generar los cargos: " + error.message);
+      return;
+    }
+
+    showAdminSuccess(
+      `Se generaron ${selected.length} cargo(s) de ${money(conceptToApply.amount)}.`
+    );
+
+    closeApplyConcept();
+    await loadAdminDashboard();
+  }
 
   async function deactivateConcept(conceptId) {
 
