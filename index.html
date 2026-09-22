@@ -1,4 +1,4 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -189,9 +189,82 @@
       flex-wrap: wrap;
     }
 
+    .apply-concept-panel {
+      display: none;
+      margin-top: 18px;
+      padding: 20px;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      background: #f9fafb;
+    }
+
+    .apply-concept-panel h3 {
+      margin: 0 0 6px 0;
+      text-align: left;
+    }
+
+    .apply-concept-players {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .apply-player-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 46px;
+      padding: 10px 12px;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      background: white;
+      cursor: pointer;
+      box-sizing: border-box;
+      margin: 0;
+    }
+
+    .apply-player-item:hover {
+      background: #f3f4f6;
+    }
+
+    .apply-player-item input {
+      width: 18px;
+      height: 18px;
+      flex: 0 0 auto;
+      margin: 0;
+    }
+
+    .apply-player-name {
+      line-height: 1.25;
+      text-align: left;
+      overflow-wrap: anywhere;
+    }
+
+    .apply-concept-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .apply-concept-actions button {
+      width: auto;
+    }
+
+    @media (max-width: 900px) {
+      .apply-concept-players {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
     @media (max-width: 700px) {
       .concept-row {
         grid-template-columns: 1fr;
+      }
+
+      .apply-concept-players {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
@@ -250,6 +323,10 @@
     }
 
     @media (max-width: 500px) {
+      .apply-concept-players {
+        grid-template-columns: 1fr;
+      }
+
       .grid {
         grid-template-columns: 1fr;
       }
@@ -262,7 +339,60 @@
         padding: 9px 5px;
       }
     }
-  </style>
+  
+    .players-toolbar {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:14px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+    .players-count {
+      font-size:.92rem;
+      color:#666;
+    }
+    .player-name-cell {
+      cursor:pointer;
+      user-select:none;
+    }
+    .player-name-cell:hover {
+      text-decoration:underline;
+      text-underline-offset:3px;
+    }
+    .player-actions {
+      display:flex;
+      gap:6px;
+      justify-content:flex-end;
+      white-space:nowrap;
+    }
+    .btn-danger-small {
+      border:1px solid #d66;
+      background:#fff5f5;
+      color:#a22;
+      border-radius:8px;
+      padding:6px 9px;
+      cursor:pointer;
+      font-size:.82rem;
+    }
+    .btn-danger-small:hover { background:#ffeaea; }
+    .player-add-form {
+      display:grid;
+      grid-template-columns:minmax(180px,1fr) minmax(140px,220px) auto;
+      gap:10px;
+      align-items:end;
+      padding:14px;
+      margin-bottom:16px;
+      border:1px solid rgba(0,0,0,.08);
+      border-radius:12px;
+      background:rgba(0,0,0,.02);
+    }
+    @media (max-width:700px) {
+      .player-add-form { grid-template-columns:1fr; }
+      .player-actions { justify-content:flex-start; }
+    }
+
+</style>
 </head>
 
 <body>
@@ -461,11 +591,11 @@
         Cargando...
       </div>
 
-      <div id="applyConceptPanel" style="display:none; margin-top:18px; padding:16px; border:1px solid rgba(127,127,127,.25); border-radius:12px;">
+      <div id="applyConceptPanel" class="apply-concept-panel">
         <h3 id="applyConceptTitle">Aplicar concepto</h3>
         <p class="muted">Seleccioná los jugadores a los que querés generarles el cargo.</p>
-        <div id="applyConceptPlayers"></div>
-        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;">
+        <div id="applyConceptPlayers" class="apply-concept-players"></div>
+        <div class="apply-concept-actions">
           <button class="btn-primary" type="button" onclick="applyConceptToSelected()">💾 Generar cargos</button>
           <button class="btn-secondary" type="button" onclick="closeApplyConcept()">Cancelar</button>
         </div>
@@ -528,7 +658,33 @@
 
     <div class="card">
 
-      <h2>👥 Jugadores</h2>
+      <div class="players-toolbar">
+        <div>
+          <h2 style="margin-bottom:4px;">👥 Jugadores</h2>
+          <div id="playersCount" class="players-count">0 / 50 jugadores</div>
+        </div>
+        <button class="btn-primary" type="button" onclick="toggleAddPlayerForm()">
+          ➕ Agregar jugador
+        </button>
+      </div>
+
+      <div id="addPlayerForm" class="player-add-form" style="display:none;">
+        <div>
+          <label>Nombre</label>
+          <input id="newPlayerName" type="text" maxlength="80" placeholder="Ej.: Juan Pérez">
+        </div>
+        <div>
+          <label>Apodo <span class="muted">(opcional)</span></label>
+          <input id="newPlayerNickname" type="text" maxlength="50" placeholder="Ej.: Juancho">
+        </div>
+        <button class="btn-primary" type="button" onclick="addPlayer()">
+          Guardar jugador
+        </button>
+      </div>
+
+      <p class="muted" style="margin-top:0;">
+        Doble clic sobre el nombre para modificarlo. Podés quitar jugadores sin borrar su historial.
+      </p>
 
       <div style="overflow-x:auto;">
 
@@ -540,6 +696,7 @@
               <th>Cargos</th>
               <th>Pagado</th>
               <th>Saldo</th>
+              <th></th>
             </tr>
           </thead>
 
@@ -1782,6 +1939,129 @@
 
 
   /* =====================================================
+     GESTIÓN DE JUGADORES
+  ===================================================== */
+
+  function toggleAddPlayerForm() {
+    const form = document.getElementById("addPlayerForm");
+    if (!form) return;
+
+    const opening = form.style.display === "none" || !form.style.display;
+    form.style.display = opening ? "grid" : "none";
+
+    if (opening) {
+      document.getElementById("newPlayerName")?.focus();
+    }
+  }
+
+  async function addPlayer() {
+
+    if (!currentTeam) {
+      showAdminError("No hay un equipo seleccionado.");
+      return;
+    }
+
+    const name = document.getElementById("newPlayerName").value.trim();
+    const nickname = document.getElementById("newPlayerNickname").value.trim();
+
+    if (!name) {
+      showAdminError("Ingresá el nombre del jugador.");
+      return;
+    }
+
+    const { count, error: countError } = await client
+      .from("players")
+      .select("id", { count: "exact", head: true })
+      .eq("team_id", currentTeam.id)
+      .eq("active", true);
+
+    if (countError) {
+      showAdminError("No pudimos comprobar la cantidad de jugadores: " + countError.message);
+      return;
+    }
+
+    if ((count || 0) >= 50) {
+      showAdminError("Este equipo ya alcanzó el máximo de 50 jugadores.");
+      return;
+    }
+
+    const { error } = await client
+      .from("players")
+      .insert({
+        team_id: currentTeam.id,
+        name: name,
+        nickname: nickname || null,
+        active: true
+      });
+
+    if (error) {
+      showAdminError("No se pudo agregar el jugador: " + error.message);
+      return;
+    }
+
+    document.getElementById("newPlayerName").value = "";
+    document.getElementById("newPlayerNickname").value = "";
+    document.getElementById("addPlayerForm").style.display = "none";
+
+    showAdminSuccess("Jugador agregado correctamente.");
+    await loadAdminDashboard();
+  }
+
+  async function editPlayerName(playerId, currentName) {
+
+    const newName = prompt("Modificar nombre del jugador:", currentName);
+
+    if (newName === null) return;
+
+    const trimmed = newName.trim();
+
+    if (!trimmed) {
+      showAdminError("El nombre no puede quedar vacío.");
+      return;
+    }
+
+    if (trimmed === currentName) return;
+
+    const { error } = await client
+      .from("players")
+      .update({ name: trimmed })
+      .eq("id", playerId)
+      .eq("team_id", currentTeam.id);
+
+    if (error) {
+      showAdminError("No se pudo modificar el jugador: " + error.message);
+      return;
+    }
+
+    showAdminSuccess("Jugador modificado correctamente.");
+    await loadAdminDashboard();
+  }
+
+  async function removePlayer(playerId, playerName) {
+
+    const confirmed = confirm(
+      `¿Quitar a ${playerName} del equipo?\n\nSu historial de cargos y pagos se conservará, pero dejará de aparecer entre los jugadores activos.`
+    );
+
+    if (!confirmed) return;
+
+    const { error } = await client
+      .from("players")
+      .update({ active: false })
+      .eq("id", playerId)
+      .eq("team_id", currentTeam.id);
+
+    if (error) {
+      showAdminError("No se pudo quitar el jugador: " + error.message);
+      return;
+    }
+
+    showAdminSuccess(`${playerName} fue quitado del equipo. El historial se conservó.`);
+    await loadAdminDashboard();
+  }
+
+
+  /* =====================================================
      TABLA JUGADORES ADMIN
   ===================================================== */
 
@@ -1798,6 +2078,11 @@
       );
 
     table.innerHTML = "";
+
+    const countBox = document.getElementById("playersCount");
+    if (countBox) {
+      countBox.textContent = `${players.length} / 50 jugadores`;
+    }
 
 
     players.forEach(player => {
@@ -1847,10 +2132,20 @@
 
 
       row.innerHTML = `
-        <td>${escapeHtml(player.name)}</td>
+        <td class="player-name-cell" title="Doble clic para modificar" ondblclick="editPlayerName('${player.id}', '${escapeHtml(player.name).replace(/'/g, "\\'")}')">
+          ${escapeHtml(player.name)}
+          ${player.nickname ? `<span class="muted"> (${escapeHtml(player.nickname)})</span>` : ""}
+        </td>
         <td>${money(playerCharges)}</td>
         <td class="positive">${money(playerPaid)}</td>
         <td>${balanceText}</td>
+        <td>
+          <div class="player-actions">
+            <button class="btn-danger-small" type="button" onclick="removePlayer('${player.id}', '${escapeHtml(player.name).replace(/'/g, "\\'")}')">
+              Quitar
+            </button>
+          </div>
+        </td>
       `;
 
 
