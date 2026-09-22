@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="es">
+html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -444,7 +443,7 @@
               <th>Jugador</th>
               <th>Cargos</th>
               <th>Pagado</th>
-              <th>Debe</th>
+              <th>Saldo</th>
             </tr>
           </thead>
 
@@ -1266,20 +1265,21 @@
     }
 
 
-    const registrationCharges =
-      charges.filter(
-        c =>
-          c.charge_type ===
-          "registration"
-      );
+    // El total mostrado en el panel representa la inscripción
+    // configurada actualmente multiplicada por los jugadores activos.
+    const {
+      data: settings
+    } = await client
+      .from("team_settings")
+      .select("registration_fee")
+      .eq("team_id", currentTeam.id)
+      .maybeSingle();
 
+    const currentRegistrationFee =
+      Number(settings?.registration_fee || 0);
 
     const registrationTotal =
-      registrationCharges.reduce(
-        (sum, c) =>
-          sum + Number(c.amount),
-        0
-      );
+      currentRegistrationFee * players.length;
 
 
     const approvedPayments =
@@ -1395,12 +1395,15 @@
           );
 
 
-      const debt =
-        Math.max(
-          0,
-          playerCharges -
-          playerPaid
-        );
+      const difference =
+        playerPaid - playerCharges;
+
+      const balanceText =
+        difference > 0
+          ? `<span class="positive">A favor ${money(difference)}</span>`
+          : difference < 0
+            ? `<span class="negative">Debe ${money(Math.abs(difference))}</span>`
+            : `<span class="positive">${money(0)}</span>`;
 
 
       const row =
@@ -1411,9 +1414,7 @@
         <td>${escapeHtml(player.name)}</td>
         <td>${money(playerCharges)}</td>
         <td class="positive">${money(playerPaid)}</td>
-        <td class="${debt > 0 ? "negative" : "positive"}">
-          ${money(debt)}
-        </td>
+        <td>${balanceText}</td>
       `;
 
 
