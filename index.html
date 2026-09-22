@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -629,6 +630,23 @@
     </div>
 
 
+    <!-- EQUIPOS ARCHIVADOS -->
+
+    <div class="card">
+
+      <h2>📦 Equipos archivados</h2>
+
+      <p class="muted">
+        Acá aparecen los equipos que archivaste. Podés reactivarlos cuando vuelvan a jugar.
+      </p>
+
+      <div id="archivedTeams">
+        Cargando...
+      </div>
+
+    </div>
+
+
     <!-- CONCEPTOS DE COBRO -->
 
     <div class="card">
@@ -1174,6 +1192,7 @@
       adminPage.classList.remove("hidden");
 
       renderCurrentTeam();
+      await loadArchivedTeams();
       await loadAdminDashboard();
 
       return;
@@ -1752,6 +1771,124 @@
   }
 
 
+  async function loadArchivedTeams() {
+
+    const container =
+      document.getElementById("archivedTeams");
+
+    if (!container) return;
+
+    container.innerHTML = "Cargando...";
+
+    const { data, error } =
+      await client
+        .from("teams")
+        .select("id, name, description, sport, country, currency, active")
+        .eq("active", false)
+        .order("created_at", { ascending: false });
+
+    if (error) {
+      container.innerHTML =
+        `<p class="muted">No pudimos cargar los equipos archivados.</p>`;
+      return;
+    }
+
+    const archivedTeams = data || [];
+
+    if (!archivedTeams.length) {
+      container.innerHTML =
+        `<p class="muted">No tenés equipos archivados.</p>`;
+      return;
+    }
+
+    container.innerHTML = archivedTeams.map(team => `
+      <div class="payment" style="margin-bottom:10px;">
+        <strong>${escapeHtml(team.name)}</strong>
+        <p class="muted" style="margin:4px 0;">
+          ${escapeHtml(team.description || "Equipo deportivo amateur")}
+        </p>
+        <p class="muted" style="margin:4px 0 10px;">
+          ${escapeHtml(team.sport || "")}
+          · ${escapeHtml(team.country || "")}
+          · ${escapeHtml(team.currency || "")}
+        </p>
+        <button
+          type="button"
+          class="btn-primary"
+          onclick="restoreArchivedTeam('${team.id}')"
+        >
+          ♻️ Reactivar equipo
+        </button>
+      </div>
+    `).join("");
+
+  }
+
+
+  async function restoreArchivedTeam(teamId) {
+
+    const { data: archivedTeam } =
+      await client
+        .from("teams")
+        .select("id, name")
+        .eq("id", teamId)
+        .eq("active", false)
+        .maybeSingle();
+
+    if (!archivedTeam) {
+      showAdminError("No encontramos ese equipo archivado.");
+      return;
+    }
+
+    const confirmed = confirm(
+      `¿Querés reactivar el equipo "${archivedTeam.name}"?\n\n` +
+      `Volverá a aparecer entre tus equipos activos y podrás administrarlo nuevamente.`
+    );
+
+    if (!confirmed) return;
+
+    hideAdminMessages();
+
+    const { error } = await client.rpc(
+      "restore_team",
+      { p_team_id: teamId }
+    );
+
+    if (error) {
+      showAdminError("No se pudo reactivar el equipo: " + error.message);
+      return;
+    }
+
+    const { data: adminTeams, error: teamsError } =
+      await client.rpc("my_admin_teams");
+
+    if (teamsError) {
+      showAdminError("El equipo fue reactivado, pero no pudimos actualizar la lista: " + teamsError.message);
+      return;
+    }
+
+    myAdminTeams =
+      (adminTeams || [])
+        .map(normalizeTeam)
+        .filter(team => team.active !== false);
+
+    currentTeam =
+      myAdminTeams.find(team => team.id === teamId) ||
+      currentTeam ||
+      myAdminTeams[0] ||
+      null;
+
+    if (currentTeam) {
+      renderCurrentTeam();
+      await loadAdminDashboard();
+    }
+
+    await loadArchivedTeams();
+    showAdminSuccess(`El equipo "${archivedTeam.name}" fue reactivado correctamente.`);
+
+  }
+
+
   async function archiveCurrentTeam() {
 
     if (!currentTeam) {
@@ -1795,6 +1932,7 @@
 
     currentTeam = myAdminTeams[0];
     renderCurrentTeam();
+    await loadArchivedTeams();
     await loadAdminDashboard();
     showAdminSuccess(`El equipo "${teamName}" fue archivado correctamente.`);
   }
