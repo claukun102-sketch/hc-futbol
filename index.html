@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -239,6 +239,13 @@
       line-height: 1.25;
       text-align: left;
       overflow-wrap: anywhere;
+    }
+
+    .apply-concept-selection-tools {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 14px;
     }
 
     .apply-concept-actions {
@@ -593,7 +600,11 @@
 
       <div id="applyConceptPanel" class="apply-concept-panel">
         <h3 id="applyConceptTitle">Aplicar concepto</h3>
-        <p class="muted">Seleccioná los jugadores a los que querés generarles el cargo.</p>
+        <p class="muted">Elegí a quién aplicar el cargo. Podés seleccionar todos o solo algunos jugadores.</p>
+        <div class="apply-concept-selection-tools">
+          <button class="btn-secondary" type="button" onclick="selectAllConceptPlayers()">☑ Seleccionar todos</button>
+          <button class="btn-secondary" type="button" onclick="clearConceptPlayers()">☐ Limpiar selección</button>
+        </div>
         <div id="applyConceptPlayers" class="apply-concept-players"></div>
         <div class="apply-concept-actions">
           <button class="btn-primary" type="button" onclick="applyConceptToSelected()">💾 Generar cargos</button>
@@ -1543,9 +1554,9 @@
       container.innerHTML = `<p class="muted">No hay jugadores activos en este equipo.</p>`;
     } else {
       container.innerHTML = players.map(player => `
-        <label style="display:flex; align-items:center; gap:10px; margin:8px 0; cursor:pointer;">
+        <label class="apply-player-item">
           <input type="checkbox" class="apply-player-checkbox" value="${player.id}">
-          <span>${escapeHtml(player.name)}${player.nickname ? ` (${escapeHtml(player.nickname)})` : ""}</span>
+          <span class="apply-player-name">${escapeHtml(player.name)}${player.nickname ? ` (${escapeHtml(player.nickname)})` : ""}</span>
         </label>
       `).join("");
     }
@@ -1559,6 +1570,20 @@
     conceptToApply = null;
     const panel = document.getElementById("applyConceptPanel");
     if (panel) panel.style.display = "none";
+  }
+
+
+  function selectAllConceptPlayers() {
+    document.querySelectorAll(".apply-player-checkbox").forEach(input => {
+      input.checked = true;
+    });
+  }
+
+
+  function clearConceptPlayers() {
+    document.querySelectorAll(".apply-player-checkbox").forEach(input => {
+      input.checked = false;
+    });
   }
 
 
