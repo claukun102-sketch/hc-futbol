@@ -300,7 +300,7 @@
     <div class="header">
 
       <div>
-        <h1>⚽ HC</h1>
+        <h1 id="adminTeamName">⚽ HC</h1>
         <small>Panel de administración</small>
       </div>
 
@@ -341,6 +341,51 @@
         <div class="muted">Pagos pendientes</div>
         <div id="statPending" class="stat">0</div>
       </div>
+
+    </div>
+
+
+    <!-- MIS EQUIPOS -->
+
+    <div class="card">
+
+      <h2>🏟️ Mis equipos</h2>
+
+      <div id="myTeams">
+        Cargando...
+      </div>
+
+      <hr style="margin:20px 0; opacity:.2;">
+
+      <h3>➕ Crear nuevo equipo</h3>
+
+      <form id="createTeamForm" onsubmit="createTeam(event)">
+
+        <label>Nombre del equipo</label>
+        <input id="newTeamName" type="text" placeholder="Ej.: Los Pumas" required>
+
+        <label>Descripción</label>
+        <input id="newTeamDescription" type="text" placeholder="Ej.: Equipo amateur">
+
+        <label>Deporte</label>
+        <input id="newTeamSport" type="text" value="Fútbol">
+
+        <label>Moneda</label>
+        <select id="newTeamCurrency">
+          <option value="ARS">ARS — Peso argentino</option>
+          <option value="USD">USD — Dólar estadounidense</option>
+          <option value="EUR">EUR — Euro</option>
+          <option value="BRL">BRL — Real brasileño</option>
+        </select>
+
+        <label>País</label>
+        <input id="newTeamCountry" type="text" value="Argentina">
+
+        <button class="btn-primary" type="submit">
+          Crear equipo
+        </button>
+
+      </form>
 
     </div>
 
@@ -493,15 +538,6 @@
         min="1"
         placeholder="Ej: 30000"
       >
-<label>Monto</label>
-
-<input
-  id="paymentAmount"
-  type="number"
-  min="1"
-  placeholder="Ej: 30000"
->
-
 <label>Medio de pago</label>
 
 <select id="paymentMethod">
@@ -593,6 +629,8 @@
 
   let currentUser = null;
   let currentPlayer = null;
+  let currentTeam = null;
+  let myAdminTeams = [];
 
 
   /* =====================================================
@@ -732,7 +770,7 @@
       await client
         .from("player_accounts")
         .select(
-          "role, player_id"
+          "role, player_id, team_id"
         )
         .eq(
           "auth_user_id",
@@ -756,10 +794,40 @@
       account.role === "admin"
     ) {
 
+      const {
+        data: adminTeams,
+        error: adminTeamsError
+      } = await client.rpc("my_admin_teams");
+
+      if (adminTeamsError) {
+        showLoginError(
+          "No pudimos cargar tus equipos: " +
+          adminTeamsError.message
+        );
+        return;
+      }
+
+      myAdminTeams =
+        (adminTeams || []).map(normalizeTeam);
+
+      if (!myAdminTeams.length) {
+        showLoginError(
+          "Tu usuario no tiene ningún equipo administrable."
+        );
+        return;
+      }
+
+      currentTeam =
+        myAdminTeams.find(
+          team => team.id === account.team_id
+        ) ||
+        myAdminTeams[0];
+
       loginPage.classList.add("hidden");
       playerPage.classList.add("hidden");
       adminPage.classList.remove("hidden");
 
+      renderCurrentTeam();
       await loadAdminDashboard();
 
       return;
@@ -792,6 +860,208 @@
 
 
   /* =====================================================
+     MULTI-EQUIPO
+  ===================================================== */
+
+  function normalizeTeam(team) {
+
+    return {
+      id: team.id || team.team_id,
+      name: team.name || team.team_name || "Mi equipo",
+      description: team.description || "",
+      sport: team.sport || "Fútbol",
+      currency: team.currency || "ARS",
+      country: team.country || "Argentina",
+      active: team.active !== false
+    };
+
+  }
+
+
+  function renderCurrentTeam() {
+
+    if (!currentTeam) return;
+
+    const title =
+      document.getElementById("adminTeamName");
+
+    if (title) {
+      title.textContent =
+        "⚽ " + currentTeam.name;
+    }
+
+    const container =
+      document.getElementById("myTeams");
+
+    if (!container) return;
+
+    container.innerHTML = `
+      <label>Equipo activo</label>
+
+      <select
+        onchange="selectAdminTeam(this.value)"
+      >
+        ${myAdminTeams.map(team => `
+          <option
+            value="${escapeHtml(team.id)}"
+            ${team.id === currentTeam.id ? "selected" : ""}
+          >
+            ${escapeHtml(team.name)}
+          </option>
+        `).join("")}
+      </select>
+
+      <div class="payment">
+        <strong>${escapeHtml(currentTeam.name)}</strong>
+        <p class="muted">
+          ${escapeHtml(currentTeam.description || "Equipo deportivo amateur")}
+        </p>
+        <p class="muted">
+          ${escapeHtml(currentTeam.sport)}
+          · ${escapeHtml(currentTeam.country)}
+          · ${escapeHtml(currentTeam.currency)}
+        </p>
+      </div>
+    `;
+
+  }
+
+
+  async function selectAdminTeam(teamId) {
+
+    const selected =
+      myAdminTeams.find(
+        team => team.id === teamId
+      );
+
+    if (!selected) {
+      showAdminError(
+        "No tenés acceso a ese equipo."
+      );
+      return;
+    }
+
+    currentTeam = selected;
+
+    renderCurrentTeam();
+    await loadAdminDashboard();
+
+  }
+
+
+  async function createTeam(event) {
+
+    event.preventDefault();
+
+    const name =
+      document.getElementById("newTeamName").value.trim();
+
+    const description =
+      document.getElementById("newTeamDescription").value.trim();
+
+    const sport =
+      document.getElementById("newTeamSport").value.trim();
+
+    const currency =
+      document.getElementById("newTeamCurrency").value;
+
+    const country =
+      document.getElementById("newTeamCountry").value.trim();
+
+    if (!name) {
+      showAdminError(
+        "El nombre del equipo es obligatorio."
+      );
+      return;
+    }
+
+    const button =
+      event.submitter ||
+      document.querySelector(
+        "#createTeamForm button[type='submit']"
+      );
+
+    if (button) {
+      button.disabled = true;
+      button.textContent = "Creando...";
+    }
+
+    const {
+      data: teamId,
+      error
+    } = await client.rpc(
+      "create_team",
+      {
+        p_name: name,
+        p_description: description,
+        p_sport: sport || "Fútbol",
+        p_currency: currency || "ARS",
+        p_country: country || "Argentina"
+      }
+    );
+
+    if (button) {
+      button.disabled = false;
+      button.textContent = "Crear equipo";
+    }
+
+    if (error) {
+      showAdminError(
+        "No se pudo crear el equipo: " +
+        error.message
+      );
+      return;
+    }
+
+    const {
+      data: adminTeams,
+      error: teamsError
+    } = await client.rpc("my_admin_teams");
+
+    if (teamsError) {
+      showAdminError(
+        "El equipo se creó, pero no pudimos actualizar la lista: " +
+        teamsError.message
+      );
+      return;
+    }
+
+    myAdminTeams =
+      (adminTeams || []).map(normalizeTeam);
+
+    currentTeam =
+      myAdminTeams.find(
+        team => team.id === teamId
+      ) ||
+      currentTeam;
+
+    document.getElementById(
+      "createTeamForm"
+    ).reset();
+
+    document.getElementById(
+      "newTeamSport"
+    ).value = "Fútbol";
+
+    document.getElementById(
+      "newTeamCurrency"
+    ).value = "ARS";
+
+    document.getElementById(
+      "newTeamCountry"
+    ).value = "Argentina";
+
+    showAdminSuccess(
+      "Equipo creado correctamente."
+    );
+
+    renderCurrentTeam();
+    await loadAdminDashboard();
+
+  }
+
+
+  /* =====================================================
      ADMIN
   ===================================================== */
 
@@ -808,6 +1078,7 @@
         .from("players")
         .select("*")
         .eq("active", true)
+        .eq("team_id", currentTeam.id)
         .order("id");
 
 
@@ -828,7 +1099,8 @@
     } =
       await client
         .from("charges")
-        .select("*");
+        .select("*")
+        .eq("team_id", currentTeam.id);
 
 
     if (chargesError) {
@@ -849,6 +1121,7 @@
       await client
         .from("payments")
         .select("*")
+        .eq("team_id", currentTeam.id)
         .order(
           "created_at",
           {
@@ -1640,7 +1913,7 @@
 
   }
 
-  
+
   /* =====================================================
      REGISTRAR PAGO
   ===================================================== */
@@ -1774,6 +2047,9 @@
         .insert({
           player_id:
             currentPlayer.id,
+
+          team_id:
+            currentPlayer.team_id,
 
           amount:
             amount,
