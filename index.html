@@ -493,10 +493,18 @@
         min="1"
         placeholder="Ej: 30000"
       >
+<label>Monto</label>
 
-      <label>Medio de pago</label>
+<input
+  id="paymentAmount"
+  type="number"
+  min="1"
+  placeholder="Ej: 30000"
+>
 
-      <select id="paymentMethod">
+<label>Medio de pago</label>
+
+<select id="paymentMethod">
 
   <option value="transfer">
     Transferencia bancaria
@@ -515,30 +523,27 @@
   </option>
 
 </select>
-      <label>Fecha del pago</label>
 
-      <input
-        id="paymentDate"
-        type="date"
-      >
+<label>Fecha del pago</label>
 
-      <label>Comprobante</label>
+<input
+  id="paymentDate"
+  type="date"
+>
 
-      <input
-        id="paymentReceipt"
-        type="file"
-        accept="image/*,.pdf"
-      >
+<label>Comprobante</label>
 
-      <button
-        class="btn-primary"
+<input
+  id="paymentReceipt"
+  type="file"
+  accept="image/*,.pdf"
+>
         onclick="registerPayment()"
       >
         Registrar pago
       </button>
 
     </div>
-
 
     <!-- HISTORIAL -->
 
