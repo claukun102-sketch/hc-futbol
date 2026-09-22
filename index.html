@@ -1,4 +1,5 @@
-html lang="es">
+!DOCTYPE html>
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -362,6 +363,16 @@ html lang="es">
         <div id="statPending" class="stat">0</div>
       </div>
 
+      <div class="card">
+        <div class="muted">💚 Saldos a favor</div>
+        <div id="statCredits" class="stat positive">$0</div>
+      </div>
+
+      <div class="card">
+        <div class="muted">🔴 Saldos negativos</div>
+        <div id="statDebts" class="stat negative">$0</div>
+      </div>
+
     </div>
 
 
@@ -588,6 +599,16 @@ html lang="es">
       <div class="card">
         <div class="muted">Pagos pendientes</div>
         <div id="playerPending" class="stat pending">0</div>
+      </div>
+
+      <div class="card">
+        <div class="muted">💚 Saldo a favor</div>
+        <div id="playerCredit" class="stat positive">$0</div>
+      </div>
+
+      <div class="card">
+        <div class="muted">🔴 Debe</div>
+        <div id="playerDebtBox" class="stat negative">$0</div>
       </div>
 
     </div>
@@ -1430,6 +1451,8 @@ html lang="es">
     }
 
     showAdminSuccess("Configuración guardada correctamente.");
+
+    await loadAdminDashboard();
   }
 
 
@@ -1556,6 +1579,33 @@ html lang="es">
           "pending"
       );
 
+    const playerBalances = players.map(player => {
+      const chargesTotal = charges
+        .filter(c => c.player_id === player.id)
+        .reduce((sum, c) => {
+          const amount =
+            c.charge_type === "registration"
+              ? currentRegistrationFee
+              : Number(c.amount || 0);
+          return sum + amount;
+        }, 0);
+
+      const paidTotal = payments
+        .filter(p => p.player_id === player.id && p.status === "approved")
+        .reduce((sum, p) => sum + Number(p.amount || 0), 0);
+
+      return paidTotal - chargesTotal;
+    });
+
+    const totalCredits = playerBalances
+      .filter(v => v > 0)
+      .reduce((sum, v) => sum + v, 0);
+
+    const totalDebts = playerBalances
+      .filter(v => v < 0)
+      .reduce((sum, v) => sum + Math.abs(v), 0);
+
+
 
     document.getElementById(
       "statPlayers"
@@ -1580,6 +1630,13 @@ html lang="es">
     ).textContent =
       pendingPayments.length;
 
+    document.getElementById("statCredits").textContent =
+      money(totalCredits);
+
+    document.getElementById("statDebts").textContent =
+      money(totalDebts);
+
+
 
     renderPendingPayments(
       pendingPayments,
@@ -1590,7 +1647,8 @@ html lang="es">
     renderPlayers(
       players,
       charges,
-      payments
+      payments,
+      currentRegistrationFee
     );
 
   }
@@ -1603,7 +1661,8 @@ html lang="es">
   function renderPlayers(
     players,
     charges,
-    payments
+    payments,
+    currentRegistrationFee
   ) {
 
     const table =
@@ -1618,16 +1677,15 @@ html lang="es">
 
       const playerCharges =
         charges
-          .filter(
-            c =>
-              c.player_id ===
-              player.id
-          )
-          .reduce(
-            (sum, c) =>
-              sum + Number(c.amount),
-            0
-          );
+          .filter(c => c.player_id === player.id)
+          .reduce((sum, c) => {
+            const amount =
+              c.charge_type === "registration"
+                ? currentRegistrationFee
+                : Number(c.amount || 0);
+
+            return sum + amount;
+          }, 0);
 
 
       const playerPaid =
@@ -1976,6 +2034,17 @@ html lang="es">
     currentPlayer =
       player;
 
+    const {
+      data: teamSettings
+    } = await client
+      .from("team_settings")
+      .select("registration_fee")
+      .eq("team_id", player.team_id)
+      .maybeSingle();
+
+    const currentRegistrationFee =
+      Number(teamSettings?.registration_fee || 0);
+
 
     const {
       data: charges,
@@ -2038,11 +2107,14 @@ html lang="es">
 
 
     const totalCharges =
-      charges.reduce(
-        (sum, c) =>
-          sum + Number(c.amount),
-        0
-      );
+      charges.reduce((sum, c) => {
+        const amount =
+          c.charge_type === "registration"
+            ? currentRegistrationFee
+            : Number(c.amount || 0);
+
+        return sum + amount;
+      }, 0);
 
 
     const totalPaid =
@@ -2097,7 +2169,17 @@ html lang="es">
     document.getElementById(
       "playerDebt"
     ).textContent =
-      money(debt);
+      money(Math.max(0, debt));
+
+
+    const playerDifference =
+      totalPaid - totalCharges;
+
+    document.getElementById("playerCredit").textContent =
+      money(Math.max(0, playerDifference));
+
+    document.getElementById("playerDebtBox").textContent =
+      money(Math.max(0, -playerDifference));
 
 
     document.getElementById(
