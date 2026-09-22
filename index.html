@@ -1,10 +1,10 @@
-DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>HC — Compromiso y Responsabilidad</title>
+  <title>Gestión de Equipos Amateur — HC</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -536,7 +536,39 @@ DOCTYPE html>
         <input id="newTeamDescription" type="text" placeholder="Ej.: Equipo amateur">
 
         <label>Deporte</label>
-        <input id="newTeamSport" type="text" value="Fútbol">
+        <select id="newTeamSport" onchange="toggleOtherSportField()">
+          <option value="Fútbol">⚽ Fútbol</option>
+          <option value="Fútbol 5">⚽ Fútbol 5</option>
+          <option value="Fútbol 7">⚽ Fútbol 7</option>
+          <option value="Fútbol 8">⚽ Fútbol 8</option>
+          <option value="Fútbol 9">⚽ Fútbol 9</option>
+          <option value="Fútbol 11">⚽ Fútbol 11</option>
+          <option value="Básquet">🏀 Básquet</option>
+          <option value="Vóley">🏐 Vóley</option>
+          <option value="Tenis">🎾 Tenis</option>
+          <option value="Tenis de mesa">🏓 Tenis de mesa</option>
+          <option value="Rugby">🏉 Rugby</option>
+          <option value="Hockey">🏑 Hockey</option>
+          <option value="Softbol">🥎 Softbol</option>
+          <option value="Béisbol">⚾ Béisbol</option>
+          <option value="Running">🏃 Running</option>
+          <option value="Ciclismo">🚴 Ciclismo</option>
+          <option value="Natación">🏊 Natación</option>
+          <option value="Handball">🤾 Handball</option>
+          <option value="Judo">🥋 Judo</option>
+          <option value="Boxeo">🥊 Boxeo</option>
+          <option value="Karate">🥋 Karate</option>
+          <option value="Bádminton">🏸 Bádminton</option>
+          <option value="Tiro con arco">🏹 Tiro con arco</option>
+          <option value="CrossFit / entrenamiento funcional">🏋️ CrossFit / entrenamiento funcional</option>
+          <option value="Gimnasia">🤸 Gimnasia</option>
+          <option value="Patín">🛼 Patín</option>
+          <option value="Surf">🏄 Surf</option>
+          <option value="Beach vóley">🏖️ Beach vóley</option>
+          <option value="Fútbol playa">🏖️ Fútbol playa</option>
+          <option value="Otro">➕ Otro</option>
+        </select>
+        <input id="newTeamSportOther" type="text" placeholder="Escribí el deporte" style="display:none;">
 
         <label>Moneda</label>
         <select id="newTeamCurrency">
@@ -1248,6 +1280,23 @@ DOCTYPE html>
   }
 
 
+  function toggleOtherSportField() {
+
+    const select = document.getElementById("newTeamSport");
+    const other = document.getElementById("newTeamSportOther");
+
+    if (!select || !other) return;
+
+    const isOther = select.value === "Otro";
+    other.style.display = isOther ? "block" : "none";
+
+    if (!isOther) {
+      other.value = "";
+    }
+
+  }
+
+
   async function createTeam(event) {
 
     event.preventDefault();
@@ -1258,8 +1307,22 @@ DOCTYPE html>
     const description =
       document.getElementById("newTeamDescription").value.trim();
 
-    const sport =
-      document.getElementById("newTeamSport").value.trim();
+    const sportSelect =
+      document.getElementById("newTeamSport");
+
+    const sportOther =
+      document.getElementById("newTeamSportOther");
+
+    let sport =
+      sportSelect ? sportSelect.value.trim() : "Fútbol";
+
+    if (sport === "Otro") {
+      sport = sportOther ? sportOther.value.trim() : "";
+      if (!sport) {
+        showAdminError("Escribí el nombre del deporte.");
+        return;
+      }
+    }
 
     const currency =
       document.getElementById("newTeamCurrency").value;
@@ -1341,6 +1404,14 @@ DOCTYPE html>
     document.getElementById(
       "newTeamSport"
     ).value = "Fútbol";
+
+    document.getElementById(
+      "newTeamSportOther"
+    ).value = "";
+
+    document.getElementById(
+      "newTeamSportOther"
+    ).style.display = "none";
 
     document.getElementById(
       "newTeamCurrency"
