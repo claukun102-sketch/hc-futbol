@@ -2084,7 +2084,14 @@ async function editPlayerDni(playerId, currentDni) {
     ).textContent =
       "Hola, " +
       player.name;
+document.getElementById("playerDataName").textContent =
+  player.name || "-";
 
+document.getElementById("playerDataNickname").textContent =
+  player.nickname || "-";
+
+document.getElementById("playerDataDni").textContent =
+  player.dni || "-";
 
     document.getElementById(
       "playerCharges"
