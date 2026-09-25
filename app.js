@@ -1635,29 +1635,55 @@ async function editPlayerDni(playerId, currentDni) {
 
 
       row.innerHTML = `
-        <td class="player-name-cell" title="Doble clic para modificar" ondblclick="editPlayerName('${player.id}', '${escapeHtml(player.name).replace(/'/g, "\\'")}')">
-          ${escapeHtml(player.name)}
-          ${player.nickname ? `<span class="muted"> (${escapeHtml(player.nickname)})</span>` : ""}
-        </td>
-        <td
-  class="player-name-cell"
-  title="Doble clic para modificar"
-  ondblclick="editPlayerDni('${player.id}', '${escapeHtml(player.dni || "").replace(/'/g, "\\'")}')"
->
-  ${escapeHtml(player.dni || "-")}
-</td>
-        <td>${money(playerCharges)}</td>
-        <td class="positive">${money(playerPaid)}</td>
-        <td>${balanceText}</td>
-        <td>
-          <div class="player-actions">
-            <button class="btn-danger-small" type="button" onclick="removePlayer('${player.id}', '${escapeHtml(player.name).replace(/'/g, "\\'")}')">
-              Quitar
-            </button>
-          </div>
-        </td>
-      `;
+  <td>
+    ${escapeHtml(player.name)}
+    ${player.nickname ? `<span class="muted"> (${escapeHtml(player.nickname)})</span>` : ""}
+  </td>
 
+  <td>
+    ${escapeHtml(player.dni || "-")}
+  </td>
+
+  <td>${money(playerCharges)}</td>
+
+  <td class="positive">
+    ${money(playerPaid)}
+  </td>
+
+  <td>
+    ${balanceText}
+  </td>
+
+  <td>
+    <div class="player-actions">
+
+      <button
+        class="btn-secondary"
+        type="button"
+        onclick="editPlayerData(
+          '${player.id}',
+          '${escapeHtml(player.name).replace(/'/g, "\\'")}',
+          '${escapeHtml(player.nickname || "").replace(/'/g, "\\'")}',
+          '${escapeHtml(player.dni || "").replace(/'/g, "\\'")}'
+        )"
+      >
+        ✏️ Editar
+      </button>
+
+      <button
+        class="btn-danger-small"
+        type="button"
+        onclick="removePlayer(
+          '${player.id}',
+          '${escapeHtml(player.name).replace(/'/g, "\\'")}'
+        )"
+      >
+        Quitar
+      </button>
+
+    </div>
+  </td>
+`;
 
       table.appendChild(row);
 
