@@ -1101,12 +1101,13 @@ async function loadMatches() {
           >
 
            ${
+  ${
   published
     ? `
       <button
         class="btn-secondary"
         type="button"
-        onclick="unpublishMatch('${match.id}')"
+        onclick="setMatchPublished('${match.id}', false)"
       >
         ↩️ Despublicar
       </button>
@@ -1115,7 +1116,7 @@ async function loadMatches() {
       <button
         class="btn-success"
         type="button"
-        onclick="publishMatch('${match.id}')"
+        onclick="setMatchPublished('${match.id}', true)"
       >
         📢 Publicar
       </button>
