@@ -942,7 +942,439 @@ await loadApplication();
     await loadChargeConcepts();
   }
 
+/* =====================================================
+   PARTIDOS
+===================================================== */
 
+function toggleMatchForm() {
+
+  const form = document.getElementById("matchForm");
+
+  if (!form) return;
+
+  const opening =
+    form.style.display === "none" ||
+    !form.style.display;
+
+  form.style.display =
+    opening ? "grid" : "none";
+
+}
+
+
+async function loadMatches() {
+
+  if (!currentTeam) return;
+
+  const container =
+    document.getElementById("matchesList");
+
+  if (!container) return;
+
+  container.innerHTML = "Cargando...";
+
+
+  const {
+    data: matches,
+    error
+  } = await client
+    .from("matches")
+    .select("*")
+    .eq("team_id", currentTeam.id)
+    .order("match_date", {
+      ascending: true
+    })
+    .order("match_time", {
+      ascending: true
+    });
+
+
+  if (error) {
+
+    container.innerHTML =
+      `<p class="muted">
+        No pudimos cargar los partidos.
+      </p>`;
+
+    showAdminError(
+      "No pudimos cargar los partidos: " +
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  if (!matches || !matches.length) {
+
+    container.innerHTML =
+      `<p class="muted">
+        Todavía no hay partidos cargados.
+      </p>`;
+
+    return;
+
+  }
+
+
+  container.innerHTML =
+    matches.map(match => {
+
+      const published =
+        !!match.published_at;
+
+      return `
+        <div class="payment" style="margin-bottom:12px;">
+
+          <div style="display:flex; justify-content:space-between; gap:15px; flex-wrap:wrap;">
+
+            <div>
+
+              <strong>
+                ⚽ ${escapeHtml(
+                  match.opponent ||
+                  "Partido"
+                )}
+              </strong>
+
+              <p style="margin:6px 0;">
+                📅 ${formatDate(match.match_date)}
+                ${match.match_time
+                  ? ` · ⏰ ${escapeHtml(match.match_time.substring(0,5))}`
+                  : ""
+                }
+              </p>
+
+              <p class="muted" style="margin:4px 0;">
+                📍 ${escapeHtml(
+                  match.venue ||
+                  "Lugar a confirmar"
+                )}
+              </p>
+
+              <p class="muted" style="margin:4px 0;">
+                💰 ${money(match.fee_per_player)}
+              </p>
+
+              ${
+                match.notes
+                  ? `
+                    <p class="muted" style="margin:4px 0;">
+                      📝 ${escapeHtml(match.notes)}
+                    </p>
+                  `
+                  : ""
+              }
+
+            </div>
+
+
+            <div style="text-align:right;">
+
+              ${
+                published
+                  ? `
+                    <span class="status status-approved">
+                      Publicado
+                    </span>
+                  `
+                  : `
+                    <span class="status status-pending">
+                      Borrador
+                    </span>
+                  `
+              }
+
+            </div>
+
+          </div>
+
+
+          <div
+            style="
+              display:flex;
+              gap:8px;
+              flex-wrap:wrap;
+              margin-top:12px;
+            "
+          >
+
+            ${
+              !published
+                ? `
+                  <button
+                    class="btn-success"
+                    type="button"
+                    onclick="publishMatch('${match.id}')"
+                  >
+                    📢 Publicar
+                  </button>
+                `
+                : ""
+            }
+
+            <button
+              class="btn-danger"
+              type="button"
+              onclick="deleteMatch('${match.id}')"
+            >
+              🗑️ Eliminar
+            </button>
+
+          </div>
+
+        </div>
+      `;
+
+    }).join("");
+
+}
+
+
+async function createMatch() {
+
+  if (!currentTeam) {
+
+    showAdminError(
+      "No hay un equipo seleccionado."
+    );
+
+    return;
+
+  }
+
+
+  const matchDate =
+    document
+      .getElementById("newMatchDate")
+      .value;
+
+  const matchTime =
+    document
+      .getElementById("newMatchTime")
+      .value;
+
+  const opponent =
+    document
+      .getElementById("newMatchOpponent")
+      .value
+      .trim();
+
+  const venue =
+    document
+      .getElementById("newMatchVenue")
+      .value
+      .trim();
+
+  const fee =
+    Number(
+      document
+        .getElementById("newMatchFee")
+        .value
+    );
+
+  const notes =
+    document
+      .getElementById("newMatchNotes")
+      .value
+      .trim();
+
+
+  if (!matchDate) {
+
+    showAdminError(
+      "Seleccioná la fecha del partido."
+    );
+
+    return;
+
+  }
+
+
+  if (fee < 0) {
+
+    showAdminError(
+      "El valor por jugador no puede ser negativo."
+    );
+
+    return;
+
+  }
+
+
+  const {
+    error
+  } = await client
+    .from("matches")
+    .insert({
+
+      team_id:
+        currentTeam.id,
+
+      match_date:
+        matchDate,
+
+      match_time:
+        matchTime || null,
+
+      opponent:
+        opponent || null,
+
+      venue:
+        venue || null,
+
+      fee_per_player:
+        fee || 0,
+
+      notes:
+        notes || null,
+
+      published_at:
+        null
+
+    });
+
+
+  if (error) {
+
+    showAdminError(
+      "No se pudo crear el partido: " +
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  document
+    .getElementById("newMatchDate")
+    .value = "";
+
+  document
+    .getElementById("newMatchTime")
+    .value = "";
+
+  document
+    .getElementById("newMatchOpponent")
+    .value = "";
+
+  document
+    .getElementById("newMatchVenue")
+    .value = "";
+
+  document
+    .getElementById("newMatchFee")
+    .value = "";
+
+  document
+    .getElementById("newMatchNotes")
+    .value = "";
+
+
+  document
+    .getElementById("matchForm")
+    .style.display = "none";
+
+
+  showAdminSuccess(
+    "Partido creado correctamente."
+  );
+
+
+  await loadMatches();
+
+}
+
+
+async function publishMatch(matchId) {
+
+  if (!currentTeam) return;
+
+  const confirmed =
+    confirm(
+      "¿Querés publicar este partido para los jugadores del equipo?"
+    );
+
+  if (!confirmed) return;
+
+
+  const {
+    error
+  } = await client
+    .from("matches")
+    .update({
+      published_at:
+        new Date().toISOString()
+    })
+    .eq("id", matchId)
+    .eq("team_id", currentTeam.id);
+
+
+  if (error) {
+
+    showAdminError(
+      "No se pudo publicar el partido: " +
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  showAdminSuccess(
+    "Partido publicado correctamente."
+  );
+
+
+  await loadMatches();
+
+}
+
+
+async function deleteMatch(matchId) {
+
+  if (!currentTeam) return;
+
+  const confirmed =
+    confirm(
+      "¿Querés eliminar este partido?"
+    );
+
+  if (!confirmed) return;
+
+
+  const {
+    error
+  } = await client
+    .from("matches")
+    .delete()
+    .eq("id", matchId)
+    .eq("team_id", currentTeam.id);
+
+
+  if (error) {
+
+    showAdminError(
+      "No se pudo eliminar el partido: " +
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  showAdminSuccess(
+    "Partido eliminado correctamente."
+  );
+
+
+  await loadMatches();
+
+}
   async function loadArchivedTeams() {
 
     const container =
