@@ -497,7 +497,8 @@
     }
 
     // El RPC crea también player_accounts y team_members para el creador.
-    await loadApplication();
+onboardingPage.classList.add("hidden");
+await loadApplication();
 
   }
 
