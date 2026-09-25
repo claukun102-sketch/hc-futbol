@@ -1432,7 +1432,7 @@ await loadApplication();
 
     const name = document.getElementById("newPlayerName").value.trim();
     const nickname = document.getElementById("newPlayerNickname").value.trim();
-
+    const dni = document.getElementById("newPlayerDni").value.trim();
     if (!name) {
       showAdminError("Ingresá el nombre del jugador.");
       return;
