@@ -2653,7 +2653,7 @@ document.getElementById("playerDataDni").textContent =
       charges
     );
 
-
+    await loadPlayerMatches();
     renderPlayerPayments(
       payments
     );
