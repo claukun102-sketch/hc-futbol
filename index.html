@@ -3951,6 +3951,18 @@
 
   async function checkExistingSession() {
 
+    const hash = window.location.hash || "";
+    const search = window.location.search || "";
+
+    const isRecovery =
+      /(?:^|[&#?])type=recovery(?:&|$)/i.test(hash) ||
+      /(?:^|[&?])type=recovery(?:&|$)/i.test(search);
+
+    if (isRecovery) {
+      showPasswordReset();
+      return;
+    }
+
     const {
       data: {
         session
