@@ -1341,7 +1341,49 @@ async function publishMatch(matchId) {
 
 }
 
+async function unpublishMatch(matchId) {
 
+  if (!currentTeam) return;
+
+  const confirmed =
+    confirm(
+      "¿Querés despublicar este partido? Dejará de estar visible para los jugadores."
+    );
+
+  if (!confirmed) return;
+
+
+  const {
+    error
+  } = await client
+    .from("matches")
+    .update({
+      published_at: null
+    })
+    .eq("id", matchId)
+    .eq("team_id", currentTeam.id);
+
+
+  if (error) {
+
+    showAdminError(
+      "No se pudo despublicar el partido: " +
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  showAdminSuccess(
+    "Partido despublicado correctamente."
+  );
+
+
+  await loadMatches();
+
+}
 async function deleteMatch(matchId) {
 
   if (!currentTeam) return;
