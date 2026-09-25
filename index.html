@@ -4015,29 +4015,28 @@
   ===================================================== */
 
   async function checkExistingSession() {
-    // La URL /?flow=password-recovery es explícita y no se pierde cuando
-    // Supabase limpia los tokens del hash.
-    if (recoveryMode) {
+
+    // La página siempre arranca en login.
+    // La sesión persistente no debe abrir onboarding automáticamente.
+    recoveryMode = false;
+    showLogin();
+
+    // No cargamos automáticamente la aplicación.
+    // El usuario entra mediante el botón "Ingresar".
+
+  }
+
+
+  client.auth.onAuthStateChange((event) => {
+
+    if (event === "PASSWORD_RECOVERY") {
+      recoveryMode = true;
       showPasswordReset();
       return;
     }
 
-    const { data: { session } } = await client.auth.getSession();
-    if (recoveryMode) {
-      showPasswordReset();
-    } else if (session) {
-      await loadApplication();
-    } else {
-      showLogin();
-    }
-  }
-
-  client.auth.onAuthStateChange((event) => {
-    if (event === "PASSWORD_RECOVERY") {
-      recoveryMode = true;
-      showPasswordReset();
-    }
   });
+
 
   checkExistingSession();
 
