@@ -577,15 +577,6 @@
      NUEVA CONTRASEÑA
 ===================================================== -->
 
-<div id="onboardingPage" class="hidden">
-  <div class="auth-card">
-    <h2>Bienvenido a Deportes Amateur</h2>
-    <p>Tu cuenta fue creada correctamente.</p>
-    <p>Ahora podemos configurar tu equipo.</p>
-    <button type="button" onclick="showLogin()">Volver al inicio</button>
-  </div>
-</div>
-
 <div id="passwordResetPage" class="hidden">
 
   <div class="login-box">
@@ -618,6 +609,77 @@
       onclick="updatePassword()"
     >
       Guardar nueva contraseña
+    </button>
+
+  </div>
+
+</div>
+
+<!-- =====================================================
+     PRIMER EQUIPO
+===================================================== -->
+
+<div id="onboardingPage" class="hidden">
+
+  <div class="login-box">
+
+    <h1>🏆 Configurá tu equipo</h1>
+
+    <p class="muted">
+      Tu cuenta está lista. Ahora creá tu primer equipo para comenzar a usar Deportes Amateur.
+    </p>
+
+    <div id="onboardingError" class="error hidden"></div>
+
+    <label>Nombre del equipo</label>
+    <input
+      id="firstTeamName"
+      type="text"
+      placeholder="Ej.: Los Pumas"
+      required
+    >
+
+    <label>Descripción</label>
+    <input
+      id="firstTeamDescription"
+      type="text"
+      placeholder="Ej.: Equipo amateur"
+    >
+
+    <label>Deporte</label>
+    <select id="firstTeamSport"></select>
+
+    <label>Moneda</label>
+    <select id="firstTeamCurrency">
+      <option value="ARS">ARS — Peso argentino</option>
+      <option value="USD">USD — Dólar estadounidense</option>
+      <option value="EUR">EUR — Euro</option>
+      <option value="BRL">BRL — Real brasileño</option>
+    </select>
+
+    <label>País</label>
+    <input
+      id="firstTeamCountry"
+      type="text"
+      value="Argentina"
+    >
+
+    <button
+      id="firstTeamButton"
+      class="btn-primary"
+      type="button"
+      onclick="createFirstTeam()"
+    >
+      Crear mi equipo
+    </button>
+
+    <button
+      type="button"
+      class="btn-secondary"
+      style="width:100%; margin-top:10px;"
+      onclick="logout()"
+    >
+      Cerrar sesión
     </button>
 
   </div>
@@ -1353,11 +1415,6 @@
 
   async function loadApplication() {
 
-    if (recoveryMode) {
-      showPasswordReset();
-      return;
-    }
-
     const {
       data: {
         user
@@ -1401,18 +1458,9 @@
 
     if (accountError || !account) {
 
-      if (recoveryMode) {
-        showPasswordReset();
-        return;
-      }
-
-      // Usuario autenticado pero todavía sin player_accounts.
-      // No mostrar un error de login: iniciar onboarding.
-      if (typeof showOnboarding === "function") {
-        showOnboarding();
-      } else {
-        showLogin();
-      }
+      // Usuario autenticado pero todavía sin equipo.
+      // Mostrar el onboarding para que pueda crear su primer equipo.
+      showOnboarding();
 
       return;
 
@@ -1594,6 +1642,64 @@
     if (!isOther) {
       other.value = "";
     }
+
+  }
+
+
+  async function createFirstTeam() {
+
+    const name =
+      document.getElementById("firstTeamName").value.trim();
+
+    const description =
+      document.getElementById("firstTeamDescription").value.trim();
+
+    const sport =
+      document.getElementById("firstTeamSport").value.trim();
+
+    const currency =
+      document.getElementById("firstTeamCurrency").value;
+
+    const country =
+      document.getElementById("firstTeamCountry").value.trim();
+
+    const errorBox =
+      document.getElementById("onboardingError");
+
+    const button =
+      document.getElementById("firstTeamButton");
+
+    errorBox.classList.add("hidden");
+
+    if (!name) {
+      errorBox.textContent = "El nombre del equipo es obligatorio.";
+      errorBox.classList.remove("hidden");
+      return;
+    }
+
+    button.disabled = true;
+    button.textContent = "Creando equipo...";
+
+    const { data: teamId, error } =
+      await client.rpc("create_team", {
+        p_name: name,
+        p_description: description,
+        p_sport: sport || "Fútbol",
+        p_currency: currency || "ARS",
+        p_country: country || "Argentina"
+      });
+
+    if (error) {
+      button.disabled = false;
+      button.textContent = "Crear mi equipo";
+      errorBox.textContent =
+        "No se pudo crear el equipo: " + error.message;
+      errorBox.classList.remove("hidden");
+      return;
+    }
+
+    // El RPC crea también player_accounts y team_members para el creador.
+    await loadApplication();
 
   }
 
@@ -3580,48 +3686,57 @@
   ===================================================== */
 
   function showLogin() {
-    const onboardingPage = document.getElementById("onboardingPage");
-    if (onboardingPage) onboardingPage.classList.add("hidden");
 
+    loginPage.classList.remove("hidden");
 
-    loginPage.classList.remove(
-      "hidden"
-    );
-
-    registerPage.classList.add(
-      "hidden"
-    );
-
-    adminPage.classList.add(
-      "hidden"
-    );
-
-    playerPage.classList.add(
-      "hidden"
-    );
+    registerPage.classList.add("hidden");
+    passwordRecoveryPage.classList.add("hidden");
+    passwordResetPage.classList.add("hidden");
+    onboardingPage.classList.add("hidden");
+    adminPage.classList.add("hidden");
+    playerPage.classList.add("hidden");
 
   }
 
 
   function showRegister() {
 
-    loginPage.classList.add(
-      "hidden"
-    );
-
-    registerPage.classList.remove(
-      "hidden"
-    );
-
-    adminPage.classList.add(
-      "hidden"
-    );
-
-    playerPage.classList.add(
-      "hidden"
-    );
+    loginPage.classList.add("hidden");
+    registerPage.classList.remove("hidden");
+    passwordRecoveryPage.classList.add("hidden");
+    passwordResetPage.classList.add("hidden");
+    onboardingPage.classList.add("hidden");
+    adminPage.classList.add("hidden");
+    playerPage.classList.add("hidden");
 
     hideRegisterMessages();
+
+  }
+
+
+  function showOnboarding() {
+
+    loginPage.classList.add("hidden");
+    registerPage.classList.add("hidden");
+    passwordRecoveryPage.classList.add("hidden");
+    passwordResetPage.classList.add("hidden");
+    adminPage.classList.add("hidden");
+    playerPage.classList.add("hidden");
+    onboardingPage.classList.remove("hidden");
+
+    const source = document.getElementById("newTeamSport");
+    const target = document.getElementById("firstTeamSport");
+
+    if (source && target && !target.options.length) {
+      target.innerHTML = source.innerHTML;
+      target.value = "Fútbol";
+    }
+
+    document.getElementById("onboardingError").classList.add("hidden");
+
+    setTimeout(() => {
+      document.getElementById("firstTeamName")?.focus();
+    }, 0);
 
   }
 
@@ -3850,33 +3965,12 @@
      RECUPERACIÓN DE CONTRASEÑA
   ===================================================== */
 
-  // Marcador persistente en la URL: Supabase puede consumir y borrar el hash
-  // antes de que la aplicación reciba PASSWORD_RECOVERY.
-  let recoveryMode =
-    new URLSearchParams(window.location.search).get("flow") === "password-recovery" ||
-    /(?:^|[&#?])type=recovery(?:&|$)/i.test(window.location.hash);
-
-
-  function showOnboarding() {
-
-    document.getElementById("loginPage").classList.add("hidden");
-    document.getElementById("passwordRecoveryPage").classList.add("hidden");
-    document.getElementById("passwordResetPage").classList.add("hidden");
-    document.getElementById("registerPage").classList.add("hidden");
-
-    const page = document.getElementById("onboardingPage");
-    if (page) {
-      page.classList.remove("hidden");
-    }
-
-  }
-
-
   function showPasswordRecovery() {
 
     document.getElementById("loginPage").classList.add("hidden");
     document.getElementById("passwordRecoveryPage").classList.remove("hidden");
     document.getElementById("passwordResetPage").classList.add("hidden");
+    document.getElementById("onboardingPage").classList.add("hidden");
 
     document.getElementById("recoveryEmail").value = "";
     document.getElementById("recoveryError").classList.add("hidden");
@@ -3907,7 +4001,7 @@
     const { error } = await client.auth.resetPasswordForEmail(
       email,
       {
-        redirectTo: window.location.origin + "/?flow=password-recovery"
+        redirectTo: window.location.origin
       }
     );
 
@@ -3921,126 +4015,3 @@
     successBox.textContent =
       "Te enviamos un enlace para restablecer tu contraseña. Revisá tu correo.";
     successBox.classList.remove("hidden");
-
-  }
-
-
-  function showPasswordReset() {
-
-    recoveryMode = true;
-
-    document.getElementById("loginPage").classList.add("hidden");
-    const onboardingPage = document.getElementById("onboardingPage");
-    if (onboardingPage) onboardingPage.classList.add("hidden");
-    document.getElementById("passwordRecoveryPage").classList.add("hidden");
-    document.getElementById("passwordResetPage").classList.remove("hidden");
-    document.getElementById("registerPage").classList.add("hidden");
-
-    document.getElementById("resetError").classList.add("hidden");
-    document.getElementById("resetSuccess").classList.add("hidden");
-
-  }
-
-
-  async function updatePassword() {
-
-    const password =
-      document.getElementById("newPassword").value;
-
-    const confirmation =
-      document.getElementById("newPasswordConfirm").value;
-
-    const errorBox =
-      document.getElementById("resetError");
-
-    const successBox =
-      document.getElementById("resetSuccess");
-
-    errorBox.classList.add("hidden");
-    successBox.classList.add("hidden");
-
-    if (password.length < 6) {
-      errorBox.textContent =
-        "La contraseña debe tener al menos 6 caracteres.";
-      errorBox.classList.remove("hidden");
-      return;
-    }
-
-    if (password !== confirmation) {
-      errorBox.textContent =
-        "Las contraseñas no coinciden.";
-      errorBox.classList.remove("hidden");
-      return;
-    }
-
-    const { error } =
-      await client.auth.updateUser({
-        password: password
-      });
-
-    if (error) {
-      errorBox.textContent =
-        "No se pudo cambiar la contraseña: " + error.message;
-      errorBox.classList.remove("hidden");
-      return;
-    }
-
-    successBox.textContent =
-      "Contraseña actualizada correctamente.";
-
-    successBox.classList.remove("hidden");
-
-    setTimeout(async () => {
-
-      // Salimos completamente del modo recuperación.
-      recoveryMode = false;
-
-      // Cerramos la sesión creada por el enlace de recuperación.
-      await client.auth.signOut();
-
-      // Limpiamos los campos.
-      document.getElementById("newPassword").value = "";
-      document.getElementById("newPasswordConfirm").value = "";
-
-      // Volvemos al login normal.
-      showLogin();
-
-    }, 1500);
-
-  }
-
-
-  /* =====================================================
-     SESIÓN EXISTENTE
-  ===================================================== */
-
-  async function checkExistingSession() {
-
-    // La página siempre arranca en login.
-    // La sesión persistente no debe abrir onboarding automáticamente.
-    recoveryMode = false;
-    showLogin();
-
-    // No cargamos automáticamente la aplicación.
-    // El usuario entra mediante el botón "Ingresar".
-
-  }
-
-
-  client.auth.onAuthStateChange((event) => {
-
-    if (event === "PASSWORD_RECOVERY") {
-      recoveryMode = true;
-      showPasswordReset();
-      return;
-    }
-
-  });
-
-
-  checkExistingSession();
-
-</script>
-
-</body>
-</html>
