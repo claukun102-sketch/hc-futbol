@@ -442,10 +442,178 @@
       Ingresar
     </button>
 
+    <button
+      id="forgotPasswordButton"
+      class="btn-secondary"
+      style="width:100%; margin-top:10px;"
+      onclick="showPasswordRecovery()"
+    >
+      ¿Olvidaste tu contraseña?
+    </button>
+
+    <div style="text-align:center; margin-top:18px;">
+      <span class="muted">¿No tenés una cuenta?</span>
+      <button
+        type="button"
+        class="btn-secondary"
+        style="margin-top:10px; width:100%;"
+        onclick="showRegister()"
+      >
+        Crear cuenta
+      </button>
+    </div>
+
   </div>
 
 </div>
 
+<!-- =====================================================
+     REGISTRO
+===================================================== -->
+
+<div id="registerPage" class="hidden">
+
+  <div class="login-box">
+
+    <h1>🏆 Crear cuenta</h1>
+
+    <p class="muted">
+      Registrate en Deportes Amateur para gestionar tus equipos.
+    </p>
+
+    <div id="registerError" class="error hidden"></div>
+    <div id="registerSuccess" class="success hidden"></div>
+
+    <label>Email</label>
+    <input
+      id="registerEmail"
+      type="email"
+      placeholder="tu@email.com"
+      autocomplete="email"
+    >
+
+    <label>Contraseña</label>
+    <input
+      id="registerPassword"
+      type="password"
+      placeholder="Mínimo 6 caracteres"
+      autocomplete="new-password"
+    >
+
+    <label>Repetir contraseña</label>
+    <input
+      id="registerPasswordConfirm"
+      type="password"
+      placeholder="Repetí tu contraseña"
+      autocomplete="new-password"
+    >
+
+    <button
+      id="registerButton"
+      class="btn-primary"
+      onclick="handleRegister()"
+    >
+      Crear cuenta
+    </button>
+
+    <button
+      type="button"
+      class="btn-secondary"
+      style="width:100%; margin-top:10px;"
+      onclick="showLogin()"
+    >
+      Volver a ingresar
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     RECUPERAR CONTRASEÑA
+===================================================== -->
+
+<div id="passwordRecoveryPage" class="hidden">
+
+  <div class="login-box">
+
+    <h1>🏆 Deportes Amateur</h1>
+
+    <p class="muted">
+      Recuperar contraseña
+    </p>
+
+    <div id="recoveryError" class="error hidden"></div>
+    <div id="recoverySuccess" class="success hidden"></div>
+
+    <label>Email</label>
+    <input
+      id="recoveryEmail"
+      type="email"
+      placeholder="tu@email.com"
+    >
+
+    <button
+      class="btn-primary"
+      onclick="sendPasswordRecovery()"
+    >
+      Enviar enlace
+    </button>
+
+    <button
+      class="btn-secondary"
+      style="width:100%; margin-top:10px;"
+      onclick="showLogin()"
+    >
+      Volver al inicio de sesión
+    </button>
+
+  </div>
+
+</div>
+
+<!-- =====================================================
+     NUEVA CONTRASEÑA
+===================================================== -->
+
+<div id="passwordResetPage" class="hidden">
+
+  <div class="login-box">
+
+    <h1>🏆 Deportes Amateur</h1>
+
+    <p class="muted">
+      Crear nueva contraseña
+    </p>
+
+    <div id="resetError" class="error hidden"></div>
+    <div id="resetSuccess" class="success hidden"></div>
+
+    <label>Nueva contraseña</label>
+    <input
+      id="newPassword"
+      type="password"
+      placeholder="Nueva contraseña"
+    >
+
+    <label>Repetir contraseña</label>
+    <input
+      id="newPasswordConfirm"
+      type="password"
+      placeholder="Repetir contraseña"
+    >
+
+    <button
+      class="btn-primary"
+      onclick="updatePassword()"
+    >
+      Guardar nueva contraseña
+    </button>
+
+  </div>
+
+</div>
 
 <!-- =====================================================
      ADMIN
@@ -1090,6 +1258,82 @@
       data.user;
 
     await loadApplication();
+
+  }
+
+
+  async function handleRegister() {
+
+    const email =
+      document.getElementById("registerEmail")
+        .value
+        .trim();
+
+    const password =
+      document.getElementById("registerPassword")
+        .value;
+
+    const passwordConfirm =
+      document.getElementById("registerPasswordConfirm")
+        .value;
+
+    hideRegisterMessages();
+
+    if (!email || !password || !passwordConfirm) {
+      showRegisterError(
+        "Completá email, contraseña y confirmación de contraseña."
+      );
+      return;
+    }
+
+    if (password.length < 6) {
+      showRegisterError(
+        "La contraseña debe tener al menos 6 caracteres."
+      );
+      return;
+    }
+
+    if (password !== passwordConfirm) {
+      showRegisterError(
+        "Las contraseñas no coinciden."
+      );
+      return;
+    }
+
+    const button =
+      document.getElementById("registerButton");
+
+    button.disabled = true;
+    button.textContent = "Creando cuenta...";
+
+    const { data, error } =
+      await client.auth.signUp({
+        email,
+        password
+      });
+
+    button.disabled = false;
+    button.textContent = "Crear cuenta";
+
+    if (error) {
+      showRegisterError(
+        error.message
+      );
+      return;
+    }
+
+    if (data.session) {
+      currentUser = data.user;
+      await loadApplication();
+      return;
+    }
+
+    showRegisterSuccess(
+      "Cuenta creada correctamente. Revisá tu email y confirmá tu cuenta antes de ingresar."
+    );
+
+    document.getElementById("registerPassword").value = "";
+    document.getElementById("registerPasswordConfirm").value = "";
 
   }
 
@@ -3318,6 +3562,10 @@
       "hidden"
     );
 
+    registerPage.classList.add(
+      "hidden"
+    );
+
     adminPage.classList.add(
       "hidden"
     );
@@ -3325,6 +3573,62 @@
     playerPage.classList.add(
       "hidden"
     );
+
+  }
+
+
+  function showRegister() {
+
+    loginPage.classList.add(
+      "hidden"
+    );
+
+    registerPage.classList.remove(
+      "hidden"
+    );
+
+    adminPage.classList.add(
+      "hidden"
+    );
+
+    playerPage.classList.add(
+      "hidden"
+    );
+
+    hideRegisterMessages();
+
+  }
+
+
+  function showRegisterError(message) {
+
+    const box =
+      document.getElementById("registerError");
+
+    box.textContent = message;
+    box.classList.remove("hidden");
+
+  }
+
+
+  function showRegisterSuccess(message) {
+
+    const box =
+      document.getElementById("registerSuccess");
+
+    box.textContent = message;
+    box.classList.remove("hidden");
+
+  }
+
+
+  function hideRegisterMessages() {
+
+    document.getElementById("registerError")
+      .classList.add("hidden");
+
+    document.getElementById("registerSuccess")
+      .classList.add("hidden");
 
   }
 
@@ -3517,6 +3821,131 @@
 
 
   /* =====================================================
+     RECUPERACIÓN DE CONTRASEÑA
+  ===================================================== */
+
+  function showPasswordRecovery() {
+
+    document.getElementById("loginPage").classList.add("hidden");
+    document.getElementById("passwordRecoveryPage").classList.remove("hidden");
+    document.getElementById("passwordResetPage").classList.add("hidden");
+
+    document.getElementById("recoveryEmail").value = "";
+    document.getElementById("recoveryError").classList.add("hidden");
+    document.getElementById("recoverySuccess").classList.add("hidden");
+
+  }
+
+
+  async function sendPasswordRecovery() {
+
+    const email = document
+      .getElementById("recoveryEmail")
+      .value
+      .trim();
+
+    const errorBox = document.getElementById("recoveryError");
+    const successBox = document.getElementById("recoverySuccess");
+
+    errorBox.classList.add("hidden");
+    successBox.classList.add("hidden");
+
+    if (!email) {
+      errorBox.textContent = "Ingresá tu email.";
+      errorBox.classList.remove("hidden");
+      return;
+    }
+
+    const { error } = await client.auth.resetPasswordForEmail(
+      email,
+      {
+        redirectTo: window.location.origin
+      }
+    );
+
+    if (error) {
+      errorBox.textContent =
+        "No se pudo enviar el enlace: " + error.message;
+      errorBox.classList.remove("hidden");
+      return;
+    }
+
+    successBox.textContent =
+      "Te enviamos un enlace para restablecer tu contraseña. Revisá tu correo.";
+    successBox.classList.remove("hidden");
+
+  }
+
+
+  function showPasswordReset() {
+
+    document.getElementById("loginPage").classList.add("hidden");
+    document.getElementById("passwordRecoveryPage").classList.add("hidden");
+    document.getElementById("passwordResetPage").classList.remove("hidden");
+
+    document.getElementById("resetError").classList.add("hidden");
+    document.getElementById("resetSuccess").classList.add("hidden");
+
+  }
+
+
+  async function updatePassword() {
+
+    const password =
+      document.getElementById("newPassword").value;
+
+    const confirmation =
+      document.getElementById("newPasswordConfirm").value;
+
+    const errorBox =
+      document.getElementById("resetError");
+
+    const successBox =
+      document.getElementById("resetSuccess");
+
+    errorBox.classList.add("hidden");
+    successBox.classList.add("hidden");
+
+    if (password.length < 6) {
+      errorBox.textContent =
+        "La contraseña debe tener al menos 6 caracteres.";
+      errorBox.classList.remove("hidden");
+      return;
+    }
+
+    if (password !== confirmation) {
+      errorBox.textContent =
+        "Las contraseñas no coinciden.";
+      errorBox.classList.remove("hidden");
+      return;
+    }
+
+    const { error } =
+      await client.auth.updateUser({
+        password: password
+      });
+
+    if (error) {
+      errorBox.textContent =
+        "No se pudo cambiar la contraseña: " + error.message;
+      errorBox.classList.remove("hidden");
+      return;
+    }
+
+    successBox.textContent =
+      "Contraseña actualizada correctamente.";
+
+    successBox.classList.remove("hidden");
+
+    setTimeout(() => {
+      client.auth.signOut();
+      showLogin();
+    }, 1500);
+
+  }
+
+
+  /* =====================================================
      SESIÓN EXISTENTE
   ===================================================== */
 
@@ -3541,6 +3970,15 @@
     }
 
   }
+
+
+  client.auth.onAuthStateChange((event) => {
+
+    if (event === "PASSWORD_RECOVERY") {
+      showPasswordReset();
+    }
+
+  });
 
 
   checkExistingSession();
