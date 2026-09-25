@@ -1100,19 +1100,27 @@ async function loadMatches() {
             "
           >
 
-            ${
-              !published
-                ? `
-                  <button
-                    class="btn-success"
-                    type="button"
-                    onclick="publishMatch('${match.id}')"
-                  >
-                    📢 Publicar
-                  </button>
-                `
-                : ""
-            }
+           ${
+  published
+    ? `
+      <button
+        class="btn-secondary"
+        type="button"
+        onclick="unpublishMatch('${match.id}')"
+      >
+        ↩️ Despublicar
+      </button>
+    `
+    : `
+      <button
+        class="btn-success"
+        type="button"
+        onclick="publishMatch('${match.id}')"
+      >
+        📢 Publicar
+      </button>
+    `
+}
 
             <button
               class="btn-danger"
