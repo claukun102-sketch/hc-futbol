@@ -1401,6 +1401,11 @@
 
     if (accountError || !account) {
 
+      if (recoveryMode) {
+        showPasswordReset();
+        return;
+      }
+
       // Usuario autenticado pero todavía sin player_accounts.
       // No mostrar un error de login: iniciar onboarding.
       if (typeof showOnboarding === "function") {
@@ -3986,12 +3991,21 @@
     successBox.classList.remove("hidden");
 
     setTimeout(async () => {
-      await client.auth.signOut();
+
+      // Salimos completamente del modo recuperación.
       recoveryMode = false;
-      window.history.replaceState({}, "", window.location.origin + "/");
-      document.getElementById("passwordResetPage").classList.add("hidden");
+
+      // Cerramos la sesión creada por el enlace de recuperación.
+      await client.auth.signOut();
+
+      // Limpiamos los campos.
+      document.getElementById("newPassword").value = "";
+      document.getElementById("newPasswordConfirm").value = "";
+
+      // Volvemos al login normal.
       showLogin();
-    }, 1500);
+
+    }, 1500);, 1500);
 
   }
 
