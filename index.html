@@ -1344,6 +1344,11 @@
 
   async function loadApplication() {
 
+    if (recoveryMode) {
+      showPasswordReset();
+      return;
+    }
+
     const {
       data: {
         user
@@ -3824,6 +3829,8 @@
      RECUPERACIÓN DE CONTRASEÑA
   ===================================================== */
 
+  let recoveryMode = false;
+
   function showPasswordRecovery() {
 
     document.getElementById("loginPage").classList.add("hidden");
@@ -3878,6 +3885,8 @@
 
 
   function showPasswordReset() {
+
+    recoveryMode = true;
 
     document.getElementById("loginPage").classList.add("hidden");
     document.getElementById("passwordRecoveryPage").classList.add("hidden");
@@ -3959,6 +3968,7 @@
       /(?:^|[&?])type=recovery(?:&|$)/i.test(search);
 
     if (isRecovery) {
+      recoveryMode = true;
       showPasswordReset();
       return;
     }
@@ -3970,15 +3980,15 @@
     } =
       await client.auth.getSession();
 
+    if (recoveryMode) {
+      showPasswordReset();
+      return;
+    }
 
     if (session) {
-
       await loadApplication();
-
     } else {
-
       showLogin();
-
     }
 
   }
@@ -3987,7 +3997,9 @@
   client.auth.onAuthStateChange((event) => {
 
     if (event === "PASSWORD_RECOVERY") {
+      recoveryMode = true;
       showPasswordReset();
+      return;
     }
 
   });
