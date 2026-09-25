@@ -3684,7 +3684,20 @@
   /* =====================================================
      MOSTRAR LOGIN
   ===================================================== */
+function showRegister() {
 
+  document.getElementById("loginPage").classList.add("hidden");
+  document.getElementById("registerPage").classList.remove("hidden");
+
+  document.getElementById("adminPage").classList.add("hidden");
+  document.getElementById("playerPage").classList.add("hidden");
+  document.getElementById("passwordRecoveryPage").classList.add("hidden");
+  document.getElementById("passwordResetPage").classList.add("hidden");
+  document.getElementById("onboardingPage").classList.add("hidden");
+
+  hideRegisterMessages();
+
+}
   function showLogin() {
 
     loginPage.classList.remove("hidden");
