@@ -1298,32 +1298,34 @@ async function createMatch() {
 
 async function publishMatch(matchId) {
 
-  if (!currentTeam) return;
+if (!currentTeam) return;
 
   const confirmed =
     confirm(
-      "¿Querés publicar este partido para los jugadores del equipo?"
+      "¿Querés despublicar este partido? Dejará de estar visible para los jugadores."
     );
 
   if (!confirmed) return;
 
 
   const {
+    data,
     error
   } = await client
     .from("matches")
     .update({
-      published_at:
-        new Date().toISOString()
+      published_at: null
     })
     .eq("id", matchId)
-    .eq("team_id", currentTeam.id);
+    .eq("team_id", currentTeam.id)
+    .select("id, published_at")
+    .single();
 
 
   if (error) {
 
     showAdminError(
-      "No se pudo publicar el partido: " +
+      "No se pudo despublicar el partido: " +
       error.message
     );
 
@@ -1332,8 +1334,19 @@ async function publishMatch(matchId) {
   }
 
 
+  if (!data) {
+
+    showAdminError(
+      "No encontramos el partido para despublicarlo."
+    );
+
+    return;
+
+  }
+
+
   showAdminSuccess(
-    "Partido publicado correctamente."
+    "Partido despublicado correctamente."
   );
 
 
