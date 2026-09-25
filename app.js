@@ -1396,6 +1396,8 @@ async function unpublishMatch(matchId) {
 
 
   await loadMatches();
+  
+}
 
 async function setMatchPublished(matchId, shouldPublish) {
   if (!currentTeam) return;
