@@ -1460,6 +1460,7 @@ await loadApplication();
         team_id: currentTeam.id,
         name: name,
         nickname: nickname || null,
+        dni: dni || null,
         active: true
       });
 
