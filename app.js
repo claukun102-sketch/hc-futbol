@@ -2648,7 +2648,7 @@ document.getElementById("playerDataDni").textContent =
     ).textContent =
       pending.length;
 
-
+    await loadPlayerMatches();
     renderPlayerCharges(
       charges
     );
