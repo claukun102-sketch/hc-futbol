@@ -577,6 +577,15 @@
      NUEVA CONTRASEÑA
 ===================================================== -->
 
+<div id="onboardingPage" class="hidden">
+  <div class="auth-card">
+    <h2>Bienvenido a Deportes Amateur</h2>
+    <p>Tu cuenta fue creada correctamente.</p>
+    <p>Ahora podemos configurar tu equipo.</p>
+    <button type="button" onclick="showLogin()">Volver al inicio</button>
+  </div>
+</div>
+
 <div id="passwordResetPage" class="hidden">
 
   <div class="login-box">
@@ -1392,9 +1401,13 @@
 
     if (accountError || !account) {
 
-      showLoginError(
-        "No encontramos tu cuenta."
-      );
+      // Usuario autenticado pero todavía sin player_accounts.
+      // No mostrar un error de login: iniciar onboarding.
+      if (typeof showOnboarding === "function") {
+        showOnboarding();
+      } else {
+        showLogin();
+      }
 
       return;
 
@@ -3562,6 +3575,9 @@
   ===================================================== */
 
   function showLogin() {
+    const onboardingPage = document.getElementById("onboardingPage");
+    if (onboardingPage) onboardingPage.classList.add("hidden");
+
 
     loginPage.classList.remove(
       "hidden"
@@ -3831,6 +3847,20 @@
 
   let recoveryMode = false;
 
+  function showOnboarding() {
+
+    document.getElementById("loginPage").classList.add("hidden");
+    document.getElementById("passwordRecoveryPage").classList.add("hidden");
+    document.getElementById("passwordResetPage").classList.add("hidden");
+
+    const page = document.getElementById("onboardingPage");
+    if (page) {
+      page.classList.remove("hidden");
+    }
+
+  }
+
+
   function showPasswordRecovery() {
 
     document.getElementById("loginPage").classList.add("hidden");
@@ -3889,6 +3919,8 @@
     recoveryMode = true;
 
     document.getElementById("loginPage").classList.add("hidden");
+    const onboardingPage = document.getElementById("onboardingPage");
+    if (onboardingPage) onboardingPage.classList.add("hidden");
     document.getElementById("passwordRecoveryPage").classList.add("hidden");
     document.getElementById("passwordResetPage").classList.remove("hidden");
 
