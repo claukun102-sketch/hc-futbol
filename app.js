@@ -1607,6 +1607,13 @@ await loadApplication();
           ${escapeHtml(player.name)}
           ${player.nickname ? `<span class="muted"> (${escapeHtml(player.nickname)})</span>` : ""}
         </td>
+        <td
+  class="player-name-cell"
+  title="Doble clic para modificar"
+  ondblclick="editPlayerDni('${player.id}', '${escapeHtml(player.dni || "").replace(/'/g, "\\'")}')"
+>
+  ${escapeHtml(player.dni || "-")}
+</td>
         <td>${money(playerCharges)}</td>
         <td class="positive">${money(playerPaid)}</td>
         <td>${balanceText}</td>
