@@ -1507,7 +1507,39 @@ await loadApplication();
     showAdminSuccess("Jugador modificado correctamente.");
     await loadAdminDashboard();
   }
+async function editPlayerDni(playerId, currentDni) {
 
+  const newDni = prompt(
+    "Modificar DNI del jugador:",
+    currentDni || ""
+  );
+
+  if (newDni === null) return;
+
+  const trimmed = newDni.trim();
+
+  const { error } = await client
+    .from("players")
+    .update({
+      dni: trimmed || null
+    })
+    .eq("id", playerId)
+    .eq("team_id", currentTeam.id);
+
+  if (error) {
+    showAdminError(
+      "No se pudo modificar el DNI: " +
+      error.message
+    );
+    return;
+  }
+
+  showAdminSuccess(
+    "DNI modificado correctamente."
+  );
+
+  await loadAdminDashboard();
+}
   async function removePlayer(playerId, playerName) {
 
     const confirmed = confirm(
