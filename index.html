@@ -868,7 +868,149 @@
 
     </div>
 
+<!-- PARTIDOS -->
 
+<div class="card">
+
+  <div class="players-toolbar">
+
+    <div>
+      <h2 style="margin-bottom:4px;">📅 Partidos</h2>
+      <div class="muted">
+        Organizá los próximos partidos y convocatorias.
+      </div>
+    </div>
+
+    <button
+      class="btn-primary"
+      type="button"
+      onclick="toggleMatchForm()"
+    >
+      ➕ Nuevo partido
+    </button>
+
+  </div>
+
+
+  <!-- FORMULARIO NUEVO PARTIDO -->
+
+  <div
+    id="matchForm"
+    class="player-add-form"
+    style="display:none;"
+  >
+
+    <div>
+
+      <label>Fecha</label>
+
+      <input
+        id="newMatchDate"
+        type="date"
+      >
+
+    </div>
+
+
+    <div>
+
+      <label>Hora</label>
+
+      <input
+        id="newMatchTime"
+        type="time"
+      >
+
+    </div>
+
+
+    <div>
+
+      <label>Rival</label>
+
+      <input
+        id="newMatchOpponent"
+        type="text"
+        maxlength="100"
+        placeholder="Ej.: Los Pumas"
+      >
+
+    </div>
+
+
+    <div>
+
+      <label>Lugar</label>
+
+      <input
+        id="newMatchVenue"
+        type="text"
+        maxlength="150"
+        placeholder="Ej.: Complejo Norte"
+      >
+
+    </div>
+
+
+    <div>
+
+      <label>Valor por jugador</label>
+
+      <input
+        id="newMatchFee"
+        type="number"
+        min="0"
+        step="1"
+        placeholder="Ej.: 8000"
+      >
+
+    </div>
+
+
+    <div>
+
+      <label>Observaciones</label>
+
+      <input
+        id="newMatchNotes"
+        type="text"
+        maxlength="250"
+        placeholder="Ej.: Llegar 30 min antes"
+      >
+
+    </div>
+
+
+    <div style="display:flex; gap:10px; align-items:end;">
+
+      <button
+        class="btn-primary"
+        type="button"
+        onclick="createMatch()"
+      >
+        Guardar partido
+      </button>
+
+      <button
+        class="btn-secondary"
+        type="button"
+        onclick="toggleMatchForm()"
+      >
+        Cancelar
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- LISTA DE PARTIDOS -->
+
+  <div id="matchesList">
+    Cargando...
+  </div>
+
+</div>
     <!-- EQUIPOS ARCHIVADOS -->
 
     <div class="card">
