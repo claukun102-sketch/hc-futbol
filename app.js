@@ -1219,6 +1219,7 @@ await loadApplication();
 
     await loadTeamSettings();
     await loadChargeConcepts();
+    await loadMatches();
 
 
     const {
