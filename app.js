@@ -2672,7 +2672,172 @@ document.getElementById("playerDataDni").textContent =
   /* =====================================================
      CARGOS DEL JUGADOR
   ===================================================== */
+/* =====================================================
+   PARTIDOS DEL JUGADOR
+===================================================== */
 
+async function loadPlayerMatches() {
+
+  const container =
+    document.getElementById("playerMatches");
+
+  if (!container) return;
+
+  container.innerHTML =
+    "Cargando...";
+
+
+  if (!currentPlayer) {
+
+    container.innerHTML =
+      `<p class="muted">
+        No encontramos tu jugador.
+      </p>`;
+
+    return;
+
+  }
+
+
+  const today =
+    new Date()
+      .toISOString()
+      .split("T")[0];
+
+
+  const {
+    data: matches,
+    error
+  } = await client
+    .from("matches")
+    .select("*")
+    .eq("team_id", currentPlayer.team_id)
+    .not("published_at", "is", null)
+    .gte("match_date", today)
+    .order("match_date", {
+      ascending: true
+    })
+    .order("match_time", {
+      ascending: true
+    });
+
+
+  if (error) {
+
+    container.innerHTML =
+      `<p class="muted">
+        No pudimos cargar los próximos partidos.
+      </p>`;
+
+    showPlayerError(
+      "No pudimos cargar los partidos: " +
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  if (!matches || !matches.length) {
+
+    container.innerHTML =
+      `<p class="muted">
+        No hay próximos partidos publicados.
+      </p>`;
+
+    return;
+
+  }
+
+
+  const visibleMatches =
+    matches.slice(0, 3);
+
+
+  container.innerHTML =
+    visibleMatches.map(match => `
+
+      <div
+        class="payment"
+        style="margin-bottom:12px;"
+      >
+
+        <strong>
+          ⚽ ${escapeHtml(
+            match.opponent ||
+            "Partido"
+          )}
+        </strong>
+
+
+        <p style="margin:6px 0;">
+
+          📅 ${formatDate(
+            match.match_date
+          )}
+
+          ${
+            match.match_time
+              ? `
+                · ⏰ ${
+                  escapeHtml(
+                    match.match_time
+                      .substring(0, 5)
+                  )
+                }
+              `
+              : ""
+          }
+
+        </p>
+
+
+        <p
+          class="muted"
+          style="margin:4px 0;"
+        >
+          📍 ${
+            escapeHtml(
+              match.venue ||
+              "Lugar a confirmar"
+            )
+          }
+        </p>
+
+
+        <p
+          class="muted"
+          style="margin:4px 0;"
+        >
+          💰 ${money(
+            match.fee_per_player
+          )}
+        </p>
+
+
+        ${
+          match.notes
+            ? `
+              <p
+                class="muted"
+                style="margin:4px 0;"
+              >
+                📝 ${
+                  escapeHtml(
+                    match.notes
+                  )
+                }
+              </p>
+            `
+            : ""
+        }
+
+      </div>
+
+    `).join("");
+
+}
   function renderPlayerCharges(
     charges
   ) {
