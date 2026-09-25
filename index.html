@@ -3845,13 +3845,19 @@
      RECUPERACIÓN DE CONTRASEÑA
   ===================================================== */
 
-  let recoveryMode = false;
+  // Marcador persistente en la URL: Supabase puede consumir y borrar el hash
+  // antes de que la aplicación reciba PASSWORD_RECOVERY.
+  let recoveryMode =
+    new URLSearchParams(window.location.search).get("flow") === "password-recovery" ||
+    /(?:^|[&#?])type=recovery(?:&|$)/i.test(window.location.hash);
+
 
   function showOnboarding() {
 
     document.getElementById("loginPage").classList.add("hidden");
     document.getElementById("passwordRecoveryPage").classList.add("hidden");
     document.getElementById("passwordResetPage").classList.add("hidden");
+    document.getElementById("registerPage").classList.add("hidden");
 
     const page = document.getElementById("onboardingPage");
     if (page) {
@@ -3896,7 +3902,7 @@
     const { error } = await client.auth.resetPasswordForEmail(
       email,
       {
-        redirectTo: window.location.origin
+        redirectTo: window.location.origin + "/?flow=password-recovery"
       }
     );
 
@@ -3923,6 +3929,7 @@
     if (onboardingPage) onboardingPage.classList.add("hidden");
     document.getElementById("passwordRecoveryPage").classList.add("hidden");
     document.getElementById("passwordResetPage").classList.remove("hidden");
+    document.getElementById("registerPage").classList.add("hidden");
 
     document.getElementById("resetError").classList.add("hidden");
     document.getElementById("resetSuccess").classList.add("hidden");
@@ -3978,8 +3985,11 @@
 
     successBox.classList.remove("hidden");
 
-    setTimeout(() => {
-      client.auth.signOut();
+    setTimeout(async () => {
+      await client.auth.signOut();
+      recoveryMode = false;
+      window.history.replaceState({}, "", window.location.origin + "/");
+      document.getElementById("passwordResetPage").classList.add("hidden");
       showLogin();
     }, 1500);
 
@@ -3991,51 +4001,29 @@
   ===================================================== */
 
   async function checkExistingSession() {
-
-    const hash = window.location.hash || "";
-    const search = window.location.search || "";
-
-    const isRecovery =
-      /(?:^|[&#?])type=recovery(?:&|$)/i.test(hash) ||
-      /(?:^|[&?])type=recovery(?:&|$)/i.test(search);
-
-    if (isRecovery) {
-      recoveryMode = true;
-      showPasswordReset();
-      return;
-    }
-
-    const {
-      data: {
-        session
-      }
-    } =
-      await client.auth.getSession();
-
+    // La URL /?flow=password-recovery es explícita y no se pierde cuando
+    // Supabase limpia los tokens del hash.
     if (recoveryMode) {
       showPasswordReset();
       return;
     }
 
-    if (session) {
+    const { data: { session } } = await client.auth.getSession();
+    if (recoveryMode) {
+      showPasswordReset();
+    } else if (session) {
       await loadApplication();
     } else {
       showLogin();
     }
-
   }
 
-
   client.auth.onAuthStateChange((event) => {
-
     if (event === "PASSWORD_RECOVERY") {
       recoveryMode = true;
       showPasswordReset();
-      return;
     }
-
   });
-
 
   checkExistingSession();
 
