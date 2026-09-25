@@ -1471,6 +1471,7 @@ await loadApplication();
 
     document.getElementById("newPlayerName").value = "";
     document.getElementById("newPlayerNickname").value = "";
+    document.getElementById("newPlayerDni").value = "";
     document.getElementById("addPlayerForm").style.display = "none";
 
     showAdminSuccess("Jugador agregado correctamente.");
