@@ -1540,7 +1540,70 @@ async function editPlayerDni(playerId, currentDni) {
 
   await loadAdminDashboard();
 }
-  async function removePlayer(playerId, playerName) {
+ async function editPlayerData(
+  playerId,
+  currentName,
+  currentNickname,
+  currentDni
+) {
+
+  const newName = prompt(
+    "Nombre del jugador:",
+    currentName || ""
+  );
+
+  if (newName === null) return;
+
+  const newNickname = prompt(
+    "Apodo:",
+    currentNickname || ""
+  );
+
+  if (newNickname === null) return;
+
+  const newDni = prompt(
+    "DNI:",
+    currentDni || ""
+  );
+
+  if (newDni === null) return;
+
+  const name = newName.trim();
+  const nickname = newNickname.trim();
+  const dni = newDni.trim();
+
+  if (!name) {
+    showAdminError(
+      "El nombre no puede quedar vacío."
+    );
+    return;
+  }
+
+  const { error } = await client
+    .from("players")
+    .update({
+      name: name,
+      nickname: nickname || null,
+      dni: dni || null
+    })
+    .eq("id", playerId)
+    .eq("team_id", currentTeam.id);
+
+  if (error) {
+    showAdminError(
+      "No se pudieron guardar los datos: " +
+      error.message
+    );
+    return;
+  }
+
+  showAdminSuccess(
+    "Datos del jugador actualizados correctamente."
+  );
+
+  await loadAdminDashboard();
+}
+async function removePlayer(playerId, playerName) {
 
     const confirmed = confirm(
       `¿Quitar a ${playerName} del equipo?\n\nSu historial de cargos y pagos se conservará, pero dejará de aparecer entre los jugadores activos.`
