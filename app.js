@@ -725,7 +725,11 @@ function toggleChargeConceptsPanel() {
 
   if (!panel) return;
 
-  if (panel.style.display === "none") {
+  if (
+    panel.style.display === "none" ||
+    panel.style.display === ""
+  ) {
+
     panel.style.display = "block";
 
     if (toggle) {
@@ -733,6 +737,7 @@ function toggleChargeConceptsPanel() {
     }
 
   } else {
+
     panel.style.display = "none";
 
     if (toggle) {
