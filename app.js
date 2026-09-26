@@ -717,19 +717,30 @@ await loadApplication();
     `).join("");
   }
 
+function conceptFrequencyLabel(frequency) {
 
-  function conceptFrequencyLabel(frequency) {
-
-    if (frequency === "monthly") {
-      return "Mensual";
-    }
-
-    if (frequency === "match") {
-      return "Por partido";
-    }
-
-    return "Único";
+  if (frequency === "monthly") {
+    return "Mensual";
   }
+
+  if (frequency === "match") {
+    return "Por partido";
+  }
+
+  if (frequency === "tournament") {
+    return "Por torneo";
+  }
+
+  if (frequency === "eventual") {
+    return "Eventual";
+  }
+
+  if (frequency === "annual") {
+    return "Anual";
+  }
+
+  return "Único";
+}
 
 
   async function saveChargeConcept(event) {
@@ -1665,31 +1676,14 @@ async function deleteMatch(matchId) {
      CONFIGURACIÓN DEL EQUIPO
   ===================================================== */
 
-  async function loadTeamSettings() {
+ async function loadTeamSettings() {
 
-    if (!currentTeam) return;
+  if (!currentTeam) return;
 
-    const { data: settings, error } = await client
-      .from("team_settings")
-      .select("*")
-      .eq("team_id", currentTeam.id)
-      .maybeSingle();
-
-    if (error) {
-      showAdminError("No pudimos cargar la configuración: " + error.message);
-      return;
-    }
-
-    document.getElementById("teamRegistrationFee").value =
-      settings ? Number(settings.registration_fee || 0) : 0;
-
-    document.getElementById("teamMonthlyInsurance").value =
-      settings ? Number(settings.monthly_insurance || 0) : 0;
-
-    document.getElementById("teamMatchFee").value =
-      settings ? Number(settings.match_fee || 0) : 0;
-  }
-
+  // La configuración económica del equipo
+  // ahora se administra mediante "Conceptos de cobro".
+  // Esta función se mantiene para no romper la carga del panel.
+}
 
   async function saveTeamSettings() {
 
