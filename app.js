@@ -745,6 +745,7 @@ function toggleChargeConceptsPanel() {
     }
   }
 }
+  window.toggleChargeConceptsPanel = toggleChargeConceptsPanel;
   if (frequency === "monthly") {
     return "Mensual";
   }
