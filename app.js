@@ -648,74 +648,94 @@ await loadApplication();
      CONCEPTOS DE COBRO
   ===================================================== */
 
-  async function loadChargeConcepts() {
+ async function loadChargeConcepts() {
 
-    if (!currentTeam) return;
+  if (!currentTeam) return;
 
-    const container =
-      document.getElementById("chargeConcepts");
+  const container =
+    document.getElementById("chargeConcepts");
 
-    if (!container) return;
+  if (!container) return;
 
-    const {
-      data: concepts,
-      error
-    } = await client
-      .from("charge_concepts")
-      .select("*")
-      .eq("team_id", currentTeam.id)
-      .eq("active", true)
-      .order("created_at");
+  const {
+    data: concepts,
+    error
+  } = await client
+    .from("charge_concepts")
+    .select("*")
+    .eq("team_id", currentTeam.id)
+    .eq("active", true)
+    .order("created_at");
 
-    if (error) {
-      container.innerHTML =
-        `<p class="muted">No se pudieron cargar los conceptos.</p>`;
-      showAdminError(
-        "No pudimos cargar los conceptos: " +
-        error.message
-      );
-      return;
-    }
+  if (error) {
 
-    if (!concepts.length) {
-      container.innerHTML =
-        `<p class="muted">Todavía no hay conceptos creados.</p>`;
-      return;
-    }
+    container.innerHTML =
+      `<p class="muted">No se pudieron cargar los conceptos.</p>`;
 
-    container.innerHTML = concepts.map(concept => `
-      <div class="concept-row">
-        <div>
-          <strong>${escapeHtml(concept.name)}</strong>
-        </div>
+    showAdminError(
+      "No pudimos cargar los conceptos: " +
+      error.message
+    );
 
-        <div>
-          ${money(concept.amount)}
-        </div>
-
-        <div class="muted">
-          ${conceptFrequencyLabel(concept.frequency)}
-        </div>
-
-        <div class="concept-actions">
-          <button
-            class="btn-primary"
-            type="button"
-            onclick="openApplyConcept('${concept.id}')"
-          >
-            ➕ Aplicar
-          </button>
-          <button
-            class="btn-danger"
-            type="button"
-            onclick="deactivateConcept('${concept.id}')"
-          >
-            Quitar
-          </button>
-        </div>
-      </div>
-    `).join("");
+    return;
   }
+
+  if (!concepts.length) {
+
+    container.innerHTML =
+      `<p class="muted">Todavía no hay conceptos creados.</p>`;
+
+    return;
+  }
+
+  container.innerHTML = concepts.map(concept => `
+
+    <div class="concept-row">
+
+      <div>
+        <strong>${escapeHtml(concept.name)}</strong>
+      </div>
+
+      <div>
+        ${money(concept.amount)}
+      </div>
+
+      <div class="muted">
+        ${conceptFrequencyLabel(concept.frequency)}
+      </div>
+
+      <div class="concept-actions">
+
+        <button
+          class="btn-secondary"
+          type="button"
+          onclick="editChargeConcept('${concept.id}')"
+        >
+          ✏️ Editar
+        </button>
+
+        <button
+          class="btn-primary"
+          type="button"
+          onclick="openApplyConcept('${concept.id}')"
+        >
+          ➕ Aplicar
+        </button>
+
+        <button
+          class="btn-danger"
+          type="button"
+          onclick="deactivateConcept('${concept.id}')"
+        >
+          Quitar
+        </button>
+
+      </div>
+
+    </div>
+
+  `).join("");
+}
 
 function conceptFrequencyLabel(frequency) {
 function toggleChargeConceptsPanel() {
