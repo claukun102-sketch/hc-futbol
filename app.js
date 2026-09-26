@@ -2375,7 +2375,15 @@ const playerChargesList =
     ${escapeHtml(player.dni || "-")}
   </td>
 
-  <td>${money(playerCharges)}</td>
+  <td>
+  <button
+    class="btn-secondary"
+    type="button"
+    onclick="showPlayerCharges('${player.id}')"
+  >
+    ${money(playerCharges)}
+  </button>
+</td>
 
   <td class="positive">
     ${money(playerPaid)}
