@@ -2375,11 +2375,11 @@ const playerChargesList =
     ${escapeHtml(player.dni || "-")}
   </td>
 
-  <td>
+ <td>
   <button
     class="btn-secondary"
     type="button"
-    onclick="showPlayerCharges('${player.id}')"
+    onclick='showPlayerCharges(${JSON.stringify(playerChargesList)})'
   >
     ${money(playerCharges)}
   </button>
