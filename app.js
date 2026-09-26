@@ -718,7 +718,28 @@ await loadApplication();
   }
 
 function conceptFrequencyLabel(frequency) {
+function toggleChargeConceptsPanel() {
 
+  const panel = document.getElementById("chargeConceptsConfig");
+  const toggle = document.getElementById("chargeConceptsToggle");
+
+  if (!panel) return;
+
+  if (panel.style.display === "none") {
+    panel.style.display = "block";
+
+    if (toggle) {
+      toggle.textContent = "▲";
+    }
+
+  } else {
+    panel.style.display = "none";
+
+    if (toggle) {
+      toggle.textContent = "▼";
+    }
+  }
+}
   if (frequency === "monthly") {
     return "Mensual";
   }
