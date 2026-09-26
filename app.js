@@ -2434,7 +2434,27 @@ const playerChargesList =
   /* =====================================================
      PAGOS PENDIENTES ADMIN
   ===================================================== */
+async function showPlayerCharges(playerCharges) {
 
+  if (!Array.isArray(playerCharges) || !playerCharges.length) {
+    showAdminError("Este jugador no tiene cargos registrados.");
+    return;
+  }
+
+  const lines = playerCharges.map(charge => {
+    const name =
+      charge.description ||
+      charge.charge_type ||
+      "Cargo";
+
+    return `${name}: ${money(charge.amount)}`;
+  });
+
+  alert(
+    "Cargos del jugador\n\n" +
+    lines.join("\n")
+  );
+}
   function renderPendingPayments(
     payments,
     players
