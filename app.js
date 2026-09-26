@@ -1687,19 +1687,21 @@ async function deleteMatch(matchId) {
 
   async function saveTeamSettings() {
 
-    if (!currentTeam) {
-      showAdminError("No hay un equipo seleccionado.");
-      return;
-    }
+  // La configuración económica del equipo
+  // ahora se administra mediante Conceptos de cobro.
+  // Se mantiene esta función para compatibilidad con código anterior.
 
-    const registrationFee = Number(document.getElementById("teamRegistrationFee").value);
-    const monthlyInsurance = Number(document.getElementById("teamMonthlyInsurance").value);
-    const matchFee = Number(document.getElementById("teamMatchFee").value);
+  if (!currentTeam) {
+    showAdminError("No hay un equipo seleccionado.");
+    return;
+  }
 
-    if (registrationFee < 0 || monthlyInsurance < 0 || matchFee < 0) {
-      showAdminError("Los valores no pueden ser negativos.");
-      return;
-    }
+  showAdminSuccess(
+    "La configuración económica se administra desde Conceptos de cobro."
+  );
+
+  await loadChargeConcepts();
+}
 
     const { data: existing, error: existingError } = await client
       .from("team_settings")
