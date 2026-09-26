@@ -2358,8 +2358,12 @@ async function removePlayer(playerId, playerName) {
 
 
       const row =
-        document.createElement("tr");
+  document.createElement("tr");
 
+const playerChargesList =
+  charges.filter(
+    c => c.player_id === player.id
+  );
 
       row.innerHTML = `
   <td>
