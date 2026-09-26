@@ -1724,59 +1724,6 @@ async function deleteMatch(matchId) {
   await loadChargeConcepts();
 }
 
-    const { data: existing, error: existingError } = await client
-      .from("team_settings")
-      .select("id")
-      .eq("team_id", currentTeam.id)
-      .maybeSingle();
-
-    if (existingError) {
-      showAdminError("No pudimos comprobar la configuración: " + existingError.message);
-      return;
-    }
-
-    let error;
-
-    if (existing) {
-      const result = await client
-        .from("team_settings")
-        .update({
-          team_name: currentTeam.name,
-          registration_fee: registrationFee,
-          monthly_insurance: monthlyInsurance,
-          match_fee: matchFee
-        })
-        .eq("id", existing.id)
-        .eq("team_id", currentTeam.id);
-
-      error = result.error;
-
-    } else {
-      const result = await client
-        .from("team_settings")
-        .insert({
-          team_id: currentTeam.id,
-          team_name: currentTeam.name,
-          description: currentTeam.description || "",
-          registration_fee: registrationFee,
-          monthly_insurance: monthlyInsurance,
-          match_fee: matchFee
-        });
-
-      error = result.error;
-    }
-
-    if (error) {
-      showAdminError("No se pudieron guardar los cambios: " + error.message);
-      return;
-    }
-
-    showAdminSuccess("Configuración guardada correctamente.");
-
-    await loadAdminDashboard();
-  }
-
-
   /* =====================================================
      ADMIN
   ===================================================== */
