@@ -1149,62 +1149,6 @@
 
     </div>
 
-      <div id="applyConceptPanel" class="apply-concept-panel">
-        <h3 id="applyConceptTitle">Aplicar concepto</h3>
-        <p class="muted">Elegí a quién aplicar el cargo. Podés seleccionar todos o solo algunos jugadores.</p>
-        <div class="apply-concept-selection-tools">
-          <button class="btn-secondary" type="button" onclick="selectAllConceptPlayers()">☑ Seleccionar todos</button>
-          <button class="btn-secondary" type="button" onclick="clearConceptPlayers()">☐ Limpiar selección</button>
-        </div>
-        <div id="applyConceptPlayers" class="apply-concept-players"></div>
-        <div class="apply-concept-actions">
-          <button class="btn-primary" type="button" onclick="applyConceptToSelected()">💾 Generar cargos</button>
-          <button class="btn-secondary" type="button" onclick="closeApplyConcept()">Cancelar</button>
-        </div>
-      </div>
-
-      <hr style="margin:20px 0; opacity:.2;">
-
-      <h3>➕ Agregar concepto</h3>
-
-      <form id="conceptForm" onsubmit="saveChargeConcept(event)">
-
-        <label>Nombre</label>
-        <input
-          id="conceptName"
-          type="text"
-          placeholder="Ej.: Seguro mensual"
-          required
-        >
-
-        <label>Monto</label>
-        <input
-          id="conceptAmount"
-          type="number"
-          min="0"
-          step="1"
-          placeholder="Ej.: 8000"
-          required
-        >
-
-        <label>Tipo</label>
-       <select id="conceptFrequency">
-  <option value="one_time">Único</option>
-  <option value="monthly">Mensual</option>
-  <option value="match">Por partido</option>
-  <option value="tournament">Por torneo</option>
-  <option value="eventual">Eventual</option>
-  <option value="annual">Anual</option>
-</select>
-        <button class="btn-primary" type="submit">
-          Guardar concepto
-        </button>
-
-      </form>
-
-    </div>
-
-
     <!-- PAGOS PENDIENTES -->
 
     <div class="card">
