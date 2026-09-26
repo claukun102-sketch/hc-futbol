@@ -14,12 +14,19 @@
   const SUPABASE_KEY =
     "sb_publishable_Skz1JtNhc11MsOLS-V_X-A_6GkBwFw0";
 
-
-  const client =
-    window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_KEY
-    );
+const client =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY,
+    {
+      auth: {
+        storage: window.sessionStorage,
+        autoRefreshToken: true,
+        persistSession: true,
+        detectSessionInUrl: true
+      }
+    }
+  );
 
 
   /* =====================================================
