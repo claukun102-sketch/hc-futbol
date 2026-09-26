@@ -1420,8 +1420,7 @@ async function setMatchPublished(matchId, shouldPublish) {
     .eq("id", matchId)
     .eq("team_id", currentTeam.id)
     .select("id, published_at")
-    .single();
-
+    .maybeSingle();
   if (error) {
     showAdminError(
       (shouldPublish
