@@ -789,7 +789,129 @@ function toggleChargeConceptsPanel() {
   return "Único";
 }
 
+async function editChargeConcept(conceptId) {
 
+  if (!currentTeam) return;
+
+  const {
+    data: concept,
+    error
+  } = await client
+    .from("charge_concepts")
+    .select("*")
+    .eq("id", conceptId)
+    .eq("team_id", currentTeam.id)
+    .eq("active", true)
+    .maybeSingle();
+
+  if (error) {
+
+    showAdminError(
+      "No pudimos cargar el concepto: " +
+      error.message
+    );
+
+    return;
+  }
+
+  if (!concept) {
+
+    showAdminError(
+      "No encontramos ese concepto."
+    );
+
+    return;
+  }
+
+  const newName = prompt(
+    "Nombre del concepto:",
+    concept.name
+  );
+
+  if (newName === null) return;
+
+  const cleanName = newName.trim();
+
+  if (!cleanName) {
+
+    showAdminError(
+      "El nombre no puede estar vacío."
+    );
+
+    return;
+  }
+
+  const newAmount = prompt(
+    "Monto:",
+    concept.amount
+  );
+
+  if (newAmount === null) return;
+
+  const amount = Number(newAmount);
+
+  if (!Number.isFinite(amount) || amount < 0) {
+
+    showAdminError(
+      "Ingresá un monto válido."
+    );
+
+    return;
+  }
+
+  const newFrequency = prompt(
+    "Tipo: one_time, monthly, match, tournament, eventual o annual",
+    concept.frequency
+  );
+
+  if (newFrequency === null) return;
+
+  const allowedFrequencies = [
+    "one_time",
+    "monthly",
+    "match",
+    "tournament",
+    "eventual",
+    "annual"
+  ];
+
+  if (!allowedFrequencies.includes(newFrequency)) {
+
+    showAdminError(
+      "Tipo de concepto no válido."
+    );
+
+    return;
+  }
+
+  const {
+    error: updateError
+  } = await client
+    .from("charge_concepts")
+    .update({
+      name: cleanName,
+      amount: amount,
+      frequency: newFrequency
+    })
+    .eq("id", conceptId)
+    .eq("team_id", currentTeam.id);
+
+  if (updateError) {
+
+    showAdminError(
+      "No se pudo modificar el concepto: " +
+      updateError.message
+    );
+
+    return;
+  }
+
+  showAdminSuccess(
+    "Concepto modificado correctamente."
+  );
+
+  await loadChargeConcepts();
+}
   async function saveChargeConcept(event) {
 
     event.preventDefault();
