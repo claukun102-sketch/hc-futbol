@@ -838,20 +838,37 @@
       <p class="muted">
         Estos valores pertenecen al equipo seleccionado.
       </p>
+     <div
+  style="
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:12px 0;
+    cursor:pointer;
+  "
+  onclick="toggleChargeConceptsPanel()"
+>
+  <div>
+    <strong>💰 Conceptos de cobro</strong>
+    <div class="muted" style="margin-top:4px;">
+      Inscripción, cuotas, partidos y otros conceptos del equipo.
+    </div>
+  </div>
 
-      <label>💵 Valor de inscripción</label>
-      <input id="teamRegistrationFee" type="number" min="0" step="1" placeholder="Ej.: 30000">
+  <span id="chargeConceptsToggle" style="font-size:20px;">
+    ▼
+  </span>
+</div>
 
-      <label>🛡️ Seguro mensual</label>
-      <input id="teamMonthlyInsurance" type="number" min="0" step="1" placeholder="Ej.: 8000">
-
-      <label>⚽ Valor por partido</label>
-      <input id="teamMatchFee" type="number" min="0" step="1" placeholder="Ej.: 8000">
-
-      <button class="btn-primary" type="button" onclick="saveTeamSettings()">
-        💾 Guardar cambios
-      </button>
-
+<div
+  id="chargeConceptsConfig"
+  style="display:none; margin-top:12px;"
+>
+  <div id="chargeConcepts">
+    Cargando...
+  </div>
+</div>
       <hr style="margin: 24px 0; opacity: .2;">
 
       <button
