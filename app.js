@@ -2082,6 +2082,7 @@ async function deleteMatch(matchId) {
       charges,
       payments,
       currentRegistrationFee
+      activeConcepts
     );
 
   }
