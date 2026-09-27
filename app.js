@@ -2081,7 +2081,7 @@ async function deleteMatch(matchId) {
       players,
       charges,
       payments,
-      currentRegistrationFee
+      currentRegistrationFee,
       activeConcepts
     );
 
