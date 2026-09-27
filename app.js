@@ -1882,6 +1882,22 @@ async function deleteMatch(matchId) {
 
     await loadTeamSettings();
     await loadChargeConcepts();
+    const {
+  data: activeConcepts,
+  error: activeConceptsError
+} = await client
+  .from("charge_concepts")
+  .select("*")
+  .eq("team_id", currentTeam.id)
+  .eq("active", true);
+    if (activeConceptsError) {
+  showAdminError(
+    "No pudimos cargar los conceptos activos: " +
+    activeConceptsError.message
+  );
+  return;
+}
+    
     await loadMatches();
 
 
