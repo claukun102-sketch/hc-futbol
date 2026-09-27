@@ -2343,7 +2343,16 @@ async function removePlayer(playerId, playerName) {
 const playerCharges = charges
   .filter(c => c.player_id === player.id)
   .filter(c => {
-    const chargeName = (c.description || "").trim().toLowerCase();
+    const chargeName =
+      (c.description || "").trim().toLowerCase();
+
+    if (
+      c.charge_type === "registration" &&
+      activeConceptNames.includes("inscripción")
+    ) {
+      return true;
+    }
+
     return activeConceptNames.includes(chargeName);
   })
   .reduce(
