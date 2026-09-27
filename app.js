@@ -2105,61 +2105,177 @@ async function deleteMatch(matchId) {
     }
   }
 
-  async function addPlayer() {
+ async function addPlayer() {
 
-    if (!currentTeam) {
-      showAdminError("No hay un equipo seleccionado.");
-      return;
-    }
-
-    const name = document.getElementById("newPlayerName").value.trim();
-    const nickname = document.getElementById("newPlayerNickname").value.trim();
-    const dni = document.getElementById("newPlayerDni").value.trim();
-    if (!name) {
-      showAdminError("Ingresá el nombre del jugador.");
-      return;
-    }
-
-    const { count, error: countError } = await client
-      .from("players")
-      .select("id", { count: "exact", head: true })
-      .eq("team_id", currentTeam.id)
-      .eq("active", true);
-
-    if (countError) {
-      showAdminError("No pudimos comprobar la cantidad de jugadores: " + countError.message);
-      return;
-    }
-
-    if ((count || 0) >= 50) {
-      showAdminError("Este equipo ya alcanzó el máximo de 50 jugadores.");
-      return;
-    }
-
-    const { error } = await client
-      .from("players")
-      .insert({
-        team_id: currentTeam.id,
-        name: name,
-        nickname: nickname || null,
-        dni: dni || null,
-        active: true
-      });
-
-    if (error) {
-      showAdminError("No se pudo agregar el jugador: " + error.message);
-      return;
-    }
-
-    document.getElementById("newPlayerName").value = "";
-    document.getElementById("newPlayerNickname").value = "";
-    document.getElementById("newPlayerDni").value = "";
-    document.getElementById("addPlayerForm").style.display = "none";
-
-    showAdminSuccess("Jugador agregado correctamente.");
-    await loadAdminDashboard();
+  if (!currentTeam) {
+    showAdminError("No hay un equipo seleccionado.");
+    return;
   }
 
+  const name =
+    document.getElementById("newPlayerName")
+      .value
+      .trim();
+
+  const nickname =
+    document.getElementById("newPlayerNickname")
+      .value
+      .trim();
+
+  const dni =
+    document.getElementById("newPlayerDni")
+      .value
+      .trim();
+
+  if (!name) {
+    showAdminError(
+      "Ingresá el nombre del jugador."
+    );
+    return;
+  }
+
+  const {
+    count,
+    error: countError
+  } = await client
+    .from("players")
+    .select("id", {
+      count: "exact",
+      head: true
+    })
+    .eq("team_id", currentTeam.id)
+    .eq("active", true);
+
+  if (countError) {
+    showAdminError(
+      "No pudimos comprobar la cantidad de jugadores: " +
+      countError.message
+    );
+    return;
+  }
+
+  if ((count || 0) >= 50) {
+    showAdminError(
+      "Este equipo ya alcanzó el máximo de 50 jugadores."
+    );
+    return;
+  }
+
+
+  /*
+   * 1. Crear jugador
+   */
+
+  const {
+    data: newPlayer,
+    error: playerError
+  } = await client
+    .from("players")
+    .insert({
+      team_id: currentTeam.id,
+      name: name,
+      nickname: nickname || null,
+      dni: dni || null,
+      active: true
+    })
+    .select()
+    .single();
+
+  if (playerError) {
+    showAdminError(
+      "No se pudo agregar el jugador: " +
+      playerError.message
+    );
+    return;
+  }
+
+
+  /*
+   * 2. Obtener conceptos activos
+   */
+
+  const {
+    data: concepts,
+    error: conceptsError
+  } = await client
+    .from("charge_concepts")
+    .select("*")
+    .eq("team_id", currentTeam.id)
+    .eq("active", true);
+
+  if (conceptsError) {
+    showAdminError(
+      "El jugador fue creado, pero no pudimos cargar los conceptos activos: " +
+      conceptsError.message
+    );
+    await loadAdminDashboard();
+    return;
+  }
+
+
+  /*
+   * 3. Crear los cargos del jugador
+   */
+
+  if (concepts && concepts.length > 0) {
+
+    const chargesToInsert =
+      concepts.map(concept => ({
+        team_id: currentTeam.id,
+        player_id: newPlayer.id,
+        charge_type:
+          concept.frequency === "one_time"
+            ? "registration"
+            : "concept",
+        description: concept.name,
+        amount: Number(concept.amount || 0)
+      }));
+
+
+    const {
+      error: chargesError
+    } = await client
+      .from("charges")
+      .insert(chargesToInsert);
+
+    if (chargesError) {
+      showAdminError(
+        "El jugador fue creado, pero no pudimos generar sus cargos: " +
+        chargesError.message
+      );
+      await loadAdminDashboard();
+      return;
+    }
+  }
+
+
+  /*
+   * 4. Limpiar formulario
+   */
+
+  document.getElementById(
+    "newPlayerName"
+  ).value = "";
+
+  document.getElementById(
+    "newPlayerNickname"
+  ).value = "";
+
+  document.getElementById(
+    "newPlayerDni"
+  ).value = "";
+
+  document.getElementById(
+    "addPlayerForm"
+  ).style.display = "none";
+
+
+  showAdminSuccess(
+    "Jugador agregado correctamente."
+  );
+
+  await loadAdminDashboard();
+}
   async function editPlayerName(playerId, currentName) {
 
     const newName = prompt("Modificar nombre del jugador:", currentName);
