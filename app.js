@@ -2317,6 +2317,7 @@ async function removePlayer(playerId, playerName) {
     charges,
     payments,
     currentRegistrationFee
+    activeConcepts
   ) {
 
     const table =
