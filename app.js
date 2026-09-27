@@ -2335,9 +2335,31 @@ async function removePlayer(playerId, playerName) {
 
     players.forEach(player => {
 
-      const playerCharges =
+     const activeConceptNames =
+  activeConcepts.map(
+    concept =>
+      concept.name.trim().toLowerCase()
+  );
+
+const playerCharges =
   charges
-    .filter(c => c.player_id === player.id)
+    .filter(c => {
+      if (c.player_id !== player.id) {
+        return false;
+      }
+
+      const chargeName =
+        (
+          c.description ||
+          ""
+        )
+          .trim()
+          .toLowerCase();
+
+      return activeConceptNames.includes(
+        chargeName
+      );
+    })
     .reduce(
       (sum, c) =>
         sum + Number(c.amount || 0),
