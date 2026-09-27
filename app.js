@@ -137,6 +137,7 @@ const client =
 
   }
 
+  window.handleLogin = handleLogin;
 
   async function handleRegister() {
 
