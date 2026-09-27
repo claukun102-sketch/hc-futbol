@@ -2318,17 +2318,13 @@ async function removePlayer(playerId, playerName) {
     players.forEach(player => {
 
       const playerCharges =
-        charges
-          .filter(c => c.player_id === player.id)
-          .reduce((sum, c) => {
-            const amount =
-              c.charge_type === "registration"
-                ? currentRegistrationFee
-                : Number(c.amount || 0);
-
-            return sum + amount;
-          }, 0);
-
+  charges
+    .filter(c => c.player_id === player.id)
+    .reduce(
+      (sum, c) =>
+        sum + Number(c.amount || 0),
+      0
+    );
 
       const playerPaid =
         payments
