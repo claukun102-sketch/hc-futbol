@@ -2821,47 +2821,50 @@ async function showPlayerCharges(playerCharges) {
       return;
 
     }
+  const totalCharges =
+  charges.reduce(
+    (sum, charge) =>
+      sum + Number(charge.amount || 0),
+    0
+  );
 
 
-    const totalCharges =
-      charges.reduce((sum, c) => {
-        const amount =
-          c.charge_type === "registration"
-            ? currentRegistrationFee
-            : Number(c.amount || 0);
-
-        return sum + amount;
-      }, 0);
-
-
-    const totalPaid =
-      payments
-        .filter(
-          p =>
-            p.status ===
-            "approved"
-        )
-        .reduce(
-          (sum, p) =>
-            sum + Number(p.amount),
-          0
-        );
+const totalPaid =
+  payments
+    .filter(
+      payment =>
+        payment.status === "approved"
+    )
+    .reduce(
+      (sum, payment) =>
+        sum + Number(payment.amount || 0),
+      0
+    );
 
 
-    const pending =
-      payments.filter(
-        p =>
-          p.status ===
-          "pending"
-      );
+const pending =
+  payments.filter(
+    payment =>
+      payment.status === "pending"
+  );
 
 
-    const debt =
-      Math.max(
-        0,
-        totalCharges -
-        totalPaid
-      );
+const balance =
+  totalPaid - totalCharges;
+
+
+const credit =
+  Math.max(
+    0,
+    balance
+  );
+
+
+const debt =
+  Math.max(
+    0,
+    -balance
+  );
 
 
     document.getElementById(
@@ -2895,32 +2898,26 @@ document.getElementById("playerDataDni").textContent =
     ).textContent =
       money(Math.max(0, debt));
 
-
-    const playerDifference =
-      totalPaid - totalCharges;
-
-    document.getElementById("playerCredit").textContent =
-      money(Math.max(0, playerDifference));
+     document.getElementById("playerCredit").textContent =
+     money(credit);
 
     document.getElementById("playerDebtBox").textContent =
-      money(Math.max(0, -playerDifference));
-
+   money(debt);
 
     document.getElementById(
       "playerPending"
     ).textContent =
       pending.length;
 
-    await loadPlayerMatches();
-    renderPlayerCharges(
-      charges
-    );
+   await loadPlayerMatches();
 
-    await loadPlayerMatches();
-    renderPlayerPayments(
-      payments
-    );
+renderPlayerCharges(
+  charges
+);
 
+renderPlayerPayments(
+  payments
+);
 
     document.getElementById(
       "paymentDate"
