@@ -2317,7 +2317,7 @@ async function removePlayer(playerId, playerName) {
     players,
     charges,
     payments,
-    currentRegistrationFee
+    currentRegistrationFee,
     activeConcepts
   ) {
 
