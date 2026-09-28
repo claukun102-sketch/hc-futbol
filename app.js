@@ -2762,7 +2762,9 @@ async function managePlayerCharges(
   list.innerHTML = "Cargando...";
 
   modal.style.display = "block";
-
+  
+  modal.dataset.playerId = playerId;
+  
   const {
     data: charges,
     error
