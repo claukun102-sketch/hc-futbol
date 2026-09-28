@@ -2095,29 +2095,6 @@ const currentCharges =
       return false;
     }
 
-    const chargeName =
-      (charge.description || "")
-        .trim()
-        .toLowerCase();
-
-    const chargeAmount =
-      Number(charge.amount || 0);
-
-    if (
-      charge.charge_type ===
-        "registration" &&
-      activeConceptNames.includes(
-        "inscripción"
-      )
-    ) {
-      return (
-        chargeAmount ===
-        activeConceptAmounts[
-          "inscripción"
-        ]
-      );
-    }
-
     return (
       activeConceptNames.includes(
         chargeName
