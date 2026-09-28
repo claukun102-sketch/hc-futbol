@@ -3240,7 +3240,7 @@ document.getElementById("playerDataDni").textContent =
    await loadPlayerMatches();
 
 renderPlayerCharges(
-  charges
+  currentCharges
 );
 
 renderPlayerPayments(
