@@ -3103,13 +3103,13 @@ async function showPlayerCharges(playerCharges) {
       return;
 
     }
- const {
+const {
   data: activeConcepts,
   error: activeConceptsError
 } = await client
   .from("charge_concepts")
   .select("*")
-  .eq("team_id", currentTeam.id)
+  .eq("team_id", player.team_id)
   .eq("active", true);
 
 if (activeConceptsError) {
