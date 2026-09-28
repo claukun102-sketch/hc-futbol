@@ -3591,6 +3591,11 @@ const activeConceptNames =
 const currentCharges =
   charges.filter(charge => {
 
+    // Los cargos anulados no cuentan para el jugador
+    if (charge.active === false) {
+      return false;
+    }
+
     const chargeName =
       (charge.description || "")
         .trim()
