@@ -2906,16 +2906,17 @@ async function showAddPlayerChargeForm() {
     .eq("active", true)
     .order("name");
 
-  if (error) {
-    console.error(error);
+ if (error) {
+  console.error("ERROR AL GUARDAR CARGO:", error);
 
-    showAdminError(
-      "No se pudieron cargar los conceptos de cobro."
-    );
+  showAdminError(
+    "Error al guardar cargo: " +
+    (error.message || JSON.stringify(error))
+  );
 
-    return;
-  }
-
+  return;
+}
+  
   if (!concepts || !concepts.length) {
     select.innerHTML =
       `<option value="">
