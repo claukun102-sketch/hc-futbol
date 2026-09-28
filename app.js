@@ -2020,59 +2020,99 @@ async function deleteMatch(matchId) {
     const currentRegistrationFee =
       Number(settings?.registration_fee || 0);
 
-    const registrationTotal =
-      currentRegistrationFee * players.length;
+   const registrationTotal =
+  charges
+    .filter(
+      c =>
+        c.charge_type === "registration"
+    )
+    .reduce(
+      (sum, c) =>
+        sum + Number(c.amount || 0),
+      0
+    );
 
 
-    const approvedPayments =
-      payments.filter(
-        p =>
-          p.status ===
-          "approved"
-      );
+const approvedPayments =
+  payments.filter(
+    p =>
+      p.status === "approved"
+  );
 
 
-    const approvedTotal =
-      approvedPayments.reduce(
-        (sum, p) =>
-          sum + Number(p.amount),
-        0
-      );
+const approvedTotal =
+  approvedPayments.reduce(
+    (sum, p) =>
+      sum + Number(p.amount || 0),
+    0
+  );
 
 
-    const pendingPayments =
-      payments.filter(
-        p =>
-          p.status ===
-          "pending"
-      );
+const pendingPayments =
+  payments.filter(
+    p =>
+      p.status === "pending"
+  );
 
-    const playerBalances = players.map(player => {
-      const chargesTotal = charges
-        .filter(c => c.player_id === player.id)
-        .reduce((sum, c) => {
-          const amount =
-            c.charge_type === "registration"
-              ? currentRegistrationFee
-              : Number(c.amount || 0);
-          return sum + amount;
-        }, 0);
 
-      const paidTotal = payments
-        .filter(p => p.player_id === player.id && p.status === "approved")
-        .reduce((sum, p) => sum + Number(p.amount || 0), 0);
+const playerBalances =
+  players.map(player => {
 
-      return paidTotal - chargesTotal;
-    });
+    const chargesTotal =
+      charges
+        .filter(
+          c =>
+            c.player_id ===
+            player.id
+        )
+        .reduce(
+          (sum, c) =>
+            sum + Number(c.amount || 0),
+          0
+        );
 
-    const totalCredits = playerBalances
-      .filter(v => v > 0)
-      .reduce((sum, v) => sum + v, 0);
 
-    const totalDebts = playerBalances
-      .filter(v => v < 0)
-      .reduce((sum, v) => sum + Math.abs(v), 0);
+    const paidTotal =
+      payments
+        .filter(
+          p =>
+            p.player_id ===
+              player.id &&
+            p.status ===
+              "approved"
+        )
+        .reduce(
+          (sum, p) =>
+            sum +
+            Number(
+              p.amount || 0
+            ),
+          0
+        );
 
+
+    return paidTotal - chargesTotal;
+  });
+
+
+const totalCredits =
+  playerBalances
+    .filter(v => v > 0)
+    .reduce(
+      (sum, v) =>
+        sum + v,
+      0
+    );
+
+
+const totalDebts =
+  playerBalances
+    .filter(v => v < 0)
+    .reduce(
+      (sum, v) =>
+        sum + Math.abs(v),
+      0
+    );
 
 
     document.getElementById(
