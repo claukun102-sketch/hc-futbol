@@ -2020,11 +2020,19 @@ async function deleteMatch(matchId) {
     const currentRegistrationFee =
       Number(settings?.registration_fee || 0);
 
-   const registrationTotal =
+   const activePlayerIds =
+  players.map(
+    player => player.id
+  );
+
+const registrationTotal =
   charges
     .filter(
       c =>
-        c.charge_type === "registration"
+        c.charge_type === "registration" &&
+        activePlayerIds.includes(
+          c.player_id
+        )
     )
     .reduce(
       (sum, c) =>
