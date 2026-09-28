@@ -3006,6 +3006,10 @@ async function savePlayerCharge() {
   const amount =
     Number(amountInput?.value);
   
+  const chargeType =
+    selectedOption?.dataset.type ||
+    "concept";
+  
 alert(
   "Datos recibidos:\n\n" +
   "Jugador: " + playerId +
@@ -3014,10 +3018,6 @@ alert(
   "\nTipo: " + chargeType
 );
   
-  const chargeType =
-    selectedOption?.dataset.type ||
-    "concept";
-
   if (!description) {
     showAdminError(
       "Ingresá una descripción para el cargo."
