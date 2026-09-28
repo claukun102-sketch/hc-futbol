@@ -2062,6 +2062,19 @@ const pendingPayments =
       p.status === "pending"
   );
 
+const activeConceptAmounts =
+  activeConcepts.reduce(
+    (map, concept) => {
+      map[
+        concept.name
+          .trim()
+          .toLowerCase()
+      ] = Number(concept.amount || 0);
+
+      return map;
+    },
+    {}
+  );
 
 const activeConceptNames =
   activeConcepts.map(
@@ -2073,6 +2086,7 @@ const activeConceptNames =
 
 const currentCharges =
   charges.filter(charge => {
+
     if (
       !activePlayerIds.includes(
         charge.player_id
@@ -2086,6 +2100,9 @@ const currentCharges =
         .trim()
         .toLowerCase();
 
+    const chargeAmount =
+      Number(charge.amount || 0);
+
     if (
       charge.charge_type ===
         "registration" &&
@@ -2093,13 +2110,25 @@ const currentCharges =
         "inscripción"
       )
     ) {
-      return true;
+      return (
+        chargeAmount ===
+        activeConceptAmounts[
+          "inscripción"
+        ]
+      );
     }
 
-    return activeConceptNames.includes(
-      chargeName
+    return (
+      activeConceptNames.includes(
+        chargeName
+      ) &&
+      chargeAmount ===
+        activeConceptAmounts[
+          chargeName
+        ]
     );
   });
+
 
 const playerBalances =
   players.map(player => {
