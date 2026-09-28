@@ -860,10 +860,44 @@ async function editChargeConcept(conceptId) {
     return;
   }
 
-  const newFrequency = prompt(
-    "Tipo: one_time, monthly, match, tournament, eventual o annual",
-    concept.frequency
+const frequencyLabels = {
+  one_time: "Único",
+  monthly: "Mensual",
+  match: "Por partido",
+  tournament: "Por torneo",
+  eventual: "Eventual",
+  annual: "Anual"
+};
+
+const currentFrequencyLabel =
+  frequencyLabels[concept.frequency] ||
+  "Único";
+
+const newFrequencyLabel = prompt(
+  "Tipo: Único, Mensual, Por partido, Por torneo, Eventual o Anual",
+  currentFrequencyLabel
+);
+
+if (newFrequencyLabel === null) return;
+
+const frequencyMap = {
+  "Único": "one_time",
+  "Mensual": "monthly",
+  "Por partido": "match",
+  "Por torneo": "tournament",
+  "Eventual": "eventual",
+  "Anual": "annual"
+};
+
+const newFrequency =
+  frequencyMap[newFrequencyLabel.trim()];
+
+if (!newFrequency) {
+  showAdminError(
+    "Tipo de concepto no válido."
   );
+  return;
+}
 
   if (newFrequency === null) return;
 
