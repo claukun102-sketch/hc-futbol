@@ -2661,7 +2661,16 @@ const playerChargesList =
       >
         ✏️ Editar
       </button>
-
+<button
+  class="btn-secondary"
+  type="button"
+  onclick="managePlayerCharges(
+    '${player.id}',
+    '${escapeHtml(player.name).replace(/'/g, "\\'")}'
+  )"
+>
+  💰 Cargos
+</button>
       <button
         class="btn-danger-small"
         type="button"
