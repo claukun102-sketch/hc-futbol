@@ -1433,7 +1433,157 @@
 
 </div>
 
+<!-- MODAL: GESTIONAR CARGOS DE JUGADOR -->
+<div
+  id="playerChargesModal"
+  style="
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.55);
+    z-index:9999;
+    padding:20px;
+    overflow-y:auto;
+  "
+>
+  <div
+    style="
+      max-width:700px;
+      margin:40px auto;
+      background:white;
+      border-radius:14px;
+      padding:22px;
+      box-shadow:0 10px 40px rgba(0,0,0,0.25);
+    "
+  >
 
+    <div
+      style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        gap:12px;
+        margin-bottom:18px;
+      "
+    >
+      <div>
+        <h2 id="playerChargesModalTitle" style="margin:0;">
+          💰 Cargos
+        </h2>
+
+        <p
+          id="playerChargesModalSubtitle"
+          class="muted"
+          style="margin:5px 0 0;"
+        >
+          Gestionar cargos del jugador
+        </p>
+      </div>
+
+      <button
+        type="button"
+        class="btn-secondary"
+        onclick="closePlayerChargesModal()"
+      >
+        ✕ Cerrar
+      </button>
+    </div>
+
+    <div id="playerChargesList">
+      Cargando...
+    </div>
+
+    <hr style="margin:22px 0;">
+
+    <button
+      type="button"
+      class="btn-primary"
+      onclick="showAddPlayerChargeForm()"
+    >
+      ➕ Agregar cargo
+    </button>
+
+    <div
+      id="addPlayerChargeForm"
+      style="
+        display:none;
+        margin-top:18px;
+        padding:18px;
+        border:1px solid #ddd;
+        border-radius:10px;
+      "
+    >
+      <h3 style="margin-top:0;">
+        ➕ Nuevo cargo
+      </h3>
+
+      <div style="margin-bottom:12px;">
+        <label for="playerChargeConcept">
+          Concepto
+        </label>
+
+        <select
+          id="playerChargeConcept"
+          style="width:100%;"
+        >
+          <option value="">
+            Seleccionar concepto...
+          </option>
+        </select>
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <label for="playerChargeDescription">
+          Descripción
+        </label>
+
+        <input
+          id="playerChargeDescription"
+          type="text"
+          placeholder="Ej.: Inscripción"
+          style="width:100%;"
+        >
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <label for="playerChargeAmount">
+          Importe
+        </label>
+
+        <input
+          id="playerChargeAmount"
+          type="number"
+          min="0"
+          step="0.01"
+          placeholder="0"
+          style="width:100%;"
+        >
+      </div>
+
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+
+        <button
+          type="button"
+          class="btn-primary"
+          onclick="savePlayerCharge()"
+        >
+          💾 Guardar cargo
+        </button>
+
+        <button
+          type="button"
+          class="btn-secondary"
+          onclick="hideAddPlayerChargeForm()"
+        >
+          Cancelar
+        </button>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+  
 <script src="/app.js"></script>
 
 </body>
