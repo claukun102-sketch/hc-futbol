@@ -3046,11 +3046,9 @@ async function savePlayerCharge() {
   amountInput.value = "";
 
   await managePlayerCharges(
-    playerId,
-    document.getElementById(
-      "playerChargesModalSubtitle"
-    )?.textContent || "Jugador"
-  );
+  playerId,
+  modal.dataset.playerName || "Jugador"
+);
 }
 
 function renderPendingPayments(
