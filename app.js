@@ -2764,6 +2764,7 @@ async function managePlayerCharges(
   modal.style.display = "block";
   
   modal.dataset.playerId = playerId;
+  modal.dataset.playerName = playerName;
   
   const {
     data: charges,
