@@ -2910,8 +2910,11 @@ async function showAddPlayerChargeForm() {
   console.error("ERROR AL GUARDAR CARGO:", error);
 
   showAdminError(
-    "Error al guardar cargo: " +
-    (error.message || JSON.stringify(error))
+    "Error al guardar cargo:\n\n" +
+    "Mensaje: " + (error.message || "-") +
+    "\nCódigo: " + (error.code || "-") +
+    "\nDetalle: " + (error.details || "-") +
+    "\nSugerencia: " + (error.hint || "-")
   );
 
   return;
