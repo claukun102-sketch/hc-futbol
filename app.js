@@ -3005,7 +3005,15 @@ async function savePlayerCharge() {
 
   const amount =
     Number(amountInput?.value);
-
+  
+alert(
+  "Datos recibidos:\n\n" +
+  "Jugador: " + playerId +
+  "\nDescripción: " + description +
+  "\nImporte: " + amount +
+  "\nTipo: " + chargeType
+);
+  
   const chargeType =
     selectedOption?.dataset.type ||
     "concept";
