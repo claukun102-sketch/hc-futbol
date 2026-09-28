@@ -2721,10 +2721,58 @@ async function managePlayerCharges(
   playerId,
   playerName
 ) {
+  if (!currentTeam) {
+    showAdminError("No hay un equipo seleccionado.");
+    return;
+  }
+
+  const {
+    data: charges,
+    error
+  } = await client
+    .from("charges")
+    .select("*")
+    .eq("team_id", currentTeam.id)
+    .eq("player_id", playerId)
+    .order("created_at", {
+      ascending: false
+    });
+
+  if (error) {
+    console.error(error);
+    showAdminError(
+      "No se pudieron cargar los cargos del jugador."
+    );
+    return;
+  }
+
+  if (!charges || !charges.length) {
+    alert(
+      "Cargos de " +
+      playerName +
+      "\n\nEste jugador no tiene cargos registrados."
+    );
+    return;
+  }
+
+  const lines = charges.map(charge => {
+    const name =
+      charge.description ||
+      charge.charge_type ||
+      "Cargo";
+
+    return (
+      name +
+      ": " +
+      money(charge.amount)
+    );
+  });
+
   alert(
-    "Gestionar cargos de " +
+    "Cargos de " +
     playerName +
-    "\n\nEsta sección la vamos a completar en el próximo paso."
+    "\n\n" +
+    lines.join("\n")
   );
 }
   function renderPendingPayments(
