@@ -2964,6 +2964,8 @@ function hideAddPlayerChargeForm() {
   form.style.display = "none";
 } 
 async function savePlayerCharge() {
+  alert("savePlayerCharge se está ejecutando");
+  
   if (!currentTeam) {
     showAdminError("No hay un equipo seleccionado.");
     return;
