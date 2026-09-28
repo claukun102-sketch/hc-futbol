@@ -2775,7 +2775,42 @@ async function managePlayerCharges(
     lines.join("\n")
   );
 }
-  function renderPendingPayments(
+ function closePlayerChargesModal() {
+  const modal =
+    document.getElementById("playerChargesModal");
+
+  if (modal) {
+    modal.style.display = "none";
+  }
+
+  const form =
+    document.getElementById("addPlayerChargeForm");
+
+  if (form) {
+    form.style.display = "none";
+  }
+}
+
+
+function showAddPlayerChargeForm() {
+  const form =
+    document.getElementById("addPlayerChargeForm");
+
+  if (!form) return;
+
+  form.style.display = "block";
+}
+
+
+function hideAddPlayerChargeForm() {
+  const form =
+    document.getElementById("addPlayerChargeForm");
+
+  if (!form) return;
+
+  form.style.display = "none";
+} 
+function renderPendingPayments(
     payments,
     players
   ) {
