@@ -2906,15 +2906,15 @@ async function showAddPlayerChargeForm() {
     .eq("active", true)
     .order("name");
 
- if (error) {
+if (error) {
   console.error("ERROR AL GUARDAR CARGO:", error);
 
-  showAdminError(
-    "Error al guardar cargo:\n\n" +
+  alert(
+    "ERROR SUPABASE\n\n" +
     "Mensaje: " + (error.message || "-") +
-    "\nCódigo: " + (error.code || "-") +
-    "\nDetalle: " + (error.details || "-") +
-    "\nSugerencia: " + (error.hint || "-")
+    "\n\nCódigo: " + (error.code || "-") +
+    "\n\nDetalle: " + (error.details || "-") +
+    "\n\nSugerencia: " + (error.hint || "-")
   );
 
   return;
