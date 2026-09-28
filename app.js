@@ -2747,6 +2747,32 @@ async function managePlayerCharges(
     );
 
   if (!modal || !title || !subtitle || !list) {
+     if (!currentTeam) {
+    showAdminError("No hay un equipo seleccionado.");
+    return;
+  }
+
+  const modal =
+    document.getElementById(
+      "playerChargesModal"
+    );
+
+  const title =
+    document.getElementById(
+      "playerChargesModalTitle"
+    );
+
+  const subtitle =
+    document.getElementById(
+      "playerChargesModalSubtitle"
+    );
+
+  const list =
+    document.getElementById(
+      "playerChargesList"
+    );
+
+  if (!modal || !title || !subtitle || !list) {
     showAdminError(
       "No se encontró la ventana de cargos."
     );
@@ -2762,10 +2788,10 @@ async function managePlayerCharges(
   list.innerHTML = "Cargando...";
 
   modal.style.display = "block";
-  
+
   modal.dataset.playerId = playerId;
   modal.dataset.playerName = playerName;
-  
+
   const {
     data: charges,
     error
@@ -2806,6 +2832,9 @@ async function managePlayerCharges(
         charge.charge_type ||
         "Cargo";
 
+      const isActive =
+        charge.active !== false;
+
       return `
         <div
           style="
@@ -2813,8 +2842,10 @@ async function managePlayerCharges(
             border:1px solid #ddd;
             border-radius:10px;
             margin-bottom:10px;
+            opacity:${isActive ? "1" : "0.65"};
           "
         >
+
           <div
             style="
               display:flex;
@@ -2843,18 +2874,45 @@ async function managePlayerCharges(
           }
 
           <div class="muted" style="margin-top:4px;">
-           Registrado:
-           ${new Date(charge.created_at).toLocaleDateString("es-AR")}
+            Registrado:
+            ${new Date(charge.created_at).toLocaleDateString("es-AR")}
           </div>
+
+          ${
+            isActive
+              ?
+              `
+                <div style="margin-top:10px;">
+                  <button
+                    type="button"
+                    class="btn-danger-small"
+                    onclick="deactivatePlayerCharge('${charge.id}')"
+                  >
+                    🗑️ Anular cargo
+                  </button>
+                </div>
+              `
+              :
+              `
+                <div
+                  style="
+                    margin-top:10px;
+                    font-weight:600;
+                    color:#777;
+                  "
+                >
+                  🚫 Cargo anulado
+                </div>
+              `
+          }
+
         </div>
       `;
 
     })
     .join("");
-    hideAddPlayerChargeForm();
-}
 
-
+  hideAddPlayerChargeForm();
  function closePlayerChargesModal() {
   const modal =
     document.getElementById("playerChargesModal");
