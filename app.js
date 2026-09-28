@@ -2726,6 +2726,136 @@ async function managePlayerCharges(
     return;
   }
 
+  const modal =
+    document.getElementById(
+      "playerChargesModal"
+    );
+
+  const title =
+    document.getElementById(
+      "playerChargesModalTitle"
+    );
+
+  const subtitle =
+    document.getElementById(
+      "playerChargesModalSubtitle"
+    );
+
+  const list =
+    document.getElementById(
+      "playerChargesList"
+    );
+
+  if (!modal || !title || !subtitle || !list) {
+    showAdminError(
+      "No se encontró la ventana de cargos."
+    );
+    return;
+  }
+
+  title.textContent =
+    "💰 Cargos de " + playerName;
+
+  subtitle.textContent =
+    "Cargos registrados para este jugador";
+
+  list.innerHTML = "Cargando...";
+
+  modal.style.display = "block";
+
+  const {
+    data: charges,
+    error
+  } = await client
+    .from("charges")
+    .select("*")
+    .eq("team_id", currentTeam.id)
+    .eq("player_id", playerId)
+    .order("created_at", {
+      ascending: false
+    });
+
+  if (error) {
+    console.error(error);
+
+    list.innerHTML =
+      `<p class="muted">
+        No se pudieron cargar los cargos.
+      </p>`;
+
+    return;
+  }
+
+  if (!charges || !charges.length) {
+    list.innerHTML =
+      `<p class="muted">
+        Este jugador no tiene cargos registrados.
+      </p>`;
+
+    return;
+  }
+
+  list.innerHTML = charges
+    .map(charge => {
+
+      const name =
+        charge.description ||
+        charge.charge_type ||
+        "Cargo";
+
+      return `
+        <div
+          style="
+            padding:12px;
+            border:1px solid #ddd;
+            border-radius:10px;
+            margin-bottom:10px;
+          "
+        >
+          <div
+            style="
+              display:flex;
+              justify-content:space-between;
+              gap:12px;
+              align-items:center;
+            "
+          >
+            <strong>
+              ${escapeHtml(name)}
+            </strong>
+
+            <strong>
+              ${money(charge.amount)}
+            </strong>
+          </div>
+
+          ${
+            charge.charge_type
+              ?
+              `<div class="muted" style="margin-top:4px;">
+                Tipo: ${escapeHtml(charge.charge_type)}
+              </div>`
+              :
+              ""
+          }
+
+          <div class="muted" style="margin-top:4px;">
+            Registrado:
+            ${formatDate(charge.created_at)}
+          </div>
+        </div>
+      `;
+
+    })
+    .join("");
+
+  hideAddPlayerChargeForm();
+}
+  if (!currentTeam) {
+    showAdminError("No hay un equipo seleccionado.");
+    return;
+  }
+
   const {
     data: charges,
     error
