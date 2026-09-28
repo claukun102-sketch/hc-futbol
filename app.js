@@ -3179,18 +3179,25 @@ const currentCharges =
         .trim()
         .toLowerCase();
 
+    const chargeAmount =
+      Number(charge.amount || 0);
+
     if (
       charge.charge_type === "registration" &&
       activeConceptNames.includes("inscripción")
     ) {
-      return true;
+      return (
+        chargeAmount ===
+        activeConceptAmounts["inscripción"]
+      );
     }
 
-    return activeConceptNames.includes(
-      chargeName
+    return (
+      activeConceptNames.includes(chargeName) &&
+      chargeAmount ===
+        activeConceptAmounts[chargeName]
     );
   });
-
 const totalCharges =
   currentCharges.reduce(
     (sum, charge) =>
