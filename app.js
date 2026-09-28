@@ -3148,6 +3148,20 @@ if (activeConceptsError) {
   return;
 }
 
+const activeConceptAmounts =
+  activeConcepts.reduce(
+    (map, concept) => {
+      map[
+        concept.name
+          .trim()
+          .toLowerCase()
+      ] = Number(concept.amount || 0);
+
+      return map;
+    },
+    {}
+  );
+
 const activeConceptNames =
   activeConcepts.map(
     concept =>
@@ -3159,6 +3173,39 @@ const activeConceptNames =
 const currentCharges =
   charges.filter(charge => {
 
+    const chargeName =
+      (charge.description || "")
+        .trim()
+        .toLowerCase();
+
+    const chargeAmount =
+      Number(charge.amount || 0);
+
+    if (
+      charge.charge_type ===
+        "registration" &&
+      activeConceptNames.includes(
+        "inscripción"
+      )
+    ) {
+      return (
+        chargeAmount ===
+        activeConceptAmounts[
+          "inscripción"
+        ]
+      );
+    }
+
+    return (
+      activeConceptNames.includes(
+        chargeName
+      ) &&
+      chargeAmount ===
+        activeConceptAmounts[
+          chargeName
+        ]
+    );
+  });
     const chargeName =
       (charge.description || "")
         .trim()
