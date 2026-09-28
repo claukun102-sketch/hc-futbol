@@ -2958,6 +2958,100 @@ function hideAddPlayerChargeForm() {
 
   form.style.display = "none";
 } 
+async function savePlayerCharge() {
+  if (!currentTeam) {
+    showAdminError("No hay un equipo seleccionado.");
+    return;
+  }
+
+  const modal =
+    document.getElementById("playerChargesModal");
+
+  const playerId =
+    modal?.dataset.playerId;
+
+  const conceptSelect =
+    document.getElementById("playerChargeConcept");
+
+  const descriptionInput =
+    document.getElementById(
+      "playerChargeDescription"
+    );
+
+  const amountInput =
+    document.getElementById(
+      "playerChargeAmount"
+    );
+
+  if (!playerId) {
+    showAdminError(
+      "No se encontró el jugador."
+    );
+    return;
+  }
+
+  const selectedOption =
+    conceptSelect?.selectedOptions?.[0];
+
+  const description =
+    descriptionInput?.value.trim();
+
+  const amount =
+    Number(amountInput?.value);
+
+  const chargeType =
+    selectedOption?.dataset.type ||
+    "concept";
+
+  if (!description) {
+    showAdminError(
+      "Ingresá una descripción para el cargo."
+    );
+    return;
+  }
+
+  if (!amount || amount <= 0) {
+    showAdminError(
+      "Ingresá un importe válido."
+    );
+    return;
+  }
+
+  const { error } = await client
+    .from("charges")
+    .insert({
+      team_id: currentTeam.id,
+      player_id: playerId,
+      charge_type: chargeType,
+      description: description,
+      amount: amount
+    });
+
+  if (error) {
+    console.error(error);
+
+    showAdminError(
+      "No se pudo guardar el cargo."
+    );
+
+    return;
+  }
+
+  showAdminSuccess(
+    "Cargo agregado correctamente."
+  );
+
+  descriptionInput.value = "";
+  amountInput.value = "";
+
+  await managePlayerCharges(
+    playerId,
+    document.getElementById(
+      "playerChargesModalSubtitle"
+    )?.textContent || "Jugador"
+  );
+}
+
 function renderPendingPayments(
     payments,
     players
