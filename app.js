@@ -2913,6 +2913,8 @@ async function managePlayerCharges(
     .join("");
 
   hideAddPlayerChargeForm();
+ } 
+  
 async function deactivatePlayerCharge(chargeId) {
   if (!currentTeam) {
     showAdminError("No hay un equipo seleccionado.");
