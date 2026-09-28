@@ -3139,7 +3139,9 @@ const {
   .select("*")
   .eq("team_id", player.team_id)
   .eq("active", true);
-
+    
+console.log("JUGADOR - conceptos activos:", activeConcepts);
+console.log("JUGADOR - cargos:", charges);
 if (activeConceptsError) {
   showPlayerError(
     activeConceptsError.message
