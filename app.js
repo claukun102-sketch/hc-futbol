@@ -3103,13 +3103,59 @@ async function showPlayerCharges(playerCharges) {
       return;
 
     }
-  const totalCharges =
-  charges.reduce(
+ const {
+  data: activeConcepts,
+  error: activeConceptsError
+} = await client
+  .from("charge_concepts")
+  .select("*")
+  .eq("team_id", currentTeam.id)
+  .eq("active", true);
+
+if (activeConceptsError) {
+  showPlayerError(
+    activeConceptsError.message
+  );
+  return;
+}
+
+const activeConceptNames =
+  activeConcepts.map(
+    concept =>
+      concept.name
+        .trim()
+        .toLowerCase()
+  );
+
+const currentCharges =
+  charges.filter(charge => {
+
+    const chargeName =
+      (charge.description || "")
+        .trim()
+        .toLowerCase();
+
+    if (
+      charge.charge_type ===
+        "registration" &&
+      activeConceptNames.includes(
+        "inscripción"
+      )
+    ) {
+      return true;
+    }
+
+    return activeConceptNames.includes(
+      chargeName
+    );
+  });
+
+const totalCharges =
+  currentCharges.reduce(
     (sum, charge) =>
       sum + Number(charge.amount || 0),
     0
   );
-
 
 const totalPaid =
   payments
