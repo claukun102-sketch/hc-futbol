@@ -2922,11 +2922,80 @@ async function managePlayerCharges(
 }
 
 
-function showAddPlayerChargeForm() {
+async function showAddPlayerChargeForm() {
+  if (!currentTeam) {
+    showAdminError("No hay un equipo seleccionado.");
+    return;
+  }
+
   const form =
     document.getElementById("addPlayerChargeForm");
 
-  if (!form) return;
+  const select =
+    document.getElementById("playerChargeConcept");
+
+  if (!form || !select) {
+    showAdminError(
+      "No se encontró el formulario de cargos."
+    );
+    return;
+  }
+
+  select.innerHTML =
+    `<option value="">
+      Seleccionar concepto...
+    </option>`;
+
+  const {
+    data: concepts,
+    error
+  } = await client
+    .from("charge_concepts")
+    .select("*")
+    .eq("team_id", currentTeam.id)
+    .eq("active", true)
+    .order("name");
+
+  if (error) {
+    console.error(error);
+
+    showAdminError(
+      "No se pudieron cargar los conceptos de cobro."
+    );
+
+    return;
+  }
+
+  if (!concepts || !concepts.length) {
+    select.innerHTML =
+      `<option value="">
+        No hay conceptos activos
+      </option>`;
+  } else {
+    concepts.forEach(concept => {
+
+      const option =
+        document.createElement("option");
+
+      option.value = concept.id;
+
+      option.textContent =
+        concept.name +
+        " — " +
+        money(concept.amount);
+
+      option.dataset.amount =
+        concept.amount;
+
+      option.dataset.name =
+        concept.name;
+
+      option.dataset.type =
+        concept.frequency || "eventual";
+
+      select.appendChild(option);
+    });
+  }
 
   form.style.display = "block";
 }
