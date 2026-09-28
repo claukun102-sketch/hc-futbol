@@ -2913,6 +2913,65 @@ async function managePlayerCharges(
     .join("");
 
   hideAddPlayerChargeForm();
+async function deactivatePlayerCharge(chargeId) {
+  if (!currentTeam) {
+    showAdminError("No hay un equipo seleccionado.");
+    return;
+  }
+
+  const confirmed = confirm(
+    "¿Querés anular este cargo?\n\n" +
+    "El cargo quedará guardado en el historial, " +
+    "pero dejará de contar como deuda vigente."
+  );
+
+  if (!confirmed) return;
+
+  const { error } = await client
+    .from("charges")
+    .update({
+      active: false
+    })
+    .eq("id", chargeId)
+    .eq("team_id", currentTeam.id);
+
+  if (error) {
+    console.error("ERROR AL ANULAR CARGO:", error);
+
+    showAdminError(
+      "No se pudo anular el cargo: " +
+      error.message
+    );
+
+    return;
+  }
+
+  showAdminSuccess(
+    "Cargo anulado correctamente."
+  );
+
+  const modal =
+    document.getElementById(
+      "playerChargesModal"
+    );
+
+  const playerId =
+    modal?.dataset.playerId;
+
+  const playerName =
+    modal?.dataset.playerName ||
+    "Jugador";
+
+  if (playerId) {
+    await managePlayerCharges(
+      playerId,
+      playerName
+    );
+  }
+
+  await loadAdminDashboard();
+}
+    
  function closePlayerChargesModal() {
   const modal =
     document.getElementById("playerChargesModal");
