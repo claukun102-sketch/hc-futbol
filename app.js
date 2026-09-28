@@ -2717,6 +2717,16 @@ async function showPlayerCharges(playerCharges) {
     lines.join("\n")
   );
 }
+async function managePlayerCharges(
+  playerId,
+  playerName
+) {
+  alert(
+    "Gestionar cargos de " +
+    playerName +
+    "\n\nEsta sección la vamos a completar en el próximo paso."
+  );
+}
   function renderPendingPayments(
     payments,
     players
