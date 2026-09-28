@@ -2843,8 +2843,8 @@ async function managePlayerCharges(
           }
 
           <div class="muted" style="margin-top:4px;">
-            Registrado:
-            ${formatDate(charge.created_at)}
+           Registrado:
+           ${new Date(charge.created_at).toLocaleDateString("es-AR")}
           </div>
         </div>
       `;
