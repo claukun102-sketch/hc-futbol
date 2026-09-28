@@ -2063,11 +2063,6 @@ const pendingPayments =
   );
 
 
-const activePlayerIds =
-  players.map(
-    player => player.id
-  );
-
 const activeConceptNames =
   activeConcepts.map(
     concept =>
