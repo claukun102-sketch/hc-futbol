@@ -2342,64 +2342,7 @@ const totalDebts =
   }
 
 
-  /*
-   * 2. Obtener conceptos activos
-   */
-
-  const {
-    data: concepts,
-    error: conceptsError
-  } = await client
-    .from("charge_concepts")
-    .select("*")
-    .eq("team_id", currentTeam.id)
-    .eq("active", true);
-
-  if (conceptsError) {
-    showAdminError(
-      "El jugador fue creado, pero no pudimos cargar los conceptos activos: " +
-      conceptsError.message
-    );
-    await loadAdminDashboard();
-    return;
-  }
-
-
-  /*
-   * 3. Crear los cargos del jugador
-   */
-
-  if (concepts && concepts.length > 0) {
-
-    const chargesToInsert =
-      concepts.map(concept => ({
-        team_id: currentTeam.id,
-        player_id: newPlayer.id,
-        charge_type:
-          concept.frequency === "one_time"
-            ? "registration"
-            : "concept",
-        description: concept.name,
-        amount: Number(concept.amount || 0)
-      }));
-
-
-    const {
-      error: chargesError
-    } = await client
-      .from("charges")
-      .insert(chargesToInsert);
-
-    if (chargesError) {
-      showAdminError(
-        "El jugador fue creado, pero no pudimos generar sus cargos: " +
-        chargesError.message
-      );
-      await loadAdminDashboard();
-      return;
-    }
-  }
-
+  
 
   /*
    * 4. Limpiar formulario
