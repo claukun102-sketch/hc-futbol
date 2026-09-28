@@ -3177,32 +3177,15 @@ const currentCharges =
         .trim()
         .toLowerCase();
 
-    const chargeAmount =
-      Number(charge.amount || 0);
-
     if (
-      charge.charge_type ===
-        "registration" &&
-      activeConceptNames.includes(
-        "inscripción"
-      )
+      charge.charge_type === "registration" &&
+      activeConceptNames.includes("inscripción")
     ) {
-      return (
-        chargeAmount ===
-        activeConceptAmounts[
-          "inscripción"
-        ]
-      );
+      return true;
     }
 
-    return (
-      activeConceptNames.includes(
-        chargeName
-      ) &&
-      chargeAmount ===
-        activeConceptAmounts[
-          chargeName
-        ]
+    return activeConceptNames.includes(
+      chargeName
     );
   });
 
