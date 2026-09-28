@@ -2063,66 +2063,113 @@ const pendingPayments =
   );
 
 
+const activePlayerIds =
+  players.map(
+    player => player.id
+  );
+
+const activeConceptNames =
+  activeConcepts.map(
+    concept =>
+      concept.name
+        .trim()
+        .toLowerCase()
+  );
+
+const currentCharges =
+  charges.filter(charge => {
+    if (
+      !activePlayerIds.includes(
+        charge.player_id
+      )
+    ) {
+      return false;
+    }
+
+    const chargeName =
+      (charge.description || "")
+        .trim()
+        .toLowerCase();
+
+    if (
+      charge.charge_type ===
+        "registration" &&
+      activeConceptNames.includes(
+        "inscripción"
+      )
+    ) {
+      return true;
+    }
+
+    return activeConceptNames.includes(
+      chargeName
+    );
+  });
+
 const playerBalances =
   players.map(player => {
 
     const chargesTotal =
-      charges
+      currentCharges
         .filter(
-          c =>
-            c.player_id ===
+          charge =>
+            charge.player_id ===
             player.id
         )
         .reduce(
-          (sum, c) =>
-            sum + Number(c.amount || 0),
-          0
-        );
-
-
-    const paidTotal =
-      payments
-        .filter(
-          p =>
-            p.player_id ===
-              player.id &&
-            p.status ===
-              "approved"
-        )
-        .reduce(
-          (sum, p) =>
+          (sum, charge) =>
             sum +
             Number(
-              p.amount || 0
+              charge.amount || 0
             ),
           0
         );
 
+    const paidTotal =
+      payments
+        .filter(
+          payment =>
+            payment.player_id ===
+              player.id &&
+            payment.status ===
+              "approved"
+        )
+        .reduce(
+          (sum, payment) =>
+            sum +
+            Number(
+              payment.amount || 0
+            ),
+          0
+        );
 
-    return paidTotal - chargesTotal;
+    return (
+      paidTotal -
+      chargesTotal
+    );
   });
-
 
 const totalCredits =
   playerBalances
-    .filter(v => v > 0)
+    .filter(
+      value => value > 0
+    )
     .reduce(
-      (sum, v) =>
-        sum + v,
+      (sum, value) =>
+        sum + value,
       0
     );
-
 
 const totalDebts =
   playerBalances
-    .filter(v => v < 0)
+    .filter(
+      value => value < 0
+    )
     .reduce(
-      (sum, v) =>
-        sum + Math.abs(v),
+      (sum, value) =>
+        sum + Math.abs(value),
       0
     );
-
-
     document.getElementById(
       "statPlayers"
     ).textContent =
