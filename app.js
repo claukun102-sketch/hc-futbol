@@ -3183,25 +3183,6 @@ const currentCharges =
         ]
     );
   });
-    const chargeName =
-      (charge.description || "")
-        .trim()
-        .toLowerCase();
-
-    if (
-      charge.charge_type ===
-        "registration" &&
-      activeConceptNames.includes(
-        "inscripción"
-      )
-    ) {
-      return true;
-    }
-
-    return activeConceptNames.includes(
-      chargeName
-    );
-  });
 
 const totalCharges =
   currentCharges.reduce(
