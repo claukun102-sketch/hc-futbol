@@ -2815,78 +2815,80 @@ async function managePlayerCharges(
           charge.charge_type ||
           "Cargo";
 
- return `
-  <div
-    style="
-      padding:12px;
-      border:1px solid #ddd;
-      border-radius:10px;
-      margin-bottom:10px;
-    "
-  >
-
-    <div
-      style="
-        display:flex;
-        justify-content:space-between;
-        gap:12px;
-        align-items:center;
-      "
-    >
-      <strong>
-        ${escapeHtml(name)}
-      </strong>
-
-      <strong>
-        ${money(charge.amount)}
-      </strong>
-    </div>
-
-    ${
-      charge.charge_type
-        ? `
+         return `
           <div
-            class="muted"
-            style="margin-top:4px;"
+            style="
+              padding:12px;
+              border:1px solid #ddd;
+              border-radius:10px;
+              margin-bottom:10px;
+            "
           >
-            Tipo:
-            ${escapeHtml(charge.charge_type)}
+
+            <div
+              style="
+                display:flex;
+                justify-content:space-between;
+                gap:12px;
+                align-items:center;
+              "
+            >
+              <strong>
+                ${escapeHtml(name)}
+              </strong>
+
+              <strong>
+                ${money(charge.amount)}
+              </strong>
+            </div>
+
+            ${
+              charge.charge_type
+                ? `
+                  <div
+                    class="muted"
+                    style="margin-top:4px;"
+                  >
+                    Tipo:
+                    ${escapeHtml(charge.charge_type)}
+                  </div>
+                `
+                : ""
+            }
+
+            <div
+              class="muted"
+              style="margin-top:4px;"
+            >
+              Registrado:
+              ${
+                charge.created_at
+                  ? new Date(
+                      charge.created_at
+                    ).toLocaleDateString("es-AR")
+                  : "-"
+              }
+            </div>
+
+            <div
+              style="
+                margin-top:10px;
+                text-align:right;
+              "
+            >
+              <button
+                class="btn-danger-small"
+                type="button"
+                onclick="deactivatePlayerCharge('${charge.id}')"
+              >
+                🗑️ Anular
+              </button>
+            </div>
+
           </div>
-        `
-        : ""
-    }
-
-    <div
-      class="muted"
-      style="margin-top:4px;"
-    >
-      Registrado:
-      ${
-        charge.created_at
-          ? new Date(
-              charge.created_at
-            ).toLocaleDateString("es-AR")
-          : "-"
-      }
-    </div>
-
-    <div
-      style="
-        margin-top:10px;
-        text-align:right;
-      "
-    >
-      <button
-        class="btn-danger-small"
-        type="button"
-        onclick="deactivatePlayerCharge('${charge.id}')"
-      >
-        🗑️ Anular
-      </button>
-    </div>
-
-  </div>
-`;
+        `;
+      })
+      .join("");
 
   hideAddPlayerChargeForm();
 }
