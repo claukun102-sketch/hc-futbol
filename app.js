@@ -1043,7 +1043,9 @@ if (!newFrequency) {
       .eq("team_id", currentTeam.id)
       .eq("active", true)
       .order("name");
-
+      console.log("JUGADORES:", players);
+      console.log("ERROR:", playersError);
+    
     if (playersError) {
       showAdminError("No pudimos cargar los jugadores: " + playersError.message);
       return;
