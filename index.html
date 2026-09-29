@@ -1564,6 +1564,191 @@
 
 </div>
 
+<!-- MODAL: NUEVO APORTE / COMPROMISO -->
+
+<div
+  id="teamPostModal"
+  style="
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.55);
+    z-index:9999;
+    padding:20px;
+    overflow-y:auto;
+  "
+>
+
+  <div
+    style="
+      max-width:600px;
+      margin:40px auto;
+      background:white;
+      border-radius:14px;
+      padding:22px;
+      box-shadow:0 10px 40px rgba(0,0,0,0.25);
+    "
+  >
+
+    <div
+      style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        gap:12px;
+        margin-bottom:18px;
+      "
+    >
+
+      <div>
+
+        <h2 style="margin:0;">
+          ➕ Nuevo aporte
+        </h2>
+
+        <p
+          class="muted"
+          style="margin:5px 0 0;"
+        >
+          Compartí un aporte o compromiso con el equipo.
+        </p>
+
+      </div>
+
+      <button
+        type="button"
+        class="btn-secondary"
+        onclick="closeTeamPostModal()"
+      >
+        ✕ Cerrar
+      </button>
+
+    </div>
+
+
+    <div style="margin-bottom:14px;">
+
+      <label for="teamPostType">
+        Tipo de aporte
+      </label>
+
+      <select
+        id="teamPostType"
+        style="width:100%;"
+        onchange="updateTeamPostForm()"
+      >
+
+        <option value="money">
+          💰 Dinero
+        </option>
+
+        <option value="product">
+          🥩 Producto
+        </option>
+
+        <option value="service">
+          🛠️ Servicio
+        </option>
+
+        <option value="commitment">
+          🤝 Compromiso
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <div style="margin-bottom:14px;">
+
+      <label for="teamPostDescription">
+        ¿Qué aportás?
+      </label>
+
+      <textarea
+        id="teamPostDescription"
+        rows="3"
+        placeholder="Ej.: Aporto un costillar para el próximo asado."
+        style="
+          width:100%;
+          box-sizing:border-box;
+          resize:vertical;
+        "
+      ></textarea>
+
+    </div>
+
+
+    <div
+      id="teamPostAmountContainer"
+      style="margin-bottom:14px;"
+    >
+
+      <label for="teamPostAmount">
+        Monto
+      </label>
+
+      <input
+        id="teamPostAmount"
+        type="number"
+        min="0"
+        step="0.01"
+        placeholder="Ej.: 20000"
+        style="width:100%;"
+      >
+
+    </div>
+
+
+    <div
+      id="teamPostDateContainer"
+      style="margin-bottom:14px; display:none;"
+    >
+
+      <label for="teamPostDate">
+        Fecha prevista
+      </label>
+
+      <input
+        id="teamPostDate"
+        type="date"
+        style="width:100%;"
+      >
+
+    </div>
+
+
+    <div
+      style="
+        display:flex;
+        gap:10px;
+        flex-wrap:wrap;
+        margin-top:18px;
+      "
+    >
+
+      <button
+        type="button"
+        class="btn-primary"
+        onclick="saveTeamPost()"
+      >
+        📢 Publicar
+      </button>
+
+      <button
+        type="button"
+        class="btn-secondary"
+        onclick="closeTeamPostModal()"
+      >
+        Cancelar
+      </button>
+
+    </div>
+
+  </div>
+
+</div>  
+  
 <!-- MODAL: GESTIONAR CARGOS DE JUGADOR -->
 <div
   id="playerChargesModal"
