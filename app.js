@@ -4353,8 +4353,6 @@ async function loadTeamPosts() {
 
   }
 
-}
-
 
 /* =====================================================
    CARGOS DEL JUGADOR
