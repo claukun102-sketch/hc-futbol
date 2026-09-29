@@ -5625,6 +5625,39 @@ async function loadAdminTeamPosts() {
           <span class="status ${statusClass}">
             ${statusText}
           </span>
+          
+${
+  post.status === "pending"
+    ? `
+      <div
+        style="
+          display:flex;
+          gap:8px;
+          margin-top:10px;
+          flex-wrap:wrap;
+        "
+      >
+
+        <button
+          type="button"
+          class="btn-primary"
+          onclick="confirmTeamPost('${post.id}')"
+        >
+          ✅ Confirmar
+        </button>
+
+        <button
+          type="button"
+          class="btn-danger"
+          onclick="cancelTeamPost('${post.id}')"
+        >
+          ❌ Cancelar
+        </button>
+
+      </div>
+    `
+    : ""
+}
 
           <p
             class="muted"
