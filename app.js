@@ -3580,7 +3580,12 @@ const currentCharges =
         activeConceptAmounts[chargeName]
     );
   });
-const totalCharges =
+console.log(
+  "JUGADOR - cargos que se van a mostrar:",
+  currentCharges
+);
+    
+  const totalCharges =
   currentCharges.reduce(
     (sum, charge) =>
       sum + Number(charge.amount || 0),
