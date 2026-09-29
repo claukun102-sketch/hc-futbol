@@ -5890,12 +5890,12 @@ async function sendPlayerInvitation() {
 
   const { error } = await client
     .from("team_invitations")
-    .insert({
-      team_id: currentTeam.id,
-      email: email,
-      status: "pending"
-    });
-
+   .insert({
+  team_id: currentTeam.id,
+  name: name,
+  email: email,
+  status: "pending"
+});
   if (error) {
     console.error("Error creando invitación:", error);
     alert("No se pudo crear la invitación: " + error.message);
