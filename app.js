@@ -3170,6 +3170,8 @@ if (error) {
   playerId,
   modal.dataset.playerName || "Jugador"
 );
+
+  await loadAdminDashboard();
 }
 
 function renderPendingPayments(
