@@ -4105,101 +4105,180 @@ async function loadPlayerMatches() {
   ===================================================== */
 
   function renderPlayerPayments(
-    payments
-  ) {
+  payments
+) {
 
-    const container =
-      document.getElementById(
-        "playerPayments"
-      );
+  const container =
+    document.getElementById(
+      "playerPayments"
+    );
 
-    container.innerHTML = "";
-
-
-    if (!payments.length) {
-
-      container.innerHTML =
-        `<p class="muted">
-          Todavía no registraste ningún pago.
-        </p>`;
-
-      return;
-
-    }
+  container.innerHTML = "";
 
 
-    payments.forEach(payment => {
+  if (!payments.length) {
 
-      const div =
-        document.createElement("div");
+    container.innerHTML =
+      `<p class="muted">
+        Todavía no registraste ningún pago.
+      </p>`;
 
-      div.className =
-        "payment";
-
-
-      let statusClass =
-        "status-pending";
-
-      let statusText =
-        "Pendiente";
-
-
-      if (
-        payment.status ===
-        "approved"
-      ) {
-
-        statusClass =
-          "status-approved";
-
-        statusText =
-          "Aprobado";
-
-      }
-
-
-      if (
-        payment.status ===
-        "rejected"
-      ) {
-
-        statusClass =
-          "status-rejected";
-
-        statusText =
-          "Rechazado";
-
-      }
-
-
-      div.innerHTML = `
-        <strong>
-          ${money(payment.amount)}
-        </strong>
-
-        <p>
-          ${escapeHtml(
-            payment.payment_method
-          )}
-          —
-          ${formatDate(
-            payment.payment_date
-          )}
-        </p>
-
-        <span class="status ${statusClass}">
-          ${statusText}
-        </span>
-      `;
-
-
-      container.appendChild(div);
-
-    });
+    return;
 
   }
 
 
+  // Mostrar inicialmente solamente los últimos 5 pagos
+  const visiblePayments =
+    payments.slice(0, 5);
+
+
+  const renderPayments =
+    (items) => {
+
+      container.innerHTML = "";
+
+      items.forEach(payment => {
+
+        const div =
+          document.createElement("div");
+
+        div.className =
+          "payment";
+
+
+        let statusClass =
+          "status-pending";
+
+        let statusText =
+          "Pendiente";
+
+
+        if (
+          payment.status ===
+          "approved"
+        ) {
+
+          statusClass =
+            "status-approved";
+
+          statusText =
+            "Aprobado";
+
+        }
+
+
+        if (
+          payment.status ===
+          "rejected"
+        ) {
+
+          statusClass =
+            "status-rejected";
+
+          statusText =
+            "Rechazado";
+
+        }
+
+
+        div.innerHTML = `
+          <strong>
+            ${money(payment.amount)}
+          </strong>
+
+          <p>
+            ${escapeHtml(
+              payment.payment_method
+            )}
+            —
+            ${formatDate(
+              payment.payment_date
+            )}
+          </p>
+
+          <span class="status ${statusClass}">
+            ${statusText}
+          </span>
+        `;
+
+
+        container.appendChild(div);
+
+      });
+
+    };
+
+
+  renderPayments(
+    visiblePayments
+  );
+
+
+  // Si hay más de 5 pagos,
+  // mostrar botón para ver todos.
+
+  if (payments.length > 5) {
+
+    const button =
+      document.createElement(
+        "button"
+      );
+
+    button.type =
+      "button";
+
+    button.className =
+      "btn-secondary player-payments-toggle";
+
+    button.style.marginTop =
+      "15px";
+
+    button.textContent =
+      `Ver todos los pagos (${payments.length})`;
+
+
+    let showingAll =
+      false;
+
+
+    button.onclick =
+      () => {
+
+        showingAll =
+          !showingAll;
+
+
+        if (showingAll) {
+
+          renderPayments(
+            payments
+          );
+
+          button.textContent =
+            "Ocultar pagos";
+
+        } else {
+
+          renderPayments(
+            visiblePayments
+          );
+
+          button.textContent =
+            `Ver todos los pagos (${payments.length})`;
+
+        }
+
+      };
+
+
+    container.appendChild(
+      button
+    );
+
+  }
+
+}
   /* =====================================================
      REGISTRAR PAGO
   ===================================================== */
