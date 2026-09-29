@@ -5864,3 +5864,45 @@ function closeInvitePlayerModal() {
 
   modal.style.display = "none";
 }
+
+async function sendPlayerInvitation() {
+
+  const name =
+    document.getElementById("invitePlayerName")?.value.trim();
+
+  const email =
+    document.getElementById("invitePlayerEmail")?.value.trim().toLowerCase();
+
+  if (!currentTeam) {
+    alert("No hay un equipo seleccionado.");
+    return;
+  }
+
+  if (!name) {
+    alert("Ingresá el nombre del jugador.");
+    return;
+  }
+
+  if (!email) {
+    alert("Ingresá el email del jugador.");
+    return;
+  }
+
+  const { error } = await client
+    .from("team_invitations")
+    .insert({
+      team_id: currentTeam.id,
+      email: email,
+      status: "pending"
+    });
+
+  if (error) {
+    console.error("Error creando invitación:", error);
+    alert("No se pudo crear la invitación: " + error.message);
+    return;
+  }
+
+  alert("✅ Invitación creada correctamente.");
+
+  closeInvitePlayerModal();
+}
