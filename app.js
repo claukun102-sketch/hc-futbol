@@ -1249,125 +1249,161 @@ async function loadMatches() {
   }
 
 
-  container.innerHTML =
-    matches.map(match => {
+  container.innerHTML = `
+    <div
+      style="
+        display:grid;
+        grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));
+        gap:12px;
+      "
+    >
 
-      const published =
-        !!match.published_at;
+      ${matches.map(match => {
 
-      return `
-        <div class="payment" style="margin-bottom:12px;">
+        const published =
+          !!match.published_at;
 
-          <div style="display:flex; justify-content:space-between; gap:15px; flex-wrap:wrap;">
+        return `
+          <div
+            class="payment"
+            style="margin:0;"
+          >
 
-            <div>
+            <div
+              style="
+                display:flex;
+                justify-content:space-between;
+                gap:15px;
+                flex-wrap:wrap;
+              "
+            >
 
-              <strong>
-                ⚽ ${escapeHtml(
-                  match.opponent ||
-                  "Partido"
-                )}
-              </strong>
+              <div>
 
-              <p style="margin:6px 0;">
-                📅 ${formatDate(match.match_date)}
-                ${match.match_time
-                  ? ` · ⏰ ${escapeHtml(match.match_time.substring(0,5))}`
-                  : ""
+                <strong>
+                  ⚽ ${escapeHtml(
+                    match.opponent ||
+                    "Partido"
+                  )}
+                </strong>
+
+                <p style="margin:6px 0;">
+                  📅 ${formatDate(match.match_date)}
+                  ${
+                    match.match_time
+                      ? ` · ⏰ ${escapeHtml(
+                          match.match_time.substring(0,5)
+                        )}`
+                      : ""
+                  }
+                </p>
+
+                <p
+                  class="muted"
+                  style="margin:4px 0;"
+                >
+                  📍 ${escapeHtml(
+                    match.venue ||
+                    "Lugar a confirmar"
+                  )}
+                </p>
+
+                <p
+                  class="muted"
+                  style="margin:4px 0;"
+                >
+                  💰 ${money(
+                    match.fee_per_player
+                  )}
+                </p>
+
+                ${
+                  match.notes
+                    ? `
+                      <p
+                        class="muted"
+                        style="margin:4px 0;"
+                      >
+                        📝 ${escapeHtml(
+                          match.notes
+                        )}
+                      </p>
+                    `
+                    : ""
                 }
-              </p>
 
-              <p class="muted" style="margin:4px 0;">
-                📍 ${escapeHtml(
-                  match.venue ||
-                  "Lugar a confirmar"
-                )}
-              </p>
+              </div>
 
-              <p class="muted" style="margin:4px 0;">
-                💰 ${money(match.fee_per_player)}
-              </p>
 
-              ${
-                match.notes
-                  ? `
-                    <p class="muted" style="margin:4px 0;">
-                      📝 ${escapeHtml(match.notes)}
-                    </p>
-                  `
-                  : ""
-              }
+              <div style="text-align:right;">
+
+                ${
+                  published
+                    ? `
+                      <span class="status status-approved">
+                        Publicado
+                      </span>
+                    `
+                    : `
+                      <span class="status status-pending">
+                        Borrador
+                      </span>
+                    `
+                }
+
+              </div>
 
             </div>
 
 
-            <div style="text-align:right;">
+            <div
+              style="
+                display:flex;
+                gap:8px;
+                flex-wrap:wrap;
+                margin-top:12px;
+              "
+            >
 
               ${
                 published
                   ? `
-                    <span class="status status-approved">
-                      Publicado
-                    </span>
+                    <button
+                      class="btn-secondary"
+                      type="button"
+                      onclick="setMatchPublished('${match.id}', false)"
+                    >
+                      ↩️ Despublicar
+                    </button>
                   `
                   : `
-                    <span class="status status-pending">
-                      Borrador
-                    </span>
+                    <button
+                      class="btn-success"
+                      type="button"
+                      onclick="setMatchPublished('${match.id}', true)"
+                    >
+                      📢 Publicar
+                    </button>
                   `
               }
+
+              <button
+                class="btn-danger"
+                type="button"
+                onclick="deleteMatch('${match.id}')"
+              >
+                🗑️ Eliminar
+              </button>
 
             </div>
 
           </div>
+        `;
 
+      }).join("")}
 
-          <div
-            style="
-              display:flex;
-              gap:8px;
-              flex-wrap:wrap;
-              margin-top:12px;
-            "
-          >
-
-  
-  ${
-  published
-    ? `
-      <button
-        class="btn-secondary"
-        type="button"
-        onclick="setMatchPublished('${match.id}', false)"
-      >
-        ↩️ Despublicar
-      </button>
-    `
-    : `
-      <button
-        class="btn-success"
-        type="button"
-        onclick="setMatchPublished('${match.id}', true)"
-      >
-        📢 Publicar
-      </button>
-    `
-}
-
-            <button
-              class="btn-danger"
-              type="button"
-              onclick="deleteMatch('${match.id}')"
-            >
-              🗑️ Eliminar
-            </button>
-
-          </div>
-
-        </div>
-      `;
-
-    }).join("");
+    </div>
+  `;
 
 }
 
