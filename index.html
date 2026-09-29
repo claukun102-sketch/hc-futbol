@@ -1184,9 +1184,25 @@
           <h2 style="margin-bottom:4px;">👥 Jugadores</h2>
           <div id="playersCount" class="players-count">0 / 50 jugadores</div>
         </div>
-        <button class="btn-primary" type="button" onclick="toggleAddPlayerForm()">
-          ➕ Agregar jugador
-        </button>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+
+  <button
+    class="btn-primary"
+    type="button"
+    onclick="toggleAddPlayerForm()"
+  >
+    ➕ Agregar jugador
+  </button>
+
+  <button
+    class="btn-secondary"
+    type="button"
+    onclick="openInvitePlayerModal()"
+  >
+    ✉️ Invitar jugador
+  </button>
+
+</div>
       </div>
 
       <div id="addPlayerForm" class="player-add-form" style="display:none;">
