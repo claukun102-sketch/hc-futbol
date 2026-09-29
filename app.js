@@ -3112,9 +3112,7 @@ const amount =
   Number(amountInput?.value) ||
   Number(selectedOption?.dataset.amount || 0);
 
-const chargeType =
-  selectedOption?.dataset.type ||
-  "concept";
+const chargeType = "concept";
   
 alert(
   "Datos recibidos:\n\n" +
