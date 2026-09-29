@@ -3147,16 +3147,19 @@ alert(
       description: description,
       amount: amount
     });
+if (error) {
+  console.error("ERROR AL GUARDAR CARGO:", error);
 
-  if (error) {
-    console.error(error);
+  alert(
+    "NO SE PUDO GUARDAR EL CARGO\n\n" +
+    "Mensaje: " + (error.message || "-") +
+    "\n\nCódigo: " + (error.code || "-") +
+    "\n\nDetalle: " + (error.details || "-") +
+    "\n\nSugerencia: " + (error.hint || "-")
+  );
 
-    showAdminError(
-      "No se pudo guardar el cargo."
-    );
-
-    return;
-  }
+  return;
+}
 
   showAdminSuccess(
     "Cargo agregado correctamente."
