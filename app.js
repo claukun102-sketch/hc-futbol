@@ -3094,18 +3094,24 @@ async function savePlayerCharge() {
     return;
   }
 
-  const selectedOption =
-    conceptSelect?.selectedOptions?.[0];
+ const selectedOption =
+  conceptSelect?.selectedOptions?.[0];
 
-  const description =
-    descriptionInput?.value.trim();
+const description =
+  descriptionInput?.value.trim() ||
+  selectedOption?.dataset.name ||
+  selectedOption?.textContent
+    ?.split("—")[0]
+    ?.trim() ||
+  "";
 
-  const amount =
-    Number(amountInput?.value);
-  
-  const chargeType =
-    selectedOption?.dataset.type ||
-    "concept";
+const amount =
+  Number(amountInput?.value) ||
+  Number(selectedOption?.dataset.amount || 0);
+
+const chargeType =
+  selectedOption?.dataset.type ||
+  "concept";
   
 alert(
   "Datos recibidos:\n\n" +
