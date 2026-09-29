@@ -3682,6 +3682,11 @@ document.getElementById("playerDataNickname").textContent =
 document.getElementById("playerDataDni").textContent =
   player.dni || "-";
 
+document.getElementById(
+  "playerCharges"
+).textContent =
+  money(totalCharges);
+    
  document.getElementById(
   "playerPaid"
 ).textContent =
