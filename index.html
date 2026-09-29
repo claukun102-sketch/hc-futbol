@@ -1001,24 +1001,31 @@
 <div class="card">
 
   <div class="players-toolbar">
+  <div>
+    <h2 style="margin-bottom:4px;">👥 Jugadores</h2>
+    <div id="playersCount" class="players-count">0 / 50 jugadores</div>
+  </div>
 
-    <div>
-      <h2 style="margin-bottom:4px;">📅 Partidos</h2>
-      <div class="muted">
-        Organizá los próximos partidos y convocatorias.
-      </div>
-    </div>
+  <div style="display:flex; gap:8px; flex-wrap:wrap;">
 
     <button
       class="btn-primary"
       type="button"
-      onclick="toggleMatchForm()"
+      onclick="toggleAddPlayerForm()"
     >
-      ➕ Nuevo partido
+      ➕ Agregar jugador
+    </button>
+
+    <button
+      class="btn-secondary"
+      type="button"
+      onclick="openInvitePlayerModal()"
+    >
+      ✉️ Invitar jugador
     </button>
 
   </div>
-
+</div>
 
   <!-- FORMULARIO NUEVO PARTIDO -->
 
