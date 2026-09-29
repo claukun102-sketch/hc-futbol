@@ -1,1 +1,10 @@
-
+{
+  "name": "Deportes Amateur",
+  "short_name": "Deportes Amateur",
+  "description": "Gestión de equipos deportivos amateur",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "orientation": "portrait"
+}
