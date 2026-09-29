@@ -1979,7 +1979,8 @@ async function deleteMatch(matchId) {
 }
     
     await loadMatches();
-
+    
+    await loadAdminTeamPosts();
 
     const {
       data: players,
