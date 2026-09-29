@@ -4278,7 +4278,21 @@ if (likesError) {
           >
             ${statusText}
           </span>
-
+<div
+  style="
+    margin-top:10px;
+    font-size:14px;
+  "
+>
+  ❤️ ${
+    likes
+      ? likes.filter(
+          like => like.post_id === post.id
+        ).length
+      : 0
+  }
+  Me gusta
+</div>
           <p
             class="muted"
             style="
