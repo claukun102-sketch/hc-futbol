@@ -739,34 +739,7 @@ await loadApplication();
 }
 
 function conceptFrequencyLabel(frequency) {
-function toggleChargeConceptsPanel() {
 
-  const panel = document.getElementById("chargeConceptsConfig");
-  const toggle = document.getElementById("chargeConceptsToggle");
-
-  if (!panel) return;
-
-  if (
-    panel.style.display === "none" ||
-    panel.style.display === ""
-  ) {
-
-    panel.style.display = "block";
-
-    if (toggle) {
-      toggle.textContent = "▲";
-    }
-
-  } else {
-
-    panel.style.display = "none";
-
-    if (toggle) {
-      toggle.textContent = "▼";
-    }
-  }
-}
-  window.toggleChargeConceptsPanel = toggleChargeConceptsPanel;
   if (frequency === "monthly") {
     return "Mensual";
   }
@@ -790,6 +763,40 @@ function toggleChargeConceptsPanel() {
   return "Único";
 }
 
+
+function toggleChargeConceptsPanel() {
+
+  const panel =
+    document.getElementById("chargeConceptsConfig");
+
+  const toggle =
+    document.getElementById("chargeConceptsToggle");
+
+  if (!panel) return;
+
+  if (
+    panel.style.display === "none" ||
+    panel.style.display === ""
+  ) {
+
+    panel.style.display = "block";
+
+    if (toggle) {
+      toggle.textContent = "▲";
+    }
+
+  } else {
+
+    panel.style.display = "none";
+
+    if (toggle) {
+      toggle.textContent = "▼";
+    }
+  }
+}
+
+window.toggleChargeConceptsPanel =
+  toggleChargeConceptsPanel;
 async function editChargeConcept(conceptId) {
 
   if (!currentTeam) return;
