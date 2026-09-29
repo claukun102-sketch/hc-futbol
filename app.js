@@ -4072,6 +4072,67 @@ async function loadPlayerMatches() {
 /* =====================================================
    ACTIVIDAD DEL EQUIPO
 ===================================================== */
+async function toggleTeamPostLike(postId) {
+
+  if (!currentPlayer) {
+    alert("No encontramos tu jugador.");
+    return;
+  }
+
+  // Verificar si ya existe el like
+  const {
+    data: existingLike,
+    error: checkError
+  } = await client
+    .from("team_post_likes")
+    .select("id")
+    .eq("post_id", postId)
+    .eq("player_id", currentPlayer.id)
+    .maybeSingle();
+
+  if (checkError) {
+    console.error("Error verificando like:", checkError);
+    alert("No se pudo comprobar el Me gusta.");
+    return;
+  }
+
+  // Si ya dio like → quitarlo
+  if (existingLike) {
+
+    const { error } = await client
+      .from("team_post_likes")
+      .delete()
+      .eq("id", existingLike.id);
+
+    if (error) {
+      console.error("Error quitando like:", error);
+      alert("No se pudo quitar el Me gusta.");
+      return;
+    }
+
+  }
+
+  // Si todavía no dio like → agregarlo
+  else {
+
+    const { error } = await client
+      .from("team_post_likes")
+      .insert({
+        post_id: postId,
+        player_id: currentPlayer.id
+      });
+
+    if (error) {
+      console.error("Error agregando like:", error);
+      alert("No se pudo agregar el Me gusta.");
+      return;
+    }
+
+  }
+
+  // Volver a cargar la actividad
+  await loadTeamPosts();
+}
 
 async function loadTeamPosts() {
 
