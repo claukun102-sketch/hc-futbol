@@ -5426,3 +5426,71 @@ function clearTeamPostForm() {
 
   updateTeamPostForm();
 }
+async function saveTeamPost() {
+
+  const type =
+    document.getElementById("teamPostType")?.value;
+
+  const description =
+    document.getElementById("teamPostDescription")?.value.trim();
+
+  const amount =
+    document.getElementById("teamPostAmount")?.value;
+
+  const date =
+    document.getElementById("teamPostDate")?.value;
+
+  if (!currentPlayer) {
+    alert("No encontramos tu jugador.");
+    return;
+  }
+
+  if (!description) {
+    alert("Escribí qué aportás o a qué te comprometés.");
+    return;
+  }
+
+  if (type === "money" && (!amount || Number(amount) <= 0)) {
+    alert("Ingresá el monto del aporte.");
+    return;
+  }
+
+  const postData = {
+    team_id: currentPlayer.team_id,
+    player_id: currentPlayer.id,
+    post_type: type,
+    description: description,
+    amount:
+      type === "money"
+        ? Number(amount)
+        : null,
+    status: "pending"
+  };
+
+  const { error } =
+    await client
+      .from("team_posts")
+      .insert(postData);
+
+  if (error) {
+    console.error(
+      "Error guardando aporte:",
+      error
+    );
+
+    alert(
+      "No se pudo guardar el aporte:\n" +
+      error.message
+    );
+
+    return;
+  }
+
+  alert("✅ Aporte registrado correctamente.");
+
+  clearTeamPostForm();
+
+  closeTeamPostModal();
+
+  await loadTeamPosts();
+}
