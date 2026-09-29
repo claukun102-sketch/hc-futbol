@@ -3493,6 +3493,8 @@ function renderPendingPayments(
 
     currentPlayer =
       player;
+    
+    await loadPlayerNotifications();
 
     const {
       data: teamSettings
