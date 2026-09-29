@@ -4129,7 +4129,25 @@ async function loadTeamPosts() {
 
   }
 
+const {
+  data: likes,
+  error: likesError
+} = await client
+  .from("team_post_likes")
+  .select("post_id, player_id")
+  .in(
+    "post_id",
+    posts.map(post => post.id)
+  );
 
+if (likesError) {
+
+  console.error(
+    "Error cargando Me gusta:",
+    likesError
+  );
+
+}
   const visiblePosts =
     posts.slice(0, 5);
 
