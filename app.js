@@ -2785,15 +2785,18 @@ async function managePlayerCharges(
     });
 
   if (error) {
-    console.error(error);
+  console.error("ERROR AL GUARDAR CARGO:", error);
 
-    list.innerHTML =
-      `<p class="muted">
-        No se pudieron cargar los cargos.
-      </p>`;
+  alert(
+    "NO SE PUDO GUARDAR EL CARGO\n\n" +
+    "Mensaje: " + (error.message || "-") +
+    "\n\nCódigo: " + (error.code || "-") +
+    "\n\nDetalle: " + (error.details || "-") +
+    "\n\nSugerencia: " + (error.hint || "-")
+  );
 
-    return;
-  }
+  return;
+}
 
   if (!charges || !charges.length) {
     list.innerHTML =
