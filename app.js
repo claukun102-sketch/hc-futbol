@@ -5837,3 +5837,30 @@ async function cancelTeamPost(postId) {
 
   await loadAdminTeamPosts();
 }
+
+function openInvitePlayerModal() {
+  const modal = document.getElementById("invitePlayerModal");
+
+  if (!modal) return;
+
+  const nameInput = document.getElementById("invitePlayerName");
+  const emailInput = document.getElementById("invitePlayerEmail");
+
+  if (nameInput) nameInput.value = "";
+  if (emailInput) emailInput.value = "";
+
+  modal.style.display = "flex";
+
+  if (nameInput) {
+    nameInput.focus();
+  }
+}
+
+
+function closeInvitePlayerModal() {
+  const modal = document.getElementById("invitePlayerModal");
+
+  if (!modal) return;
+
+  modal.style.display = "none";
+}
