@@ -4114,16 +4114,15 @@ async function loadPlayerMatches() {
     }
 
 
-    if (!file) {
+   if (!file && method !== "cash") {
 
-      showPlayerError(
-        "Adjuntá el comprobante."
-      );
+  showPlayerError(
+    "Adjuntá el comprobante."
+  );
 
-      return;
+  return;
 
-    }
-
+}
 
     hidePlayerMessages();
 
