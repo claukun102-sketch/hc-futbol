@@ -3808,6 +3808,8 @@ renderPlayerPayments(
   payments
 );
 
+ loadTeamPosts();
+    
     document.getElementById(
       "paymentDate"
     ).value =
