@@ -2733,53 +2733,6 @@ async function managePlayerCharges(
     return;
   }
 
-  const modal =
-    document.getElementById(
-      "playerChargesModal"
-    );
-
-  const title =
-    document.getElementById(
-      "playerChargesModalTitle"
-    );
-
-  const subtitle =
-    document.getElementById(
-      "playerChargesModalSubtitle"
-    );
-
-  const list =
-    document.getElementById(
-      "playerChargesList"
-    );
-
-  const modal =
-    document.getElementById(
-      "playerChargesModal"
-    );
-
-  const title =
-    document.getElementById(
-      "playerChargesModalTitle"
-    );
-
-  const subtitle =
-    document.getElementById(
-      "playerChargesModalSubtitle"
-    );
-
-  const list =
-    document.getElementById(
-      "playerChargesList"
-    );
-
-  if (!modal || !title || !subtitle || !list) {
-    showAdminError(
-      "No se encontró la ventana de cargos."
-    );
-    return;
-  }
-
   title.textContent =
     "💰 Cargos de " + playerName;
 
