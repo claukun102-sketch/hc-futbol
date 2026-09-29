@@ -3815,11 +3815,6 @@ if (balanceCard) {
 }
     
 document.getElementById(
-  "playerTotalCharges"
-).textContent =
-  money(totalCharges);
-
-document.getElementById(
   "playerPending"
 ).textContent =
   pending.length;
