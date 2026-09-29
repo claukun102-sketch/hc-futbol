@@ -2096,46 +2096,14 @@ const activeConceptNames =
 const currentCharges =
   charges.filter(charge => {
 
-    if (
-      !activePlayerIds.includes(
-        charge.player_id
-      )
-    ) {
+    // Los cargos anulados no cuentan para el jugador
+    if (charge.active === false) {
       return false;
     }
 
-    const chargeName =
-      (charge.description || "")
-        .trim()
-        .toLowerCase();
-
-    const chargeAmount =
-      Number(charge.amount || 0);
-
-    if (
-      charge.charge_type ===
-        "registration" &&
-      activeConceptNames.includes(
-        "inscripción"
-      )
-    ) {
-      return (
-        chargeAmount ===
-        activeConceptAmounts[
-          "inscripción"
-        ]
-      );
-    }
-
-    return (
-      activeConceptNames.includes(
-        chargeName
-      ) &&
-      chargeAmount ===
-        activeConceptAmounts[
-          chargeName
-        ]
-    );
+    // Todo cargo activo asignado al jugador
+    // debe aparecer en su panel.
+    return true;
   });
     
 const playerBalances =
