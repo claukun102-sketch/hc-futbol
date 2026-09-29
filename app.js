@@ -3952,65 +3952,153 @@ async function loadPlayerMatches() {
 
 }
   function renderPlayerCharges(
-    charges
-  ) {
+  charges
+) {
 
-    const table =
-      document.getElementById(
-        "playerChargesTable"
-      );
+  const table =
+    document.getElementById(
+      "playerChargesTable"
+    );
 
-    table.innerHTML = "";
-
-
-    if (!charges.length) {
-
-      table.innerHTML =
-        `<tr>
-          <td colspan="3">
-            No tenés cargos registrados.
-          </td>
-        </tr>`;
-
-      return;
-
-    }
+  table.innerHTML = "";
 
 
-    charges.forEach(charge => {
+  if (!charges.length) {
 
-      const row =
-        document.createElement("tr");
-
-
-      row.innerHTML = `
-        <td>
-          ${escapeHtml(
-            charge.description ||
-            charge.charge_type
-          )}
+    table.innerHTML =
+      `<tr>
+        <td colspan="3">
+          No tenés cargos registrados.
         </td>
+      </tr>`;
 
-        <td>
-          ${money(charge.amount)}
-        </td>
-
-        <td>
-          ${formatDate(
-            charge.created_at
-              ? charge.created_at.substring(0,10)
-              : null
-          )}
-        </td>
-      `;
-
-
-      table.appendChild(row);
-
-    });
+    return;
 
   }
 
+
+  // Mostrar inicialmente los últimos 5 cargos
+  const visibleCharges =
+    charges.slice(0, 5);
+
+
+  const renderRows =
+    (items) => {
+
+      table.innerHTML = "";
+
+      items.forEach(charge => {
+
+        const row =
+          document.createElement("tr");
+
+
+        row.innerHTML = `
+          <td>
+            ${escapeHtml(
+              charge.description ||
+              charge.charge_type
+            )}
+          </td>
+
+          <td>
+            ${money(charge.amount)}
+          </td>
+
+          <td>
+            ${formatDate(
+              charge.created_at
+                ? charge.created_at.substring(0,10)
+                : null
+            )}
+          </td>
+        `;
+
+
+        table.appendChild(row);
+
+      });
+
+    };
+
+
+  renderRows(
+    visibleCharges
+  );
+
+
+  // Si hay más de 5 cargos,
+  // mostrar botón para ver todos.
+
+  if (charges.length > 5) {
+
+    const container =
+      table.closest(
+        ".card"
+      );
+
+    if (!container) return;
+
+
+    const button =
+      document.createElement(
+        "button"
+      );
+
+    button.type =
+      "button";
+
+    button.className =
+      "btn-secondary player-charges-toggle";
+
+    button.style.marginTop =
+      "15px";
+
+    button.textContent =
+      `Ver todos los cargos (${charges.length})`;
+
+
+    let showingAll =
+      false;
+
+
+    button.onclick =
+      () => {
+
+        showingAll =
+          !showingAll;
+
+
+        if (showingAll) {
+
+          renderRows(
+            charges
+          );
+
+          button.textContent =
+            "Ocultar cargos";
+
+        } else {
+
+          renderRows(
+            visibleCharges
+          );
+
+          button.textContent =
+            `Ver todos los cargos (${charges.length})`;
+
+        }
+
+      };
+
+
+    container.appendChild(
+      button
+    );
+
+  }
+
+}
 
   /* =====================================================
      PAGOS DEL JUGADOR
