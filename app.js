@@ -4132,47 +4132,50 @@ async function loadPlayerMatches() {
       de la carpeta del usuario.
     */
 
-    const extension =
-      file.name
-        .split(".")
-        .pop()
-        .toLowerCase();
+   let fileName = null;
+
+if (file) {
+
+  const extension =
+    file.name
+      .split(".")
+      .pop()
+      .toLowerCase();
+
+  fileName =
+    currentUser.id +
+    "/" +
+    crypto.randomUUID() +
+    "." +
+    extension;
 
 
-    const fileName =
-      currentUser.id +
-      "/" +
-      crypto.randomUUID() +
-      "." +
-      extension;
-
-
-    const {
-      error: uploadError
-    } =
-      await client
-        .storage
-        .from("comprobantes")
-        .upload(
-          fileName,
-          file,
-          {
-            upsert: false
-          }
-        );
-
-
-    if (uploadError) {
-
-      showPlayerError(
-        uploadError.message
+  const {
+    error: uploadError
+  } =
+    await client
+      .storage
+      .from("comprobantes")
+      .upload(
+        fileName,
+        file,
+        {
+          upsert: false
+        }
       );
 
-      return;
 
-    }
+  if (uploadError) {
 
+    showPlayerError(
+      uploadError.message
+    );
 
+    return;
+
+  }
+
+}
     const {
       error: paymentError
     } =
