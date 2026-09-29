@@ -2733,18 +2733,50 @@ async function managePlayerCharges(
     return;
   }
 
+  const modal =
+    document.getElementById(
+      "playerChargesModal"
+    );
+
+  const title =
+    document.getElementById(
+      "playerChargesModalTitle"
+    );
+
+  const subtitle =
+    document.getElementById(
+      "playerChargesModalSubtitle"
+    );
+
+  const list =
+    document.getElementById(
+      "playerChargesList"
+    );
+
+  if (!modal || !title || !subtitle || !list) {
+    showAdminError(
+      "No se encontró la ventana de cargos."
+    );
+    return;
+  }
+
   title.textContent =
     "💰 Cargos de " + playerName;
 
   subtitle.textContent =
     "Cargos registrados para este jugador";
 
-  list.innerHTML = "Cargando...";
+  list.innerHTML =
+    "Cargando...";
 
-  modal.style.display = "block";
+  modal.style.display =
+    "block";
 
-  modal.dataset.playerId = playerId;
-  modal.dataset.playerName = playerName;
+  modal.dataset.playerId =
+    playerId;
+
+  modal.dataset.playerName =
+    playerName;
 
   const {
     data: charges,
@@ -2775,99 +2807,86 @@ async function managePlayerCharges(
         Este jugador no tiene cargos registrados.
       </p>`;
 
+    hideAddPlayerChargeForm();
+
     return;
   }
 
-  list.innerHTML = charges
-    .map(charge => {
+  list.innerHTML =
+    charges
+      .map(charge => {
 
-      const name =
-        charge.description ||
-        charge.charge_type ||
-        "Cargo";
+        const name =
+          charge.description ||
+          charge.charge_type ||
+          "Cargo";
 
-      const isActive =
-        charge.active !== false;
-
-      return `
-        <div
-          style="
-            padding:12px;
-            border:1px solid #ddd;
-            border-radius:10px;
-            margin-bottom:10px;
-            opacity:${isActive ? "1" : "0.65"};
-          "
-        >
-
+        return `
           <div
             style="
-              display:flex;
-              justify-content:space-between;
-              gap:12px;
-              align-items:center;
+              padding:12px;
+              border:1px solid #ddd;
+              border-radius:10px;
+              margin-bottom:10px;
             "
           >
-            <strong>
-              ${escapeHtml(name)}
-            </strong>
 
-            <strong>
-              ${money(charge.amount)}
-            </strong>
-          </div>
+            <div
+              style="
+                display:flex;
+                justify-content:space-between;
+                gap:12px;
+                align-items:center;
+              "
+            >
+              <strong>
+                ${escapeHtml(name)}
+              </strong>
 
-          ${
-            charge.charge_type
-              ?
-              `<div class="muted" style="margin-top:4px;">
-                Tipo: ${escapeHtml(charge.charge_type)}
-              </div>`
-              :
-              ""
-          }
+              <strong>
+                ${money(charge.amount)}
+              </strong>
+            </div>
 
-          <div class="muted" style="margin-top:4px;">
-            Registrado:
-            ${new Date(charge.created_at).toLocaleDateString("es-AR")}
-          </div>
-
-          ${
-            isActive
-              ?
-              `
-                <div style="margin-top:10px;">
-                  <button
-                    type="button"
-                    class="btn-danger-small"
-                    onclick="deactivatePlayerCharge('${charge.id}')"
+            ${
+              charge.charge_type
+                ? `
+                  <div
+                    class="muted"
+                    style="margin-top:4px;"
                   >
-                    🗑️ Anular cargo
-                  </button>
-                </div>
-              `
-              :
-              `
-                <div
-                  style="
-                    margin-top:10px;
-                    font-weight:600;
-                    color:#777;
-                  "
-                >
-                  🚫 Cargo anulado
-                </div>
-              `
-          }
+                    Tipo:
+                    ${escapeHtml(
+                      charge.charge_type
+                    )}
+                  </div>
+                `
+                : ""
+            }
 
-        </div>
-      `;
+            <div
+              class="muted"
+              style="margin-top:4px;"
+            >
+              Registrado:
+              ${
+                charge.created_at
+                  ? new Date(
+                      charge.created_at
+                    ).toLocaleDateString(
+                      "es-AR"
+                    )
+                  : "-"
+              }
+            </div>
 
-    })
-    .join("");
+          </div>
+        `;
+      })
+      .join("");
 
   hideAddPlayerChargeForm();
- } 
+}
   
 async function deactivatePlayerCharge(chargeId) {
   if (!currentTeam) {
