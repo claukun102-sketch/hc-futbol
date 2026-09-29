@@ -2602,6 +2602,7 @@ const activeConceptNames =
 const playerChargesList =
   charges
     .filter(c => c.player_id === player.id)
+    .filter(c => c.active !== false)
     .filter(c => {
       const chargeName =
         (c.description || "")
