@@ -4353,11 +4353,21 @@ if (likesError) {
               : ""
           }
 
-          <span
-            class="status ${statusClass}"
-          >
-            ${statusText}
-          </span>
+ <span
+  class="status ${statusClass}"
+>
+  ${statusText}
+</span>
+
+<div style="margin-top:10px;">
+  <button
+    type="button"
+    class="btn-secondary"
+    onclick="toggleTeamPostLike('${post.id}')"
+  >
+    ❤️ Me gusta
+  </button>
+</div>
 <div
   style="
     margin-top:10px;
