@@ -2778,6 +2778,7 @@ async function managePlayerCharges(
     .from("charges")
     .select("*")
     .eq("team_id", currentTeam.id)
+    .eq("active", true)
     .eq("player_id", playerId)
     .order("created_at", {
       ascending: false
