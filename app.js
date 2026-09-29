@@ -261,18 +261,37 @@ const client =
         )
         .single();
 
+if (accountError || !account) {
 
-    if (accountError || !account) {
+  // Intentar aceptar automáticamente una invitación pendiente.
+  const {
+    data: invitationResult,
+    error: invitationError
+  } = await client.rpc(
+    "accept_pending_team_invitation"
+  );
 
-      // Usuario autenticado pero todavía sin equipo.
-      // Mostrar el onboarding para que pueda crear su primer equipo.
-      showOnboarding();
+  if (invitationError) {
+    console.error(
+      "Error aceptando invitación:",
+      invitationError
+    );
+  }
 
-      return;
+  // Si se aceptó una invitación, volver a cargar
+  // la aplicación para obtener el nuevo player_account.
+  if (invitationResult?.accepted === true) {
+    await loadApplication();
+    return;
+  }
 
-    }
+  // Usuario autenticado pero todavía sin equipo.
+  showOnboarding();
 
+  return;
 
+}
+    
     if (
       account.role === "admin"
     ) {
