@@ -4367,9 +4367,6 @@ async function loadTeamPosts() {
 function renderPlayerCharges(
   charges
 ) {
-function renderPlayerCharges(
-  charges
-) {
 
   const table =
     document.getElementById(
