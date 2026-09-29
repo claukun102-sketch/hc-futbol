@@ -5657,21 +5657,6 @@ async function loadAdminTeamPosts() {
           <span class="status ${statusClass}">
             ${statusText}
           </span>
-<div
-  style="
-    margin-top:10px;
-    font-size:14px;
-  "
->
-  ❤️ ${
-    likes
-      ? likes.filter(
-          like => like.post_id === post.id
-        ).length
-      : 0
-  }
-  Me gusta
-</div>
           
 ${
   post.status === "pending"
