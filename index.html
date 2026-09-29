@@ -1272,7 +1272,96 @@
 
 </div>
 
+<!-- =====================================================
+     MODAL: INVITAR JUGADOR
+===================================================== -->
 
+<div
+  id="invitePlayerModal"
+  style="
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.45);
+    z-index:1000;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+  "
+>
+
+  <div
+    style="
+      width:100%;
+      max-width:460px;
+      background:white;
+      border-radius:18px;
+      padding:24px;
+      box-sizing:border-box;
+      box-shadow:0 20px 50px rgba(0,0,0,.2);
+    "
+  >
+
+    <h2 style="margin-top:0;">
+      ✉️ Invitar jugador
+    </h2>
+
+    <p class="muted">
+      Ingresá los datos del jugador. Le enviaremos una invitación para que se registre en Deportes Amateur y se incorpore al equipo.
+    </p>
+
+    <label>Nombre</label>
+
+    <input
+      id="invitePlayerName"
+      type="text"
+      maxlength="80"
+      placeholder="Ej.: Juan Pérez"
+    >
+
+    <label style="margin-top:12px;">
+      Email
+    </label>
+
+    <input
+      id="invitePlayerEmail"
+      type="email"
+      maxlength="150"
+      placeholder="Ej.: juan@email.com"
+    >
+
+    <div
+      style="
+        display:flex;
+        gap:10px;
+        margin-top:20px;
+        justify-content:flex-end;
+        flex-wrap:wrap;
+      "
+    >
+
+      <button
+        type="button"
+        class="btn-secondary"
+        onclick="closeInvitePlayerModal()"
+      >
+        Cancelar
+      </button>
+
+      <button
+        type="button"
+        class="btn-primary"
+        onclick="sendPlayerInvitation()"
+      >
+        ✉️ Enviar invitación
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+  
 <!-- =====================================================
      JUGADOR
 ===================================================== -->
