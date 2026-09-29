@@ -4043,10 +4043,6 @@ async function loadPlayerMatches() {
 
 
     container.appendChild(button);
-
-  }
-
-}
   
   }
 
