@@ -5357,3 +5357,72 @@ if (file) {
 
 
   checkExistingSession();
+
+function openTeamPostModal() {
+  const modal = document.getElementById("teamPostModal");
+
+  if (!modal) return;
+
+  modal.style.display = "block";
+
+  updateTeamPostForm();
+}
+
+
+function closeTeamPostModal() {
+  const modal = document.getElementById("teamPostModal");
+
+  if (!modal) return;
+
+  modal.style.display = "none";
+}
+
+
+function updateTeamPostForm() {
+  const type =
+    document.getElementById("teamPostType")?.value;
+
+  const amountContainer =
+    document.getElementById("teamPostAmountContainer");
+
+  const dateContainer =
+    document.getElementById("teamPostDateContainer");
+
+  if (!amountContainer || !dateContainer) return;
+
+  if (type === "money") {
+    amountContainer.style.display = "block";
+    dateContainer.style.display = "none";
+  } else if (type === "commitment") {
+    amountContainer.style.display = "none";
+    dateContainer.style.display = "block";
+  } else {
+    amountContainer.style.display = "none";
+    dateContainer.style.display = "none";
+  }
+}
+
+
+function clearTeamPostForm() {
+  const description =
+    document.getElementById("teamPostDescription");
+
+  const amount =
+    document.getElementById("teamPostAmount");
+
+  const date =
+    document.getElementById("teamPostDate");
+
+  if (description) description.value = "";
+  if (amount) amount.value = "";
+  if (date) date.value = "";
+
+  const type =
+    document.getElementById("teamPostType");
+
+  if (type) {
+    type.value = "money";
+  }
+
+  updateTeamPostForm();
+}
