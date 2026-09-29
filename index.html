@@ -1258,40 +1258,136 @@
 
     <!-- RESUMEN -->
 
-    <div class="grid">
+   <div
+  style="
+    display:grid;
+    grid-template-columns: minmax(280px, 1.4fr) minmax(220px, 1fr);
+    gap:18px;
+    margin-bottom:20px;
+  "
+>
 
-      <div class="card">
-        <div class="muted">Total cargos</div>
-        <div id="playerCharges" class="stat">$0</div>
-      </div>
+  <!-- SALDO PRINCIPAL -->
 
-      <div class="card">
-        <div class="muted">Pagado</div>
-        <div id="playerPaid" class="stat positive">$0</div>
-      </div>
+  <div
+    id="playerBalanceCard"
+    style="
+      border-radius:18px;
+      padding:28px;
+      background:#eef7ff;
+      border:2px solid #cfe8ff;
+      text-align:center;
+      min-height:190px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      box-sizing:border-box;
+    "
+  >
 
-      <div class="card">
-        <div class="muted">Debe</div>
-        <div id="playerDebt" class="stat negative">$0</div>
-      </div>
-
-      <div class="card">
-        <div class="muted">Pagos pendientes</div>
-        <div id="playerPending" class="stat pending">0</div>
-      </div>
-
-      <div class="card">
-        <div class="muted">💚 Saldo a favor</div>
-        <div id="playerCredit" class="stat positive">$0</div>
-      </div>
-
-      <div class="card">
-        <div class="muted">🔴 Debe</div>
-        <div id="playerDebtBox" class="stat negative">$0</div>
-      </div>
-
+    <div
+      id="playerBalanceTitle"
+      style="
+        font-size:15px;
+        font-weight:700;
+        letter-spacing:.5px;
+        margin-bottom:8px;
+      "
+    >
+      💳 SALDO
     </div>
 
+    <div
+      id="playerBalanceAmount"
+      style="
+        font-size:42px;
+        font-weight:800;
+        line-height:1.1;
+        margin:6px 0;
+      "
+    >
+      $0
+    </div>
+
+    <div
+      id="playerBalanceSubtitle"
+      style="
+        font-size:14px;
+        margin-top:8px;
+      "
+    >
+      Cargando...
+    </div>
+
+  </div>
+
+
+  <!-- MENSAJE -->
+
+  <div
+    style="
+      border-radius:18px;
+      padding:26px;
+      background:#f8fafc;
+      border:1px solid #e2e8f0;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      box-sizing:border-box;
+      min-height:190px;
+    "
+  >
+
+    <div
+      id="playerBalanceMessage"
+      style="
+        font-size:18px;
+        font-weight:700;
+        line-height:1.4;
+        margin-bottom:10px;
+      "
+    >
+      💪 ¡Vamos equipo!
+    </div>
+
+    <div
+      id="playerBalanceMessageText"
+      class="muted"
+      style="
+        font-size:14px;
+        line-height:1.5;
+      "
+    >
+      Gracias por formar parte del equipo.
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- RESUMEN -->
+
+<div class="grid">
+
+  <div class="card">
+    <div class="muted">Total cargos</div>
+    <div id="playerCharges" class="stat">$0</div>
+  </div>
+
+  <div class="card">
+    <div class="muted">Pagado</div>
+    <div id="playerPaid" class="stat positive">$0</div>
+  </div>
+
+  <div class="card">
+    <div class="muted">Pagos pendientes</div>
+    <div id="playerPending" class="stat pending">0</div>
+  </div>
+
+</div>
+    
 <!-- MIS DATOS -->
 
 <div class="card">
