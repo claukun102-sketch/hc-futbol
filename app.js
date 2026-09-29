@@ -5725,3 +5725,83 @@ ${
   }
 
 }
+
+async function confirmTeamPost(postId) {
+
+  const confirmed = confirm(
+    "¿Querés confirmar este aporte o compromiso?"
+  );
+
+  if (!confirmed) return;
+
+  const { error } =
+    await client
+      .from("team_posts")
+      .update({
+        status: "confirmed",
+        confirmed_at: new Date().toISOString()
+      })
+      .eq("id", postId)
+      .eq("team_id", currentTeam.id);
+
+  if (error) {
+
+    console.error(
+      "Error confirmando aporte:",
+      error
+    );
+
+    showAdminError(
+      "No se pudo confirmar el aporte: " +
+      error.message
+    );
+
+    return;
+  }
+
+  showAdminSuccess(
+    "Aporte confirmado correctamente."
+  );
+
+  await loadAdminTeamPosts();
+}
+
+
+async function cancelTeamPost(postId) {
+
+  const confirmed = confirm(
+    "¿Querés cancelar este aporte o compromiso?"
+  );
+
+  if (!confirmed) return;
+
+  const { error } =
+    await client
+      .from("team_posts")
+      .update({
+        status: "cancelled"
+      })
+      .eq("id", postId)
+      .eq("team_id", currentTeam.id);
+
+  if (error) {
+
+    console.error(
+      "Error cancelando aporte:",
+      error
+    );
+
+    showAdminError(
+      "No se pudo cancelar el aporte: " +
+      error.message
+    );
+
+    return;
+  }
+
+  showAdminSuccess(
+    "Aporte cancelado correctamente."
+  );
+
+  await loadAdminTeamPosts();
+}
