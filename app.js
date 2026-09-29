@@ -3788,7 +3788,6 @@ renderPlayerPayments(
 /* =====================================================
    PARTIDOS DEL JUGADOR
 ===================================================== */
-
 async function loadPlayerMatches() {
 
   const container =
@@ -3865,90 +3864,149 @@ async function loadPlayerMatches() {
 
 
   const visibleMatches =
-    matches.slice(0, 3);
+    matches.slice(0, 5);
 
 
-  container.innerHTML =
-    visibleMatches.map(match => `
+  const renderMatches = (items) => {
 
-      <div
-        class="payment"
-        style="margin-bottom:12px;"
-      >
+    container.innerHTML =
+      items.map(match => `
 
-        <strong>
-          ⚽ ${escapeHtml(
-            match.opponent ||
-            "Partido"
-          )}
-        </strong>
+        <div
+          class="payment"
+          style="margin-bottom:12px;"
+        >
+
+          <strong>
+            ⚽ ${escapeHtml(
+              match.opponent ||
+              "Partido"
+            )}
+          </strong>
 
 
-        <p style="margin:6px 0;">
+          <p style="margin:6px 0;">
 
-          📅 ${formatDate(
-            match.match_date
-          )}
+            📅 ${formatDate(
+              match.match_date
+            )}
+
+            ${
+              match.match_time
+                ? `
+                  · ⏰ ${
+                    escapeHtml(
+                      match.match_time
+                        .substring(0, 5)
+                    )
+                  }
+                `
+                : ""
+            }
+
+          </p>
+
+
+          <p
+            class="muted"
+            style="margin:4px 0;"
+          >
+            📍 ${
+              escapeHtml(
+                match.venue ||
+                "Lugar a confirmar"
+              )
+            }
+          </p>
+
+
+          <p
+            class="muted"
+            style="margin:4px 0;"
+          >
+            💰 ${money(
+              match.fee_per_player
+            )}
+          </p>
+
 
           ${
-            match.match_time
+            match.notes
               ? `
-                · ⏰ ${
-                  escapeHtml(
-                    match.match_time
-                      .substring(0, 5)
-                  )
-                }
+                <p
+                  class="muted"
+                  style="margin:4px 0;"
+                >
+                  📝 ${
+                    escapeHtml(
+                      match.notes
+                    )
+                  }
+                </p>
               `
               : ""
           }
 
-        </p>
+        </div>
+
+      `).join("");
+
+  };
 
 
-        <p
-          class="muted"
-          style="margin:4px 0;"
-        >
-          📍 ${
-            escapeHtml(
-              match.venue ||
-              "Lugar a confirmar"
-            )
-          }
-        </p>
+  renderMatches(visibleMatches);
 
 
-        <p
-          class="muted"
-          style="margin:4px 0;"
-        >
-          💰 ${money(
-            match.fee_per_player
-          )}
-        </p>
+  if (matches.length > 5) {
+
+    const button =
+      document.createElement("button");
+
+    button.type = "button";
+
+    button.className =
+      "btn-secondary player-matches-toggle";
+
+    button.style.marginTop =
+      "15px";
+
+    button.textContent =
+      `Ver todos los partidos (${matches.length})`;
 
 
-        ${
-          match.notes
-            ? `
-              <p
-                class="muted"
-                style="margin:4px 0;"
-              >
-                📝 ${
-                  escapeHtml(
-                    match.notes
-                  )
-                }
-              </p>
-            `
-            : ""
-        }
+    let showingAll = false;
 
-      </div>
 
-    `).join("");
+    button.onclick = () => {
+
+      showingAll =
+        !showingAll;
+
+
+      if (showingAll) {
+
+        renderMatches(matches);
+
+        button.textContent =
+          "Ocultar partidos";
+
+      } else {
+
+        renderMatches(
+          visibleMatches
+        );
+
+        button.textContent =
+          `Ver todos los partidos (${matches.length})`;
+
+      }
+
+    };
+
+
+    container.appendChild(button);
+
+  }
 
 }
   function renderPlayerCharges(
