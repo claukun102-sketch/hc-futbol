@@ -2554,44 +2554,15 @@ async function removePlayer(playerId, playerName) {
 
     players.forEach(player => {
 
-   const activeConceptNames = activeConcepts.map(
-  concept => concept.name.trim().toLowerCase()
-);
-
-const playerCharges = charges
-  .filter(c => c.player_id === player.id)
-  .filter(c => {
-    const chargeName =
-      (c.description || "").trim().toLowerCase();
-
-    if (
-      c.charge_type === "registration" &&
-      activeConceptNames.includes("inscripción")
-    ) {
-      return true;
-    }
-
-    return activeConceptNames.includes(chargeName);
-  })
-  .reduce(
-    (sum, c) => sum + Number(c.amount || 0),
-    0
-  );
-      const playerPaid =
-        payments
-          .filter(
-            p =>
-              p.player_id ===
-              player.id &&
-              p.status ===
-              "approved"
-          )
-          .reduce(
-            (sum, p) =>
-              sum + Number(p.amount),
-            0
-          );
-
+  const playerCharges =
+  charges
+    .filter(c => c.player_id === player.id)
+    .filter(c => c.active !== false)
+    .reduce(
+      (sum, c) =>
+        sum + Number(c.amount || 0),
+      0
+    );
 
       const difference =
         playerPaid - playerCharges;
