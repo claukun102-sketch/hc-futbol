@@ -2753,12 +2753,6 @@ async function managePlayerCharges(
       "playerChargesList"
     );
 
-  if (!modal || !title || !subtitle || !list) {
-     if (!currentTeam) {
-    showAdminError("No hay un equipo seleccionado.");
-    return;
-  }
-
   const modal =
     document.getElementById(
       "playerChargesModal"
