@@ -3624,33 +3624,143 @@ document.getElementById("playerDataNickname").textContent =
 document.getElementById("playerDataDni").textContent =
   player.dni || "-";
 
-    document.getElementById(
-      "playerCharges"
-    ).textContent =
-      money(totalCharges);
+ document.getElementById(
+  "playerPaid"
+).textContent =
+  money(totalPaid);
 
 
-    document.getElementById(
-      "playerPaid"
-    ).textContent =
-      money(totalPaid);
+// ================================
+// ESTADO DEL SALDO DEL JUGADOR
+// ================================
+
+const balanceCard =
+  document.getElementById(
+    "playerBalanceCard"
+  );
+
+const balanceTitle =
+  document.getElementById(
+    "playerBalanceTitle"
+  );
+
+const balanceAmount =
+  document.getElementById(
+    "playerBalanceAmount"
+  );
+
+const balanceSubtitle =
+  document.getElementById(
+    "playerBalanceSubtitle"
+  );
+
+const balanceMessage =
+  document.getElementById(
+    "playerBalanceMessage"
+  );
+
+const balanceMessageText =
+  document.getElementById(
+    "playerBalanceMessageText"
+  );
 
 
-    document.getElementById(
-      "playerDebt"
-    ).textContent =
-      money(Math.max(0, debt));
+if (balanceCard) {
 
-     document.getElementById("playerCredit").textContent =
-     money(credit);
+  // 🔴 DEBE
+  if (debt > 0) {
 
-    document.getElementById("playerDebtBox").textContent =
-   money(debt);
+    balanceCard.style.background =
+      "#fff1f2";
 
-    document.getElementById(
-      "playerPending"
-    ).textContent =
-      pending.length;
+    balanceCard.style.borderColor =
+      "#fecdd3";
+
+    balanceTitle.textContent =
+      "🔴 SALDO A PAGAR";
+
+    balanceAmount.textContent =
+      money(debt);
+
+    balanceAmount.style.color =
+      "#dc2626";
+
+    balanceSubtitle.textContent =
+      "Tenés un saldo pendiente";
+
+    balanceMessage.textContent =
+      "💪 ¡Vamos equipo!";
+
+    balanceMessageText.textContent =
+      "Cuando puedas, ponete al día. ¡Gracias por aportar al equipo!";
+
+  }
+
+  // 💚 SALDO A FAVOR
+  else if (credit > 0) {
+
+    balanceCard.style.background =
+      "#ecfdf5";
+
+    balanceCard.style.borderColor =
+      "#bbf7d0";
+
+    balanceTitle.textContent =
+      "💚 SALDO A FAVOR";
+
+    balanceAmount.textContent =
+      money(credit);
+
+    balanceAmount.style.color =
+      "#16a34a";
+
+    balanceSubtitle.textContent =
+      "Tenés saldo disponible";
+
+    balanceMessage.textContent =
+      "🙌 ¡Genial!";
+
+    balanceMessageText.textContent =
+      "Tenés saldo a favor. Gracias por tu aporte al equipo.";
+
+  }
+
+  // ✅ AL DÍA
+  else {
+
+    balanceCard.style.background =
+      "#eff6ff";
+
+    balanceCard.style.borderColor =
+      "#bfdbfe";
+
+    balanceTitle.textContent =
+      "✅ ESTÁS AL DÍA";
+
+    balanceAmount.textContent =
+      "$0";
+
+    balanceAmount.style.color =
+      "#2563eb";
+
+    balanceSubtitle.textContent =
+      "No tenés saldo pendiente";
+
+    balanceMessage.textContent =
+      "👏 ¡Excelente!";
+
+    balanceMessageText.textContent =
+      "Gracias por estar al día y por tu aporte al equipo.";
+
+  }
+
+}
+
+
+document.getElementById(
+  "playerPending"
+).textContent =
+  pending.length;
 
    await loadPlayerMatches();
 
