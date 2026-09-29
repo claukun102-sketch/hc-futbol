@@ -5487,3 +5487,208 @@ async function saveTeamPost() {
 
   await loadTeamPosts();
 }
+
+async function loadAdminTeamPosts() {
+
+  const container =
+    document.getElementById("adminTeamPosts");
+
+  if (!container) return;
+
+  if (!currentTeam) {
+    container.innerHTML =
+      `<p class="muted">
+        No hay un equipo seleccionado.
+      </p>`;
+    return;
+  }
+
+  container.innerHTML = "Cargando...";
+
+  const {
+    data: posts,
+    error
+  } = await client
+    .from("team_posts")
+    .select(`
+      *,
+      players (
+        name,
+        nickname
+      )
+    `)
+    .eq(
+      "team_id",
+      currentTeam.id
+    )
+    .order(
+      "created_at",
+      {
+        ascending: false
+      }
+    );
+
+  if (error) {
+
+    console.error(
+      "Error cargando aportes:",
+      error
+    );
+
+    container.innerHTML =
+      `<p class="muted">
+        No pudimos cargar los aportes.
+      </p>`;
+
+    return;
+  }
+
+  if (!posts || !posts.length) {
+
+    container.innerHTML =
+      `<p class="muted">
+        No hay aportes ni compromisos registrados.
+      </p>`;
+
+    return;
+  }
+
+  const visiblePosts =
+    posts.slice(0, 5);
+
+  const renderPosts =
+    (items) => {
+
+      container.innerHTML = "";
+
+      items.forEach(post => {
+
+        const playerName =
+          post.players?.nickname ||
+          post.players?.name ||
+          "Jugador";
+
+        let icon = "🤝";
+
+        if (post.post_type === "money") {
+          icon = "💰";
+        }
+
+        if (post.post_type === "product") {
+          icon = "🥩";
+        }
+
+        if (post.post_type === "service") {
+          icon = "🛠️";
+        }
+
+        let statusText = "Pendiente";
+        let statusClass = "status-pending";
+
+        if (post.status === "confirmed") {
+          statusText = "Confirmado";
+          statusClass = "status-approved";
+        }
+
+        if (post.status === "cancelled") {
+          statusText = "Cancelado";
+          statusClass = "status-rejected";
+        }
+
+        const div =
+          document.createElement("div");
+
+        div.className = "payment";
+
+        div.style.marginBottom = "12px";
+
+        div.innerHTML = `
+          <strong>
+            ${icon}
+            ${escapeHtml(playerName)}
+          </strong>
+
+          <p style="margin:6px 0;">
+            ${escapeHtml(post.description)}
+          </p>
+
+          ${
+            post.amount
+              ? `
+                <p style="margin:4px 0;">
+                  💵 ${money(post.amount)}
+                </p>
+              `
+              : ""
+          }
+
+          <span class="status ${statusClass}">
+            ${statusText}
+          </span>
+
+          <p
+            class="muted"
+            style="margin:6px 0 0;"
+          >
+            ${formatDate(
+              post.created_at
+                ? post.created_at.substring(0, 10)
+                : null
+            )}
+          </p>
+        `;
+
+        container.appendChild(div);
+
+      });
+
+    };
+
+  renderPosts(visiblePosts);
+
+  if (posts.length > 5) {
+
+    const button =
+      document.createElement("button");
+
+    button.type = "button";
+
+    button.className =
+      "btn-secondary";
+
+    button.style.marginTop = "3px";
+
+    button.textContent =
+      `Ver todos los aportes (${posts.length})`;
+
+    let showingAll = false;
+
+    button.onclick = () => {
+
+      showingAll = !showingAll;
+
+      if (showingAll) {
+
+        renderPosts(posts);
+
+        button.textContent =
+          "Ocultar aportes";
+
+      } else {
+
+        renderPosts(visiblePosts);
+
+        button.textContent =
+          `Ver todos los aportes (${posts.length})`;
+
+      }
+
+      container.appendChild(button);
+
+    };
+
+    container.appendChild(button);
+
+  }
+
+}
