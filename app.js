@@ -2565,7 +2565,26 @@ async function removePlayer(playerId, playerName) {
         sum + Number(c.amount || 0),
       0
     );
+const playerPaid =
+  payments
+    .filter(
+      payment =>
+        payment.player_id === player.id &&
+        payment.status === "approved"
+    )
+    .reduce(
+      (sum, payment) =>
+        sum + Number(payment.amount || 0),
+      0
+    );
 
+const activeConceptNames =
+  activeConcepts.map(
+    concept =>
+      concept.name
+        .trim()
+        .toLowerCase()
+  );
       const difference =
         playerPaid - playerCharges;
 
