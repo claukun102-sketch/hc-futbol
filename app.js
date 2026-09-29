@@ -3846,6 +3846,109 @@ renderPlayerPayments(
 /* =====================================================
    PARTIDOS DEL JUGADOR
 ===================================================== */
+
+async function loadPlayerNotifications() {
+
+  const container =
+    document.getElementById("playerNotifications");
+
+  if (!container) return;
+
+  if (!currentPlayer) {
+    container.innerHTML = "";
+    return;
+  }
+
+  const {
+    data: notifications,
+    error
+  } = await client
+    .from("notifications")
+    .select("*")
+    .eq("player_id", currentPlayer.id)
+    .order("created_at", {
+      ascending: false
+    })
+    .limit(10);
+
+  if (error) {
+
+    console.error(
+      "Error cargando notificaciones:",
+      error
+    );
+
+    container.innerHTML =
+      `<p class="muted">
+        No pudimos cargar las notificaciones.
+      </p>`;
+
+    return;
+  }
+
+  if (!notifications || !notifications.length) {
+
+    container.innerHTML =
+      `<p class="muted">
+        No tenés notificaciones nuevas.
+      </p>`;
+
+    return;
+  }
+
+  container.innerHTML =
+    notifications.map(notification => {
+
+      let icon = "🔔";
+
+      if (notification.type === "match") {
+        icon = "⚽";
+      }
+
+      if (notification.type === "charge") {
+        icon = "💰";
+      }
+
+      if (notification.type === "payment") {
+        icon = "💳";
+      }
+
+      if (notification.type === "team_post") {
+        icon = "📰";
+      }
+
+      return `
+        <div
+          class="payment"
+          style="margin-bottom:12px;"
+        >
+
+          <strong>
+            ${icon}
+            ${escapeHtml(notification.title)}
+          </strong>
+
+          <p style="margin:6px 0;">
+            ${escapeHtml(notification.message)}
+          </p>
+
+          <p
+            class="muted"
+            style="margin:4px 0 0;"
+          >
+            ${formatDate(
+              notification.created_at
+                ? notification.created_at.substring(0, 10)
+                : null
+            )}
+          </p>
+
+        </div>
+      `;
+
+    }).join("");
+}
+
 async function loadPlayerMatches() {
 
   const container =
