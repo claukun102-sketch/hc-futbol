@@ -2619,10 +2619,11 @@ const activeConceptNames =
             ? `<span class="negative">Debe ${money(Math.abs(difference))}</span>`
             : `<span class="positive">${money(0)}</span>`;
 
-
-      const row =
+const row =
   document.createElement("tr");
 
+row.className = "player-row";
+      
 const playerChargesList =
   charges
     .filter(c => c.player_id === player.id)
