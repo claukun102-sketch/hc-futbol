@@ -399,7 +399,7 @@
       .player-add-form { grid-template-columns:1fr; }
       .player-actions { justify-content:flex-start; }
     }
-
+    
 /* =====================================================
    MODO MOVIL
 ===================================================== */
@@ -418,7 +418,7 @@
 
   .card {
     padding: 16px;
-    overflow-x: hidden;
+    overflow: hidden;
   }
 
   .header {
@@ -429,28 +429,114 @@
     font-size: 24px;
   }
 
-  table {
-    width: 100%;
+
+  /* ESTADISTICAS */
+
+  .grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .grid .card {
     min-width: 0;
-    font-size: 12px;
   }
 
-  th,
-  td {
-    padding: 8px 5px;
+
+  /* TABLA DE JUGADORES */
+
+  #playersTable {
+    width: 100%;
   }
 
-  .player-actions {
+  #playersTable thead {
+    display: none;
+  }
+
+  #playersTable tbody {
+    display: block;
+    width: 100%;
+  }
+
+  #playersTable .player-row {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 16px 0;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  #playersTable .player-row td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px 0;
+    border: none;
+    font-size: 16px;
+  }
+
+  /* Nombre */
+
+  #playersTable .player-row td:first-child {
+    display: block;
+    font-size: 19px;
+    font-weight: 600;
+    padding-bottom: 12px;
+  }
+
+  /* DNI */
+
+  #playersTable .player-row td:nth-child(2)::before {
+    content: "DNI";
+    color: #6b7280;
+    font-size: 14px;
+  }
+
+  /* Cargos */
+
+  #playersTable .player-row td:nth-child(3)::before {
+    content: "Cargos";
+    color: #6b7280;
+    font-size: 14px;
+  }
+
+  /* Pagado */
+
+  #playersTable .player-row td:nth-child(4)::before {
+    content: "Pagado";
+    color: #6b7280;
+    font-size: 14px;
+  }
+
+  /* Saldo */
+
+  #playersTable .player-row td:nth-child(5)::before {
+    content: "Saldo";
+    color: #6b7280;
+    font-size: 14px;
+  }
+
+  /* Acciones */
+
+  #playersTable .player-row td:nth-child(6) {
+    display: block;
+    padding-top: 12px;
+  }
+
+  #playersTable .player-actions {
+    display: flex;
     flex-wrap: wrap;
+    gap: 8px;
   }
 
-}    
+  #playersTable .player-actions button {
+    font-size: 14px;
+    padding: 9px 11px;
+  }
+
+}
     
-</style>
-</head>
-
-<body>
-
 <!-- =====================================================
      LOGIN
 ===================================================== -->
