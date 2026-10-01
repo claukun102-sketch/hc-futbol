@@ -975,6 +975,83 @@ table:has(#playersTable) thead {
   }
 
 }
+
+/* =====================================================
+   PERFIL DEL JUGADOR — MODO MOVIL
+===================================================== */
+
+.player-profile-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.player-profile-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eef7ff;
+  font-size: 22px;
+}
+
+.player-profile-title h2 {
+  margin: 0 0 3px;
+}
+
+.player-profile-data {
+  border-top: 1px solid #eef0f2;
+}
+
+.player-profile-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 13px 0;
+  border-bottom: 1px solid #eef0f2;
+}
+
+.player-profile-row:last-child {
+  border-bottom: 0;
+}
+
+.player-profile-row span {
+  color: #64748b;
+  font-size: 14px;
+}
+
+.player-profile-row strong {
+  color: #102033;
+  font-size: 15px;
+  text-align: right;
+}
+
+@media (max-width: 600px) {
+
+  #playerPage .player-profile-card {
+    padding: 18px;
+    border-radius: 20px;
+  }
+
+  #playerPage .player-profile-title {
+    margin-bottom: 14px;
+  }
+
+  #playerPage .player-profile-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 13px;
+  }
+
+  #playerPage .player-profile-row {
+    padding: 12px 0;
+  }
+
+}  
   
 </style>
 </head>
