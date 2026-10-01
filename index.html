@@ -570,24 +570,29 @@
     flex-wrap: wrap;
   }
 
-  /* =====================================================
+/* =====================================================
    JUGADORES — MODO MOVIL
 ===================================================== */
 
-#playersTable {
+/* La tabla que contiene a playersTable ocupa todo el ancho */
+table:has(#playersTable) {
   width: 100%;
-  border: 0;
+  min-width: 0 !important;
+  display: block;
 }
 
-#playersTable thead {
+/* Ocultamos los títulos de columnas */
+table:has(#playersTable) thead {
   display: none;
 }
 
-#playersTable tbody {
+/* El tbody pasa a comportarse como contenedor de tarjetas */
+#playersTable {
   display: block;
   width: 100%;
 }
 
+/* Cada jugador = una tarjeta */
 #playersTable .player-row {
   display: block;
   width: 100%;
@@ -600,7 +605,7 @@
   box-shadow: 0 6px 18px rgba(0,0,0,.06);
 }
 
-/* Cada dato del jugador */
+/* Datos */
 #playersTable .player-row td {
   display: flex;
   align-items: center;
