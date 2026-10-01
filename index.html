@@ -678,7 +678,7 @@ table:has(#playersTable) thead {
 }
 
 @media (max-width: 600px) {
-  #adminPage .grid {
+#adminPage .grid {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 12px !important;
   }
@@ -694,8 +694,51 @@ table:has(#playersTable) thead {
     line-height: 1.15;
     overflow-wrap: anywhere;
   }
-}    
+
+  /* PAGOS PENDIENTES */
+
+  #pendingPayments {
+    width: 100%;
+  }
+
+  #pendingPayments .payment {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 14px;
+    padding: 18px;
+    border-radius: 20px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 6px 18px rgba(0,0,0,.06);
+  }
+
+  #pendingPayments .payment strong {
+    font-size: 19px;
+    color: #102033;
+  }
+
+  #pendingPayments .payment p {
+    margin: 9px 0;
+    font-size: 15px;
+    line-height: 1.4;
+  }
+
+  #pendingPayments .payment-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 15px;
+  }
+
+  #pendingPayments .payment-actions button {
+    flex: 1 1 140px;
+    min-height: 44px;
+    border-radius: 12px;
+    font-size: 14px;
+   }
     
+  }
+   
 </style>
 </head>
 
