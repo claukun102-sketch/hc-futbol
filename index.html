@@ -762,73 +762,44 @@
     <div id="adminSuccess" class="success hidden"></div>
 
 
- <!-- ESTADÍSTICAS -->
+    <!-- ESTADÍSTICAS -->
 
-<div class="stats-dashboard">
+   <div
+  class="grid"
+  style="
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  "
+>
 
-  <div class="stat-card stat-players">
-    <div class="stat-card-top">
-      <span class="stat-label">Jugadores</span>
-      <span class="stat-mark">01</span>
-    </div>
-    <div id="statPlayers" class="stat-number">0</div>
-    <div class="stat-line"></div>
-    <div class="stat-description">Integrantes del equipo</div>
+  <div class="card">
+    <div class="muted">Jugadores</div>
+    <div id="statPlayers" class="stat">0</div>
   </div>
 
-
-  <div class="stat-card stat-charges">
-    <div class="stat-card-top">
-      <span class="stat-label">Inscripciones</span>
-      <span class="stat-mark">02</span>
-    </div>
-    <div id="statCharges" class="stat-number">$0</div>
-    <div class="stat-line"></div>
-    <div class="stat-description">Cargos generados</div>
+  <div class="card">
+    <div class="muted">Inscripciones</div>
+    <div id="statCharges" class="stat">$0</div>
   </div>
 
-
-  <div class="stat-card stat-approved">
-    <div class="stat-card-top">
-      <span class="stat-label">Pagos aprobados</span>
-      <span class="stat-mark">03</span>
-    </div>
-    <div id="statApproved" class="stat-number">$0</div>
-    <div class="stat-line"></div>
-    <div class="stat-description">Cobros registrados</div>
+  <div class="card">
+    <div class="muted">Pagos aprobados</div>
+    <div id="statApproved" class="stat">$0</div>
   </div>
 
-
-  <div class="stat-card stat-pending">
-    <div class="stat-card-top">
-      <span class="stat-label">Pagos pendientes</span>
-      <span class="stat-mark">04</span>
-    </div>
-    <div id="statPending" class="stat-number">0</div>
-    <div class="stat-line"></div>
-    <div class="stat-description">Pendientes de revisión</div>
+  <div class="card">
+    <div class="muted">Pagos pendientes</div>
+    <div id="statPending" class="stat">0</div>
   </div>
 
-
-  <div class="stat-card stat-credit">
-    <div class="stat-card-top">
-      <span class="stat-label">Saldos a favor</span>
-      <span class="stat-mark">05</span>
-    </div>
-    <div id="statCredits" class="stat-number positive">$0</div>
-    <div class="stat-line"></div>
-    <div class="stat-description">Crédito disponible</div>
+  <div class="card">
+    <div class="muted">💚 Saldos a favor</div>
+    <div id="statCredits" class="stat positive">$0</div>
   </div>
 
-
-  <div class="stat-card stat-debt">
-    <div class="stat-card-top">
-      <span class="stat-label">Saldos negativos</span>
-      <span class="stat-mark">06</span>
-    </div>
-    <div id="statDebts" class="stat-number negative">$0</div>
-    <div class="stat-line"></div>
-    <div class="stat-description">Deuda pendiente</div>
+  <div class="card">
+    <div class="muted">🔴 Saldos negativos</div>
+    <div id="statDebts" class="stat negative">$0</div>
   </div>
 
 </div>
