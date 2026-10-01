@@ -2100,26 +2100,38 @@ table:has(#playersTable) thead {
     
 <!-- MIS DATOS -->
 
-<div class="card">
+<div class="card player-profile-card">
 
-  <h2>👤 Mis datos</h2>
+  <div class="player-profile-title">
+    <div class="player-profile-icon">👤</div>
 
-  <p>
-    <strong>Nombre:</strong>
-    <span id="playerDataName">-</span>
-  </p>
+    <div>
+      <h2>Mi perfil</h2>
+      <div class="muted">Datos registrados del jugador</div>
+    </div>
+  </div>
 
-  <p>
-    <strong>Apodo:</strong>
-    <span id="playerDataNickname">-</span>
-  </p>
+  <div class="player-profile-data">
 
-  <p>
-    <strong>DNI:</strong>
-    <span id="playerDataDni">-</span>
-  </p>
+    <div class="player-profile-row">
+      <span>Nombre</span>
+      <strong id="playerDataName">-</strong>
+    </div>
+
+    <div class="player-profile-row">
+      <span>Apodo</span>
+      <strong id="playerDataNickname">-</strong>
+    </div>
+
+    <div class="player-profile-row">
+      <span>DNI</span>
+      <strong id="playerDataDni">-</strong>
+    </div>
+
+  </div>
 
 </div>
+    
   <!-- PRÓXIMOS PARTIDOS -->
 
 <div class="card">
