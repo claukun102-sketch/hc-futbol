@@ -1363,6 +1363,68 @@ table:has(#playersTable) thead {
   }
 
 }
+
+/* =====================================================
+   HISTORIAL DE PAGOS — MODO MOVIL
+===================================================== */
+
+@media (max-width: 600px) {
+
+  #playerPage #playerPayments {
+    width: 100%;
+    margin-top: 14px;
+  }
+
+  #playerPage #playerPayments .payment {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 12px !important;
+    padding: 17px;
+    border-radius: 18px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 5px 16px rgba(0,0,0,.05);
+  }
+
+  #playerPage #playerPayments .payment:last-child {
+    margin-bottom: 0 !important;
+  }
+
+  #playerPage #playerPayments .payment strong {
+    display: block;
+    font-size: 17px;
+    line-height: 1.35;
+    color: #102033;
+    margin-bottom: 8px;
+  }
+
+  #playerPage #playerPayments .payment p {
+    margin: 6px 0 !important;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  #playerPage #playerPayments .payment .muted {
+    color: #64748b;
+  }
+
+  #playerPage #playerPayments .payment .status {
+    display: inline-block;
+    margin-top: 5px;
+    padding: 5px 9px;
+    border-radius: 999px;
+    font-size: 12px;
+  }
+
+  #playerPage #playerPayments .payment button {
+    min-height: 40px;
+    padding: 8px 12px;
+    margin-top: 8px;
+    border-radius: 11px;
+    font-size: 14px;
+  }
+
+}  
   
 </style>
 </head>
