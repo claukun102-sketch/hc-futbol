@@ -73,6 +73,102 @@
   backdrop-filter: blur(4px);
 }
 
+/* =====================================================
+   LOGIN — IDENTIDAD TORNEO COMERCIAL
+===================================================== */
+
+#loginPage {
+  min-height: 100vh;
+  padding: 70px 20px 40px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  position: relative;
+  overflow: hidden;
+
+  background:
+    linear-gradient(
+      rgba(0, 75, 40, .08),
+      rgba(0, 55, 30, .18)
+    ),
+    url("torneo-comercial-login.png") center center / cover no-repeat;
+}
+
+#loginPage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(0, 70, 35, .10) 0%,
+      rgba(0, 70, 35, .00) 45%,
+      rgba(0, 40, 20, .28) 100%
+    );
+  pointer-events: none;
+}
+
+#loginPage .login-box {
+  position: relative;
+  z-index: 2;
+  width: min(480px, 94%);
+  margin: 0 0 4vh;
+  padding: 32px;
+  border-radius: 24px;
+  background: rgba(255,255,255,.96);
+  box-shadow: 0 22px 55px rgba(0,0,0,.24);
+}
+
+#loginPage .login-box h1 {
+  text-align: center;
+  margin-bottom: 8px;
+  font-size: 32px;
+  color: #102033;
+}
+
+#loginPage .login-box > p {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+#loginPage input {
+  background: white;
+  border: 1px solid #d7dde3;
+}
+
+#loginPage .btn-primary {
+  background: #087a3b;
+  color: white;
+}
+
+#loginPage .btn-primary:hover {
+  background: #066631;
+}
+
+#loginPage .btn-secondary {
+  background: #e7eee9;
+  color: #12452c;
+}
+
+@media (max-width: 600px) {
+
+  #loginPage {
+    padding: 40px 14px 24px;
+    align-items: flex-end;
+    background-position: center center;
+  }
+
+  #loginPage .login-box {
+    width: 100%;
+    margin: 0;
+    padding: 26px 22px;
+    border-radius: 22px;
+  }
+
+  #loginPage .login-box h1 {
+    font-size: 27px;
+  }
+}    
     h1, h2, h3 {
       margin-top: 0;
     }
