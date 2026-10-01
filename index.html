@@ -570,7 +570,107 @@
     flex-wrap: wrap;
   }
 
-}    
+  /* =====================================================
+   JUGADORES — MODO MOVIL
+===================================================== */
+
+#playersTable {
+  width: 100%;
+  border: 0;
+}
+
+#playersTable thead {
+  display: none;
+}
+
+#playersTable tbody {
+  display: block;
+  width: 100%;
+}
+
+#playersTable .player-row {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 18px;
+  margin-bottom: 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 6px 18px rgba(0,0,0,.06);
+}
+
+/* Cada dato del jugador */
+#playersTable .player-row td {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 7px 0;
+  border: 0;
+  font-size: 15px;
+}
+
+/* Nombre */
+#playersTable .player-row td:first-child {
+  display: block;
+  padding: 0 0 12px;
+  margin-bottom: 5px;
+  border-bottom: 1px solid #eef0f2;
+  font-size: 20px;
+  font-weight: 700;
+  color: #102033;
+}
+
+/* Etiquetas */
+#playersTable .player-row td:nth-child(2)::before {
+  content: "DNI";
+}
+
+#playersTable .player-row td:nth-child(3)::before {
+  content: "Cargos";
+}
+
+#playersTable .player-row td:nth-child(4)::before {
+  content: "Pagado";
+}
+
+#playersTable .player-row td:nth-child(5)::before {
+  content: "Saldo";
+}
+
+#playersTable .player-row td:nth-child(2)::before,
+#playersTable .player-row td:nth-child(3)::before,
+#playersTable .player-row td:nth-child(4)::before,
+#playersTable .player-row td:nth-child(5)::before {
+  color: #6b7280;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Acciones */
+#playersTable .player-row td:nth-child(6) {
+  display: block;
+  padding-top: 14px;
+  margin-top: 8px;
+  border-top: 1px solid #eef0f2;
+}
+
+#playersTable .player-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-start;
+}
+
+#playersTable .player-actions button {
+  min-height: 42px;
+  padding: 9px 13px;
+  border-radius: 12px;
+  font-size: 14px;
+}
 
 @media (max-width: 600px) {
   #adminPage .grid {
