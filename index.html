@@ -1219,17 +1219,32 @@ table:has(#playersTable) thead {
 
 }  
 
- /* =====================================================
+/* =====================================================
    MIS CARGOS — MODO MOVIL
 ===================================================== */
 
 @media (max-width: 600px) {
 
+  /* La tabla deja de comportarse como tabla */
+  #playerPage table:has(#playerChargesTable) {
+    display: block;
+    width: 100%;
+    min-width: 0 !important;
+  }
+
+  /* Ocultar encabezados de PC */
+  #playerPage table:has(#playerChargesTable) thead {
+    display: none;
+  }
+
   #playerPage #playerChargesTable {
     display: block;
     width: 100%;
+    margin: 0;
+    padding: 0;
   }
 
+  /* Cada fila = una tarjeta */
   #playerPage #playerChargesTable tr {
     display: block;
     width: 100%;
@@ -1242,38 +1257,59 @@ table:has(#playersTable) thead {
     box-shadow: 0 5px 16px rgba(0,0,0,.05);
   }
 
+  /* Cada dato */
   #playerPage #playerChargesTable td {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
+    display: block;
     width: 100%;
     box-sizing: border-box;
-    padding: 7px 0;
+    padding: 8px 0;
     border: 0;
-    font-size: 14px;
+    font-size: 15px;
+    line-height: 1.4;
   }
 
+  /* Concepto */
   #playerPage #playerChargesTable td:first-child {
-    display: block;
-    padding: 0 0 10px;
-    margin-bottom: 4px;
+    padding: 0 0 11px;
+    margin-bottom: 5px;
     border-bottom: 1px solid #eef0f2;
+    font-size: 17px;
+    font-weight: 700;
+    color: #102033;
+  }
+
+  /* Monto */
+  #playerPage #playerChargesTable td:nth-child(2) {
     font-size: 16px;
     font-weight: 700;
     color: #102033;
   }
 
-  #playerPage #playerChargesTable td:nth-child(2) {
-    font-weight: 700;
-    color: #102033;
+  #playerPage #playerChargesTable td:nth-child(2)::before {
+    content: "Monto";
+    display: block;
+    margin-bottom: 2px;
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 500;
   }
 
+  /* Fecha */
   #playerPage #playerChargesTable td:nth-child(3) {
     color: #64748b;
+    font-size: 14px;
   }
 
-} 
+  #playerPage #playerChargesTable td:nth-child(3)::before {
+    content: "Fecha";
+    display: block;
+    margin-bottom: 2px;
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+}
   
 </style>
 </head>
