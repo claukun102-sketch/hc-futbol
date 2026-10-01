@@ -571,6 +571,25 @@
   }
 
 }    
+
+@media (max-width: 600px) {
+  #adminPage .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+  }
+
+  #adminPage .grid .card {
+    min-width: 0;
+    padding: 16px 14px;
+    border-radius: 18px;
+  }
+
+  #adminPage .grid .stat {
+    font-size: 23px;
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+  }
+}    
     
 </style>
 </head>
