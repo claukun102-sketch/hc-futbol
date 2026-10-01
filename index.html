@@ -1109,6 +1109,52 @@ table:has(#playersTable) thead {
 
 }  
   
+/* =====================================================
+   NOTIFICACIONES — MODO MOVIL
+===================================================== */
+
+@media (max-width: 600px) {
+
+  #playerPage #playerNotifications {
+    width: 100%;
+    margin-top: 14px !important;
+  }
+
+  #playerPage #playerNotifications > div {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 12px;
+    padding: 16px;
+    border-radius: 18px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 5px 16px rgba(0,0,0,.05);
+  }
+
+  #playerPage #playerNotifications > div:last-child {
+    margin-bottom: 0;
+  }
+
+  #playerPage #playerNotifications strong {
+    display: block;
+    color: #102033;
+    font-size: 16px;
+    line-height: 1.35;
+    margin-bottom: 6px;
+  }
+
+  #playerPage #playerNotifications p {
+    margin: 5px 0;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  #playerPage #playerNotifications .muted {
+    color: #64748b;
+  }
+
+}  
+  
 </style>
 </head>
 
