@@ -793,7 +793,35 @@ table:has(#playersTable) thead {
 
 }
 
-  
+/* =====================================================
+   EQUIPOS ARCHIVADOS — MODO MOVIL
+===================================================== */
+
+@media (max-width: 600px) {
+
+  #archivedTeams {
+    width: 100%;
+  }
+
+  #archivedTeams > div {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 14px;
+    padding: 18px;
+    border-radius: 20px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 6px 18px rgba(0,0,0,.06);
+  }
+
+  #archivedTeams button {
+    min-height: 42px;
+    border-radius: 12px;
+    font-size: 14px;
+    margin-top: 10px;
+  }
+
+}  
 </style>
 </head>
 
