@@ -3404,6 +3404,86 @@ function renderPendingPayments(
 
   }
 
+/* =====================================================
+   ANULAR PAGO APROBADO
+===================================================== */
+
+async function cancelPayment(paymentId) {
+
+  const reason = prompt(
+    "Motivo de la anulación del pago:\n\n" +
+    "Ejemplo: La transferencia nunca llegó."
+  );
+
+  if (reason === null) {
+    return;
+  }
+
+  const cleanReason = reason.trim();
+
+  if (!cleanReason) {
+
+    showAdminError(
+      "Tenés que indicar el motivo de la anulación."
+    );
+
+    return;
+  }
+
+  const {
+    data: {
+      user
+    }
+  } = await client.auth.getUser();
+
+  if (!user) {
+
+    showAdminError(
+      "No encontramos al administrador."
+    );
+
+    return;
+  }
+
+  const {
+    error
+  } = await client
+    .from("payments")
+    .update({
+      status: "cancelled",
+      cancelled_at:
+        new Date().toISOString(),
+      cancelled_by:
+        user.id,
+      cancellation_reason:
+        cleanReason
+    })
+    .eq(
+      "id",
+      paymentId
+    )
+    .eq(
+      "status",
+      "approved"
+    );
+
+  if (error) {
+
+    showAdminError(
+      error.message
+    );
+
+    return;
+  }
+
+  showAdminSuccess(
+    "Pago anulado correctamente."
+  );
+
+  await loadAdminDashboard();
+
+}
+
 
   /* =====================================================
      VER COMPROBANTE
