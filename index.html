@@ -1310,6 +1310,59 @@ table:has(#playersTable) thead {
   }
 
 }
+
+/* =====================================================
+   REGISTRAR UN PAGO — MODO MOVIL
+===================================================== */
+
+@media (max-width: 600px) {
+
+  #playerPage #paymentAmount,
+  #playerPage #paymentMethod,
+  #playerPage #paymentDate,
+  #playerPage #paymentReceipt {
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 48px;
+    margin-bottom: 14px;
+    border-radius: 12px;
+    font-size: 16px;
+  }
+
+  #playerPage #paymentAmount,
+  #playerPage #paymentMethod,
+  #playerPage #paymentDate {
+    padding: 12px 14px;
+  }
+
+  #playerPage #paymentReceipt {
+    padding: 10px;
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+  }
+
+  #playerPage label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #475569;
+  }
+
+  #playerPage #paymentAmount + label {
+    margin-top: 2px;
+  }
+
+  #playerPage button[onclick="registerPayment()"] {
+    width: 100%;
+    min-height: 50px;
+    margin-top: 4px;
+    border-radius: 13px;
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+}
   
 </style>
 </head>
