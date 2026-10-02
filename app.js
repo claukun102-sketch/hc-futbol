@@ -5465,6 +5465,43 @@ if (file) {
 
   }
 
+/* =====================================================
+   NAVEGACIÓN MOBILE — JUGADOR
+===================================================== */
+
+function playerMobileGo(section) {
+
+  if (window.innerWidth > 600) {
+    return;
+  }
+
+  let target = null;
+
+  if (section === "inicio") {
+    target = document.querySelector("#playerBalanceCard");
+  }
+
+  if (section === "partidos") {
+    target = document.querySelector("#playerMatches");
+  }
+
+  if (section === "pagos") {
+    target = document.querySelector("#playerChargesTable");
+  }
+
+  if (section === "perfil") {
+    target = document.querySelector(".player-profile-card");
+  }
+
+  if (!target) {
+    return;
+  }
+
+  target.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+}
 
   /* =====================================================
      LOGOUT
