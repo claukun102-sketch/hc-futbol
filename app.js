@@ -3308,6 +3308,110 @@ function renderPendingPayments(
 
   }
 
+/* =====================================================
+   HISTORIAL DE PAGOS
+===================================================== */
+
+function renderPaymentHistory(payments, players) {
+
+  const container =
+    document.getElementById("paymentHistory");
+
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  if (!payments.length) {
+
+    container.innerHTML =
+      `<p class="muted">
+        Todavía no hay pagos registrados.
+      </p>`;
+
+    return;
+  }
+
+  payments.forEach(payment => {
+
+    const player =
+      players.find(
+        p => p.id === payment.player_id
+      );
+
+    const div =
+      document.createElement("div");
+
+    div.className = "payment";
+
+    let statusClass = "status-pending";
+    let statusText = "Pendiente";
+
+    if (payment.status === "approved") {
+      statusClass = "status-approved";
+      statusText = "Aprobado";
+    }
+
+    if (payment.status === "rejected") {
+      statusClass = "status-rejected";
+      statusText = "Rechazado";
+    }
+
+    if (payment.status === "cancelled") {
+      statusClass = "status-rejected";
+      statusText = "Anulado";
+    }
+
+    div.innerHTML = `
+      <strong>
+        ${escapeHtml(
+          player
+            ? player.name
+            : "Jugador"
+        )}
+      </strong>
+
+      <p>
+        Monto:
+        <strong>
+          ${money(payment.amount)}
+        </strong>
+      </p>
+
+      <p>
+        Medio:
+        ${escapeHtml(
+          payment.payment_method
+        )}
+      </p>
+
+      <p>
+        Fecha:
+        ${formatDate(payment.payment_date)}
+      </p>
+
+      <span class="status ${statusClass}">
+        ${statusText}
+      </span>
+
+      ${
+        payment.cancellation_reason
+          ? `
+            <p class="muted">
+              Motivo de anulación:
+              ${escapeHtml(
+                payment.cancellation_reason
+              )}
+            </p>
+          `
+          : ""
+      }
+    `;
+
+    container.appendChild(div);
+
+  });
+
+}
 
   /* =====================================================
      APROBAR PAGO
