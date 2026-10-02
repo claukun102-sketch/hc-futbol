@@ -3397,6 +3397,17 @@ function renderPaymentHistory(payments, players) {
         ${statusText}
       </span>
 
+      ${payment.status === "approved" ? `
+  <div class="payment-actions" style="margin-top:10px;">
+    <button
+      class="btn-danger"
+      onclick="cancelPayment('${payment.id}')"
+    >
+      Anular pago
+    </button>
+  </div>
+` : ""}
+
       ${
         payment.cancellation_reason
           ? `
