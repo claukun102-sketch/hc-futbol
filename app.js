@@ -3335,7 +3335,7 @@ function renderPaymentHistory(payments, players) {
     return;
   }
 
-  payments.forEach(payment => {
+  payments.slice(0, 5).forEach(payment => {
 
     const player =
       players.find(
