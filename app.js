@@ -5517,7 +5517,71 @@ if (activeButton) {
   /* =====================================================
      LOGOUT
   ===================================================== */
+/* =====================================================
+   FOTO DE PERFIL — JUGADOR
+===================================================== */
 
+async function handlePlayerAvatarChange(event) {
+
+  const file = event.target.files?.[0];
+
+  if (!file) {
+    return;
+  }
+
+  if (!file.type.startsWith("image/")) {
+    showPlayerError("El archivo seleccionado no es una imagen.");
+    return;
+  }
+
+  if (!currentPlayer) {
+    showPlayerError("No encontramos los datos del jugador.");
+    return;
+  }
+
+  showPlayerSuccess("Subiendo foto...");
+
+  const extension = file.name.split(".").pop().toLowerCase();
+
+  const avatarPath =
+    `${currentPlayer.team_id}/${currentPlayer.id}/avatar.${extension}`;
+
+  const {
+    error: uploadError
+  } = await client
+    .storage
+    .from("avatars")
+    .upload(avatarPath, file, {
+      upsert: true,
+      contentType: file.type
+    });
+
+  if (uploadError) {
+    showPlayerError(uploadError.message);
+    return;
+  }
+
+  const {
+    error: updateError
+  } = await client
+    .from("players")
+    .update({
+      avatar_url: avatarPath
+    })
+    .eq("id", currentPlayer.id);
+
+  if (updateError) {
+    showPlayerError(updateError.message);
+    return;
+  }
+
+  currentPlayer.avatar_url = avatarPath;
+
+  await loadPlayerAvatar();
+
+  showPlayerSuccess("Foto actualizada correctamente.");
+
+}
   async function logout() {
 
     await client.auth.signOut();
