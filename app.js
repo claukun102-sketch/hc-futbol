@@ -5582,7 +5582,36 @@ async function handlePlayerAvatarChange(event) {
   showPlayerSuccess("Foto actualizada correctamente.");
 
 }
-  async function logout() {
+async function loadPlayerAvatar() {
+
+  if (!currentPlayer?.avatar_url) {
+    return;
+  }
+
+  const {
+    data,
+    error
+  } = await client
+    .storage
+    .from("avatars")
+    .createSignedUrl(currentPlayer.avatar_url, 3600);
+
+  if (error || !data?.signedUrl) {
+    return;
+  }
+
+  const avatar = document.getElementById("playerAvatar");
+  const initial = document.getElementById("playerAvatarInitial");
+
+  if (!avatar || !initial) {
+    return;
+  }
+
+  avatar.src = data.signedUrl;
+  avatar.style.display = "block";
+  initial.style.display = "none";
+}  
+async function logout() {
 
     await client.auth.signOut();
 
