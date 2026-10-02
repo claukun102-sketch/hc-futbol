@@ -1642,7 +1642,59 @@ table:has(#playersTable) thead {
   }
 
 }  
-  
+
+/* =====================================================
+   JUGADOR — NAVEGACIÓN MOBILE
+===================================================== */
+
+#playerMobileNav {
+  display: none;
+}
+
+@media (max-width: 600px) {
+
+  #playerMobileNav {
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    z-index: 5000;
+
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+
+    padding: 8px;
+
+    background: rgba(255,255,255,.96);
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,.14);
+
+    backdrop-filter: blur(12px);
+  }
+
+  #playerMobileNav button {
+    min-height: 48px;
+    border: 0;
+    border-radius: 14px;
+    background: transparent;
+
+    color: #64748b;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+  }
+
+  #playerMobileNav button:active {
+    background: #eef7ff;
+  }
+
+}    
+    
 </style>
 </head>
 
