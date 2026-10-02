@@ -3335,8 +3335,13 @@ function renderPaymentHistory(payments, players) {
     return;
   }
 
-  payments.slice(0, 5).forEach(payment => {
+  const visiblePayments = payments.slice(0, 5);
 
+  const renderPayments = (items) => {
+
+  container.innerHTML = "";
+
+  items.forEach(payment => {
     const player =
       players.find(
         p => p.id === payment.player_id
