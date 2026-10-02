@@ -1366,19 +1366,31 @@ table:has(#playersTable) thead {
 }
     
 /* =====================================================
-   MIS CARGOS — MODO MOVIL
+   JUGADOR — MIS CARGOS MOBILE
 ===================================================== */
 
 @media (max-width: 600px) {
 
+  #playerPage .card:has(#playerChargesTable) {
+    padding: 18px;
+    margin-bottom: 14px;
+    border-radius: 22px;
+  }
+
+  #playerPage .card:has(#playerChargesTable) h2 {
+    margin: 0 0 14px;
+    font-size: 20px;
+    line-height: 1.2;
+  }
+
   /* La tabla deja de comportarse como tabla */
+
   #playerPage table:has(#playerChargesTable) {
     display: block;
     width: 100%;
     min-width: 0 !important;
   }
 
-  /* Ocultar encabezados de PC */
   #playerPage table:has(#playerChargesTable) thead {
     display: none;
   }
@@ -1390,41 +1402,49 @@ table:has(#playersTable) thead {
     padding: 0;
   }
 
-  /* Cada fila = una tarjeta */
+  /* Cada cargo = una tarjeta */
+
   #playerPage #playerChargesTable tr {
     display: block;
     width: 100%;
     box-sizing: border-box;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     padding: 16px;
-    border: 1px solid #e5e7eb;
+    border: 1px solid #e2e8f0;
     border-radius: 18px;
-    background: #ffffff;
-    box-shadow: 0 5px 16px rgba(0,0,0,.05);
+    background: #f8fafc;
+    box-shadow: none;
   }
 
-  /* Cada dato */
+  #playerPage #playerChargesTable tr:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Datos */
+
   #playerPage #playerChargesTable td {
     display: block;
     width: 100%;
     box-sizing: border-box;
-    padding: 8px 0;
+    padding: 7px 0;
     border: 0;
-    font-size: 15px;
+    font-size: 14px;
     line-height: 1.4;
   }
 
   /* Concepto */
+
   #playerPage #playerChargesTable td:first-child {
     padding: 0 0 11px;
     margin-bottom: 5px;
-    border-bottom: 1px solid #eef0f2;
+    border-bottom: 1px solid #e2e8f0;
     font-size: 17px;
     font-weight: 700;
     color: #102033;
   }
 
   /* Monto */
+
   #playerPage #playerChargesTable td:nth-child(2) {
     font-size: 16px;
     font-weight: 700;
@@ -1441,6 +1461,7 @@ table:has(#playersTable) thead {
   }
 
   /* Fecha */
+
   #playerPage #playerChargesTable td:nth-child(3) {
     color: #64748b;
     font-size: 14px;
@@ -1453,6 +1474,16 @@ table:has(#playersTable) thead {
     color: #64748b;
     font-size: 13px;
     font-weight: 500;
+  }
+
+  /* Botón ver todos */
+
+  #playerPage .player-charges-toggle {
+    width: 100%;
+    min-height: 44px;
+    margin-top: 12px !important;
+    border-radius: 12px;
+    font-size: 14px;
   }
 
 }
