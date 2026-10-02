@@ -2261,6 +2261,7 @@ const totalDebts =
       pendingPayments,
       players
     );
+    
     renderPaymentHistory(
     payments,
     players
