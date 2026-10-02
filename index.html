@@ -2877,24 +2877,38 @@ table:has(#playersTable) thead {
 <div class="card player-profile-card">
 
   <div class="player-profile-title">
+<div class="player-avatar-wrap">
 
-    <div class="player-avatar-wrap">
+  <img
+    id="playerAvatar"
+    class="player-avatar"
+    src=""
+    alt="Foto del jugador"
+  >
 
-      <img
-        id="playerAvatar"
-        class="player-avatar"
-        src=""
-        alt="Foto del jugador"
-      >
+  <div
+    id="playerAvatarInitial"
+    class="player-avatar-initial"
+  >
+    ?
+  </div>
 
-      <div
-        id="playerAvatarInitial"
-        class="player-avatar-initial"
-      >
-        ?
-      </div>
+  <label
+    for="playerAvatarInput"
+    class="player-avatar-button"
+  >
+    Cambiar foto
+  </label>
 
-    </div>
+  <input
+    id="playerAvatarInput"
+    type="file"
+    accept="image/*"
+    hidden
+    onchange="handlePlayerAvatarChange(event)"
+  >
+
+</div>
 
     <div>
       <h2>Mi perfil</h2>
