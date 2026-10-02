@@ -5021,7 +5021,19 @@ function renderPlayerCharges(
 
         }
 
+        if (
+          payment.status ===
+          "cancelled"
+   ) {
 
+        statusClass =
+        "status-rejected";
+
+        statusText =
+        "Anulado";
+
+}
+        
         div.innerHTML = `
           <strong>
             ${money(payment.amount)}
