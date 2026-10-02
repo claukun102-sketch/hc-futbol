@@ -2084,7 +2084,30 @@ async function deleteMatch(matchId) {
 
     const currentRegistrationFee =
       Number(settings?.registration_fee || 0);
+    
+  const {
+  data: playerTeam,
+  error: playerTeamError
+} = await client
+  .from("teams")
+  .select("name, sport, active")
+  .eq("id", player.team_id)
+  .maybeSingle();
 
+if (playerTeamError) {
+  showPlayerError(playerTeamError.message);
+  return;
+}
+
+document.getElementById("playerDataTeam").textContent =
+  playerTeam?.name || "-";
+
+document.getElementById("playerDataSport").textContent =
+  playerTeam?.sport || "-";
+
+document.getElementById("playerDataTeamStatus").textContent =
+  playerTeam?.active ? "Activo" : "Inactivo";
+    
    const activePlayerIds =
   players.map(
     player => player.id
