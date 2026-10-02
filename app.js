@@ -3816,9 +3816,9 @@ async function cancelPayment(paymentId) {
     }
 
 
-    currentPlayer =
-      player;
-    
+    currentPlayer =  player;
+    await loadPlayerAvatar();
+   
     await loadPlayerNotifications();
 
     const {
