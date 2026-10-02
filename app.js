@@ -5004,6 +5004,14 @@ function renderPlayerCharges(
 
     if (!container) return;
 
+    const oldButton =
+    container.querySelector(
+    ".player-charges-toggle"
+ );
+
+   if (oldButton) {
+    oldButton.remove();
+}
 
     const button =
       document.createElement(
