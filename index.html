@@ -1284,10 +1284,34 @@ table:has(#playersTable) thead {
 }
     
 /* =====================================================
-   ACTIVIDAD DEL EQUIPO — MODO MOVIL
+   JUGADOR — ACTIVIDAD DEL EQUIPO MOBILE
 ===================================================== */
 
 @media (max-width: 600px) {
+
+  #playerPage .card:has(#teamPosts) {
+    padding: 18px;
+    margin-bottom: 14px;
+    border-radius: 22px;
+  }
+
+  #playerPage .card:has(#teamPosts) h2 {
+    margin: 0;
+    font-size: 20px;
+    line-height: 1.2;
+  }
+
+  #playerPage .card:has(#teamPosts) > .muted {
+    display: none;
+  }
+
+  #playerPage .player-team-post-button {
+    width: 100%;
+    min-height: 46px;
+    margin-top: 14px;
+    border-radius: 13px;
+    font-size: 14px;
+  }
 
   #playerPage #teamPosts {
     width: 100%;
@@ -1297,20 +1321,20 @@ table:has(#playersTable) thead {
   #playerPage #teamPosts .payment {
     width: 100%;
     box-sizing: border-box;
-    margin-bottom: 12px !important;
+    margin: 0 0 10px !important;
     padding: 17px;
     border-radius: 18px;
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    box-shadow: 0 5px 16px rgba(0,0,0,.05);
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    box-shadow: none;
   }
 
   #playerPage #teamPosts .payment strong {
     display: block;
+    margin-bottom: 8px;
     font-size: 17px;
     line-height: 1.35;
     color: #102033;
-    margin-bottom: 7px;
   }
 
   #playerPage #teamPosts .payment p {
@@ -1326,27 +1350,21 @@ table:has(#playersTable) thead {
   #playerPage #teamPosts .payment button {
     min-height: 40px;
     padding: 8px 12px;
+    margin-top: 8px;
     border-radius: 11px;
     font-size: 14px;
   }
 
   #playerPage #teamPosts .status {
     display: inline-block;
-    margin-top: 5px;
+    margin-top: 6px;
     padding: 5px 9px;
     border-radius: 999px;
     font-size: 12px;
   }
 
-  #playerPage .player-team-post-button {
-    width: 100%;
-    min-height: 46px;
-    margin-top: 4px;
-    border-radius: 13px;
-  }
-
-}  
-
+}
+    
 /* =====================================================
    MIS CARGOS — MODO MOVIL
 ===================================================== */
