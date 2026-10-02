@@ -2849,12 +2849,30 @@ table:has(#playersTable) thead {
 <div class="card player-profile-card">
 
   <div class="player-profile-title">
-    <div class="player-profile-icon">👤</div>
+
+    <div class="player-avatar-wrap">
+
+      <img
+        id="playerAvatar"
+        class="player-avatar"
+        src=""
+        alt="Foto del jugador"
+      >
+
+      <div
+        id="playerAvatarInitial"
+        class="player-avatar-initial"
+      >
+        ?
+      </div>
+
+    </div>
 
     <div>
       <h2>Mi perfil</h2>
       <div class="muted">Datos registrados del jugador</div>
     </div>
+
   </div>
 
   <div class="player-profile-data">
@@ -2877,6 +2895,8 @@ table:has(#playersTable) thead {
   </div>
 
 </div>
+
+<!-- PRÓXIMOS PARTIDOS -->
     
   <!-- PRÓXIMOS PARTIDOS -->
 
