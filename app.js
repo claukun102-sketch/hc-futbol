@@ -3431,6 +3431,47 @@ function renderPaymentHistory(payments, players) {
 
   });
 
+};
+
+  renderPayments(visiblePayments);
+
+if (payments.length > 5) {
+
+  const button = document.createElement("button");
+
+  button.type = "button";
+  button.className = "btn-secondary";
+  button.style.marginTop = "15px";
+
+  button.textContent =
+    `Ver todos los pagos (${payments.length})`;
+
+  let showingAll = false;
+
+  button.onclick = () => {
+
+    showingAll = !showingAll;
+
+    if (showingAll) {
+
+      renderPayments(payments);
+
+      button.textContent =
+        "Ocultar pagos";
+
+    } else {
+
+      renderPayments(visiblePayments);
+
+      button.textContent =
+        `Ver todos los pagos (${payments.length})`;
+
+    }
+
+  };
+
+  container.appendChild(button);
+
 }
 
   /* =====================================================
