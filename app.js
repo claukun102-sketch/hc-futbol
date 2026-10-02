@@ -5474,7 +5474,18 @@ function playerMobileGo(section) {
   if (window.innerWidth > 600) {
     return;
   }
+document.querySelectorAll("#playerMobileNav button").forEach(button => {
+  button.classList.remove("active");
+});
 
+const activeButton = document.querySelector(
+  `#playerMobileNav button[data-section="${section}"]`
+);
+
+if (activeButton) {
+  activeButton.classList.add("active");
+}
+  
   let target = null;
 
   if (section === "inicio") {
