@@ -1559,38 +1559,56 @@ table:has(#playersTable) thead {
 }
 
 /* =====================================================
-   HISTORIAL DE PAGOS — MODO MOVIL
+   JUGADOR — HISTORIAL DE PAGOS MOBILE
 ===================================================== */
 
 @media (max-width: 600px) {
+
+  #playerPage .card:has(#playerPayments) {
+    padding: 18px;
+    margin-bottom: 14px;
+    border-radius: 22px;
+  }
+
+  #playerPage .card:has(#playerPayments) h2 {
+    margin: 0;
+    font-size: 20px;
+    line-height: 1.2;
+  }
 
   #playerPage #playerPayments {
     width: 100%;
     margin-top: 14px;
   }
 
+  /* Cada pago = una tarjeta */
+
   #playerPage #playerPayments .payment {
     width: 100%;
     box-sizing: border-box;
-    margin-bottom: 12px !important;
+    margin: 0 0 10px !important;
     padding: 17px;
     border-radius: 18px;
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    box-shadow: 0 5px 16px rgba(0,0,0,.05);
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    box-shadow: none;
   }
 
   #playerPage #playerPayments .payment:last-child {
     margin-bottom: 0 !important;
   }
 
-  #playerPage #playerPayments .payment strong {
+  /* Monto */
+
+  #playerPage #playerPayments .payment > strong {
     display: block;
-    font-size: 17px;
-    line-height: 1.35;
+    margin-bottom: 10px;
+    font-size: 20px;
+    line-height: 1.2;
     color: #102033;
-    margin-bottom: 8px;
   }
+
+  /* Datos */
 
   #playerPage #playerPayments .payment p {
     margin: 6px 0 !important;
@@ -1602,19 +1620,24 @@ table:has(#playersTable) thead {
     color: #64748b;
   }
 
-  #playerPage #playerPayments .payment .status {
+  /* Estado */
+
+  #playerPage #playerPayments .status {
     display: inline-block;
-    margin-top: 5px;
-    padding: 5px 9px;
+    margin-top: 8px;
+    padding: 5px 10px;
     border-radius: 999px;
     font-size: 12px;
+    font-weight: 600;
   }
 
-  #playerPage #playerPayments .payment button {
-    min-height: 40px;
-    padding: 8px 12px;
-    margin-top: 8px;
-    border-radius: 11px;
+  /* Ver todos */
+
+  #playerPage #playerPayments .player-payments-toggle {
+    width: 100%;
+    min-height: 44px;
+    margin-top: 12px !important;
+    border-radius: 12px;
     font-size: 14px;
   }
 
