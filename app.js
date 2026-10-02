@@ -3335,103 +3335,182 @@ function renderPaymentHistory(payments, players) {
     return;
   }
 
-  const visiblePayments = payments.slice(0, 5);
+  const visiblePayments =
+    payments.slice(0, 5);
 
   const renderPayments = (items) => {
 
-  container.innerHTML = "";
+    container.innerHTML = "";
 
-  items.forEach(payment => {
-    const player =
-      players.find(
-        p => p.id === payment.player_id
-      );
+    items.forEach(payment => {
 
-    const div =
-      document.createElement("div");
+      const player =
+        players.find(
+          p => p.id === payment.player_id
+        );
 
-    div.className = "payment";
+      const div =
+        document.createElement("div");
 
-    let statusClass = "status-pending";
-    let statusText = "Pendiente";
+      div.className = "payment";
 
-    if (payment.status === "approved") {
-      statusClass = "status-approved";
-      statusText = "Aprobado";
-    }
+      let statusClass =
+        "status-pending";
 
-    if (payment.status === "rejected") {
-      statusClass = "status-rejected";
-      statusText = "Rechazado";
-    }
+      let statusText =
+        "Pendiente";
 
-    if (payment.status === "cancelled") {
-      statusClass = "status-rejected";
-      statusText = "Anulado";
-    }
+      if (payment.status === "approved") {
 
-    div.innerHTML = `
-      <strong>
-        ${escapeHtml(
-          player
-            ? player.name
-            : "Jugador"
-        )}
-      </strong>
+        statusClass =
+          "status-approved";
 
-      <p>
-        Monto:
-        <strong>
-          ${money(payment.amount)}
-        </strong>
-      </p>
-
-      <p>
-        Medio:
-        ${escapeHtml(
-          payment.payment_method
-        )}
-      </p>
-
-      <p>
-        Fecha:
-        ${formatDate(payment.payment_date)}
-      </p>
-
-      <span class="status ${statusClass}">
-        ${statusText}
-      </span>
-
-      ${payment.status === "approved" ? `
-  <div class="payment-actions" style="margin-top:10px;">
-    <button
-      class="btn-danger"
-      onclick="cancelPayment('${payment.id}')"
-    >
-      Anular pago
-    </button>
-  </div>
-` : ""}
-
-      ${
-        payment.cancellation_reason
-          ? `
-            <p class="muted">
-              Motivo de anulación:
-              ${escapeHtml(
-                payment.cancellation_reason
-              )}
-            </p>
-          `
-          : ""
+        statusText =
+          "Aprobado";
       }
-    `;
 
-    container.appendChild(div);
+      if (payment.status === "rejected") {
 
-  });
+        statusClass =
+          "status-rejected";
 
-};
+        statusText =
+          "Rechazado";
+      }
+
+      if (payment.status === "cancelled") {
+
+        statusClass =
+          "status-rejected";
+
+        statusText =
+          "Anulado";
+      }
+
+      div.innerHTML = `
+        <strong>
+          ${escapeHtml(
+            player
+              ? player.name
+              : "Jugador"
+          )}
+        </strong>
+
+        <p>
+          Monto:
+          <strong>
+            ${money(payment.amount)}
+          </strong>
+        </p>
+
+        <p>
+          Medio:
+          ${escapeHtml(
+            payment.payment_method
+          )}
+        </p>
+
+        <p>
+          Fecha:
+          ${formatDate(
+            payment.payment_date
+          )}
+        </p>
+
+        <span class="status ${statusClass}">
+          ${statusText}
+        </span>
+
+        ${
+          payment.status === "approved"
+            ? `
+              <div
+                class="payment-actions"
+                style="margin-top:10px;"
+              >
+                <button
+                  class="btn-danger"
+                  onclick="cancelPayment('${payment.id}')"
+                >
+                  Anular pago
+                </button>
+              </div>
+            `
+            : ""
+        }
+
+        ${
+          payment.cancellation_reason
+            ? `
+              <p class="muted">
+                Motivo de anulación:
+                ${escapeHtml(
+                  payment.cancellation_reason
+                )}
+              </p>
+            `
+            : ""
+        }
+      `;
+
+      container.appendChild(div);
+
+    });
+
+  };
+
+  renderPayments(visiblePayments);
+
+  if (payments.length > 5) {
+
+    const button =
+      document.createElement("button");
+
+    button.type = "button";
+
+    button.className =
+      "btn-secondary";
+
+    button.style.marginTop =
+      "15px";
+
+    button.textContent =
+      `Ver todos los pagos (${payments.length})`;
+
+    let showingAll = false;
+
+    button.onclick = () => {
+
+      showingAll =
+        !showingAll;
+
+      if (showingAll) {
+
+        renderPayments(
+          payments
+        );
+
+        button.textContent =
+          "Ocultar pagos";
+
+      } else {
+
+        renderPayments(
+          visiblePayments
+        );
+
+        button.textContent =
+          `Ver todos los pagos (${payments.length})`;
+
+      }
+
+    };
+
+    container.appendChild(button);
+
+  }
+
+}
 
   renderPayments(visiblePayments);
 
