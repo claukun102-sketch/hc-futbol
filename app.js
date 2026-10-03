@@ -4391,11 +4391,7 @@ const renderMatches = (items) => {
         <div class="player-match-teams">
 
           <div class="player-match-team">
-            ${escapeHtml(
-              currentPlayer?.team_name ||
-              currentPlayer?.team?.name ||
-              "Mi equipo"
-            )}
+         ${escapeHtml(teamName)}
           </div>
 
           <div class="player-match-vs">
