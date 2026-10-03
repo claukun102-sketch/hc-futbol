@@ -2107,33 +2107,6 @@ document.getElementById("playerDataSport").textContent =
 document.getElementById("playerDataTeamStatus").textContent =
   playerTeam?.active ? "Activo" : "Inactivo";
     
-  const {
-  data: playerTeam,
-  error: playerTeamError
-} = await client
-  .from("teams")
-  .select("name, sport, active")
-  .eq("id", player.team_id)
-  .maybeSingle();
-    
-console.log("JUGADOR - team_id:", player.team_id);
-console.log("JUGADOR - equipo:", playerTeam);
-console.log("JUGADOR - error equipo:", playerTeamError); 
-
-if (playerTeamError) {
-  showPlayerError(playerTeamError.message);
-  return;
-}
-
-document.getElementById("playerDataTeam").textContent =
-  playerTeam?.name || "-";
-
-document.getElementById("playerDataSport").textContent =
-  playerTeam?.sport || "-";
-
-document.getElementById("playerDataTeamStatus").textContent =
-  playerTeam?.active ? "Activo" : "Inactivo";
-    
    const activePlayerIds =
   players.map(
     player => player.id
