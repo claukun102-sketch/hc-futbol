@@ -10,6 +10,25 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   
   <style>
+    .player-account-mobile-only,
+.player-account-mobile-only + .player-account-summary,
+.player-account-mobile-only + .player-account-summary + .player-account-status {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .player-account-mobile-only {
+    display: block;
+  }
+
+  .player-account-mobile-only + .player-account-summary {
+    display: grid;
+  }
+
+  .player-account-mobile-only + .player-account-summary + .player-account-status {
+    display: block;
+  }
+}
     .player-account-summary {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
