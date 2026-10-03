@@ -4017,6 +4017,20 @@ document.getElementById(
 ).textContent =
   money(totalPaid);
 
+document.getElementById(
+  "playerProfileCharges"
+).textContent =
+  money(totalCharges);
+
+document.getElementById(
+  "playerProfilePaid"
+).textContent =
+  money(totalPaid);
+
+document.getElementById(
+  "playerProfileBalance"
+).textContent =
+  money(debt);    
 
 // ================================
 // ESTADO DEL SALDO DEL JUGADOR
