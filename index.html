@@ -11,7 +11,48 @@
 
 
   <style>
+@media (max-width: 600px) {
 
+  #playerPage #paymentHistory {
+    width: 100%;
+  }
+
+  #playerPage #paymentHistory .payment {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 12px;
+    padding: 17px;
+    border-radius: 18px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 5px 16px rgba(0,0,0,.05);
+  }
+
+  #playerPage #paymentHistory .payment strong {
+    display: block;
+    margin-bottom: 7px;
+    color: #102033;
+    font-size: 20px;
+  }
+
+  #playerPage #paymentHistory .payment p {
+    margin: 6px 0;
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  #playerPage #paymentHistory .payment .status {
+    display: inline-block;
+    margin-top: 7px;
+    padding: 5px 9px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+}
+    
 @media (max-width: 600px) {
 
   #playerPage .card:has(#paymentAmount) {
