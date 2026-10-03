@@ -3799,8 +3799,26 @@ async function cancelPayment(paymentId) {
 
 
     currentPlayer =  player;
+    
     await loadPlayerAvatar();
-   
+
+const {
+  data: playerTeam
+} = await client
+  .from("teams")
+  .select("name, sport, active")
+  .eq("id", player.team_id)
+  .maybeSingle();
+
+document.getElementById("playerDataTeam").textContent =
+  playerTeam?.name || "-";
+
+document.getElementById("playerDataSport").textContent =
+  playerTeam?.sport || "-";
+
+document.getElementById("playerDataTeamStatus").textContent =
+  playerTeam?.active ? "Activo" : "Inactivo";
+    
     await loadPlayerNotifications();
 
     const {
