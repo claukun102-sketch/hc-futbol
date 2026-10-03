@@ -4371,74 +4371,107 @@ async function loadPlayerMatches() {
 
   const visibleMatches =
     matches.slice(0, 5);
-
 const renderMatches = (items) => {
-
   container.innerHTML =
     items.map(match => `
+      <div class="player-match-card">
 
-      <div class="payment" style="margin-bottom:12px;">
+        <div class="player-match-status">
+          PRÓXIMO PARTIDO
+        </div>
 
-        <strong>
-          ${escapeHtml(
-            match.opponent || "Partido"
-          )}
-        </strong>
+        <div class="player-match-teams">
 
-        <p style="margin:6px 0;">
+          <div class="player-match-team">
+            ${escapeHtml(
+              currentPlayer?.team_name ||
+              currentPlayer?.team?.name ||
+              "Mi equipo"
+            )}
+          </div>
 
-          ${formatDate(
-            match.match_date
-          )}
+          <div class="player-match-vs">
+            VS
+          </div>
+
+          <div class="player-match-team">
+            ${escapeHtml(match.opponent || "Rival")}
+          </div>
+
+        </div>
+
+        <div class="player-match-info">
+
+          <div class="player-match-info-row">
+            <span class="player-match-info-label">
+              Fecha
+            </span>
+
+            <span class="player-match-info-value">
+              ${formatDate(match.match_date)}
+            </span>
+          </div>
 
           ${
             match.match_time
-              ? ` · ${escapeHtml(
-                  match.match_time.substring(0, 5)
-                )}`
+              ? `
+                <div class="player-match-info-row">
+                  <span class="player-match-info-label">
+                    Hora
+                  </span>
+
+                  <span class="player-match-info-value">
+                    ${escapeHtml(
+                      match.match_time.substring(0, 5)
+                    )}
+                  </span>
+                </div>
+              `
               : ""
           }
 
-        </p>
+          <div class="player-match-info-row">
+            <span class="player-match-info-label">
+              Lugar
+            </span>
 
-        <p
-          class="muted"
-          style="margin:4px 0;"
-        >
-          ${escapeHtml(
-            match.venue ||
-            "Lugar a confirmar"
-          )}
-        </p>
+            <span class="player-match-info-value">
+              ${escapeHtml(
+                match.venue || "Lugar a confirmar"
+              )}
+            </span>
+          </div>
 
-        <p
-          class="muted"
-          style="margin:4px 0;"
-        >
-          ${money(
-            match.fee_per_player
-          )}
-        </p>
+        </div>
+
+        ${
+          match.fee_per_player
+            ? `
+              <div class="player-match-fee">
+                ${money(match.fee_per_player)} por jugador
+              </div>
+            `
+            : ""
+        }
 
         ${
           match.notes
             ? `
-              <p
-                class="muted"
-                style="margin:4px 0;"
-              >
-                ${escapeHtml(
-                  match.notes
-                )}
-              </p>
+              <div class="player-match-info-row" style="margin-top:12px;">
+                <span class="player-match-info-label">
+                  Nota
+                </span>
+
+                <span class="player-match-info-value">
+                  ${escapeHtml(match.notes)}
+                </span>
+              </div>
             `
             : ""
         }
 
       </div>
-
     `).join("");
-
 };
 
   renderMatches(visibleMatches);
