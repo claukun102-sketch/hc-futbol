@@ -11,6 +11,63 @@
 
 
   <style>
+
+@media (max-width: 600px) {
+
+  #playerPage .card:has(#paymentAmount) {
+    padding: 18px;
+    border-radius: 20px;
+  }
+
+  #playerPage .card:has(#paymentAmount) h2 {
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+
+  #playerPage .card:has(#paymentAmount) label {
+    display: block;
+    margin-top: 16px;
+    margin-bottom: 7px;
+    color: #475569;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  #playerPage #paymentAmount,
+  #playerPage #paymentMethod,
+  #playerPage #paymentDate,
+  #playerPage #paymentReceipt {
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 46px;
+    margin: 0;
+    border-radius: 12px;
+  }
+
+  #playerPage #paymentAmount,
+  #playerPage #paymentMethod,
+  #playerPage #paymentDate {
+    padding: 11px 12px;
+    font-size: 16px;
+  }
+
+  #playerPage #paymentReceipt {
+    padding: 10px;
+    font-size: 14px;
+    background: #f8faf9;
+  }
+
+  #playerPage .card:has(#paymentAmount) .btn-primary {
+    width: 100%;
+    min-height: 46px;
+    margin-top: 20px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+}
+    
     @media (max-width: 600px) {
 
   #playerChargesTable {
