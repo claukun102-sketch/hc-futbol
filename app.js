@@ -4377,260 +4377,69 @@ const renderMatches = (items) => {
   container.innerHTML =
     items.map(match => `
 
-      <div class="player-match-card">
+      <div class="payment" style="margin-bottom:12px;">
 
-        <div class="player-match-top">
+        <strong>
+          ${escapeHtml(
+            match.opponent || "Partido"
+          )}
+        </strong>
 
-          <span class="player-match-label">
-            PRÓXIMO PARTIDO
-          </span>
+        <p style="margin:6px 0;">
 
-          <span class="player-match-status">
-            Publicado
-          </span>
-
-        </div>
-
-
-        <div class="player-match-main">
-
-          <div class="player-match-team">
-
-            <div class="player-match-team-name">
-              TU EQUIPO
-            </div>
-
-          </div>
-
-
-          <div class="player-match-vs">
-            VS
-          </div>
-
-
-          <div class="player-match-team">
-
-            <div class="player-match-team-name">
-              ${escapeHtml(
-                match.opponent || "Rival"
-              )}
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <div class="player-match-divider"></div>
-
-
-        <div class="player-match-info">
-
-
-          <div class="player-match-info-item">
-
-            <div class="player-match-info-icon">
-
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.8"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <rect
-                  x="3"
-                  y="4"
-                  width="18"
-                  height="17"
-                  rx="2"
-                ></rect>
-
-                <path d="M16 2v4"></path>
-                <path d="M8 2v4"></path>
-                <path d="M3 10h18"></path>
-
-              </svg>
-
-            </div>
-
-            <div>
-              <span>FECHA</span>
-              <strong>
-                ${formatDate(match.match_date)}
-              </strong>
-            </div>
-
-          </div>
-
+          ${formatDate(
+            match.match_date
+          )}
 
           ${
             match.match_time
-              ? `
-
-                <div class="player-match-info-item">
-
-                  <div class="player-match-info-icon">
-
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="1.8"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <circle
-                        cx="12"
-                        cy="12"
-                        r="9"
-                      ></circle>
-
-                      <path d="M12 7v5l3 2"></path>
-
-                    </svg>
-
-                  </div>
-
-                  <div>
-                    <span>HORA</span>
-                    <strong>
-                      ${escapeHtml(
-                        match.match_time.substring(0, 5)
-                      )}
-                    </strong>
-                  </div>
-
-                </div>
-
-              `
+              ? ` · ${escapeHtml(
+                  match.match_time.substring(0, 5)
+                )}`
               : ""
           }
 
+        </p>
 
-          <div class="player-match-info-item">
+        <p
+          class="muted"
+          style="margin:4px 0;"
+        >
+          ${escapeHtml(
+            match.venue ||
+            "Lugar a confirmar"
+          )}
+        </p>
 
-            <div class="player-match-info-icon">
+        <p
+          class="muted"
+          style="margin:4px 0;"
+        >
+          ${money(
+            match.fee_per_player
+          )}
+        </p>
 
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.8"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+        ${
+          match.notes
+            ? `
+              <p
+                class="muted"
+                style="margin:4px 0;"
               >
-                <path
-                  d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0z"
-                ></path>
-
-                <circle
-                  cx="12"
-                  cy="10"
-                  r="2.5"
-                ></circle>
-
-              </svg>
-
-            </div>
-
-            <div>
-              <span>LUGAR</span>
-              <strong>
                 ${escapeHtml(
-                  match.venue || "Lugar a confirmar"
+                  match.notes
                 )}
-              </strong>
-            </div>
-
-          </div>
-
-
-        </div>
-
-
-        <div class="player-match-footer">
-
-
-          <div class="player-match-fee">
-
-            <span>VALOR POR JUGADOR</span>
-
-            <strong>
-              ${money(match.fee_per_player)}
-            </strong>
-
-          </div>
-
-
-          ${
-            match.notes
-              ? `
-
-                <div class="player-match-note">
-
-                  <span>NOTA</span>
-
-                  <strong>
-                    ${escapeHtml(match.notes)}
-                  </strong>
-
-                </div>
-
-              `
-              : ""
-          }
-
-
-        </div>
+              </p>
+            `
+            : ""
+        }
 
       </div>
 
     `).join("");
 
 };
- 
-
-  if (matches.length > 5) {
-
-    const button =
-      document.createElement("button");
-
-    button.type = "button";
-
-    button.className =
-      "btn-secondary player-matches-toggle";
-
-    button.style.marginTop =
-      "15px";
-
-    button.textContent =
-      `Ver todos los partidos (${matches.length})`;
-
-
-    let showingAll = false;
-
-
-    button.onclick = () => {
-
-      showingAll =
-        !showingAll;
-
-
-      if (showingAll) {
-
-        renderMatches(matches);
-
-        button.textContent =
-          "Ocultar partidos";
-
-      } else {
-
-        renderMatches(
-          visibleMatches
-        );
-
         button.textContent =
           `Ver todos los partidos (${matches.length})`;
 
