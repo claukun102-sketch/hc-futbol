@@ -4440,21 +4440,69 @@ const renderMatches = (items) => {
     `).join("");
 
 };
-        button.textContent =
-          `Ver todos los partidos (${matches.length})`;
 
-      }
-
-    };
+  renderMatches(visibleMatches);
 
 
-    container.appendChild(button);
-  
+  if (matches.length > 5) {
+
+    const button =
+      document.createElement("button");
+
+    button.type =
+      "button";
+
+    button.className =
+      "btn-secondary player-matches-toggle";
+
+    button.style.marginTop =
+      "15px";
+
+    button.textContent =
+      `Ver todos los partidos (${matches.length})`;
+
+
+    let showingAll =
+      false;
+
+
+    button.onclick =
+      () => {
+
+        showingAll =
+          !showingAll;
+
+
+        if (showingAll) {
+
+          renderMatches(
+            matches
+          );
+
+          button.textContent =
+            "Ocultar partidos";
+
+        } else {
+
+          renderMatches(
+            visibleMatches
+          );
+
+          button.textContent =
+            `Ver todos los partidos (${matches.length})`;
+
+        }
+
+      };
+
+
+    container.appendChild(
+      button
+    );
+
   }
 
 }
-
-
 /* =====================================================
    ACTIVIDAD DEL EQUIPO
 ===================================================== */
