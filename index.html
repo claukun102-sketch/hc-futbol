@@ -8,7 +8,61 @@
   <title>Torneo Comercial — Administración de equipos amateur</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+.player-account-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
 
+.player-account-item {
+  padding: 15px;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  background: #f8faf9;
+}
+
+.player-account-item span {
+  display: block;
+  margin-bottom: 6px;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.player-account-item strong {
+  display: block;
+  color: #102033;
+  font-size: 20px;
+  line-height: 1.2;
+}
+
+.player-account-status {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #e8f5ee;
+  color: #0f5132;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  #playerPage .player-account-summary {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  #playerPage .player-account-item {
+    padding: 14px;
+  }
+
+  #playerPage .player-account-item strong {
+    font-size: 19px;
+  }
+}
+  
   <style>
     * {
       box-sizing: border-box;
