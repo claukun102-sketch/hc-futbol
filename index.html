@@ -8,8 +8,71 @@
   <title>Torneo Comercial — Administración de equipos amateur</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  
+
+
   <style>
+    @media (max-width: 600px) {
+
+  #playerChargesTable {
+    display: block;
+    width: 100%;
+  }
+
+  #playerChargesTable tr {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 12px;
+    padding: 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    background: #ffffff;
+    box-shadow: 0 5px 16px rgba(0,0,0,.05);
+  }
+
+  #playerChargesTable td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 7px 0;
+    border: 0;
+    font-size: 14px;
+  }
+
+  #playerChargesTable td:first-child {
+    display: block;
+    padding-bottom: 10px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid #eef0f2;
+    font-size: 17px;
+    font-weight: 700;
+    color: #102033;
+  }
+
+  #playerChargesTable td:nth-child(2)::before {
+    content: "Monto";
+  }
+
+  #playerChargesTable td:nth-child(3)::before {
+    content: "Fecha";
+  }
+
+  #playerChargesTable td:nth-child(2)::before,
+  #playerChargesTable td:nth-child(3)::before {
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  #playerChargesTable td:nth-child(2) {
+    font-weight: 700;
+    color: #102033;
+  }
+
+}
     .player-account-mobile-only,
 .player-account-mobile-only + .player-account-summary,
 .player-account-mobile-only + .player-account-summary + .player-account-status {
