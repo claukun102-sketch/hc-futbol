@@ -2092,10 +2092,6 @@ const {
   .select("name, sport, active")
   .eq("id", player.team_id)
   .maybeSingle();
-    
-console.log("PLAYER TEAM ID:", player.team_id);
-console.log("PLAYER TEAM DATA:", playerTeam);
-console.log("PLAYER TEAM ERROR:", playerTeamError);
 
 if (playerTeamError) {
   showPlayerError(playerTeamError.message);
@@ -2110,7 +2106,6 @@ document.getElementById("playerDataSport").textContent =
 
 document.getElementById("playerDataTeamStatus").textContent =
   playerTeam?.active ? "Activo" : "Inactivo";
-    
    const activePlayerIds =
   players.map(
     player => player.id
