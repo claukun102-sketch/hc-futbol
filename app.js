@@ -4368,7 +4368,15 @@ async function loadPlayerMatches() {
 
   }
 
+const { data: playerTeam } = await client
+  .from("teams")
+  .select("name")
+  .eq("id", currentPlayer.team_id)
+  .maybeSingle();
 
+const teamName =
+  playerTeam?.name || "Mi equipo";
+  
   const visibleMatches =
     matches.slice(0, 5);
 const renderMatches = (items) => {
