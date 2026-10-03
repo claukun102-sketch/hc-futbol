@@ -2093,6 +2093,10 @@ async function deleteMatch(matchId) {
   .select("name, sport, active")
   .eq("id", player.team_id)
   .maybeSingle();
+    
+console.log("JUGADOR - team_id:", player.team_id);
+console.log("JUGADOR - equipo:", playerTeam);
+console.log("JUGADOR - error equipo:", playerTeamError); 
 
 if (playerTeamError) {
   showPlayerError(playerTeamError.message);
