@@ -4372,96 +4372,225 @@ async function loadPlayerMatches() {
   const visibleMatches =
     matches.slice(0, 5);
 
+const renderMatches = (items) => {
 
-  const renderMatches = (items) => {
+  container.innerHTML =
+    items.map(match => `
 
-    container.innerHTML =
-      items.map(match => `
+      <div class="player-match-card">
 
-        <div
-          class="payment"
-          style="margin-bottom:12px;"
-        >
+        <div class="player-match-top">
 
-          <strong>
-            ⚽ ${escapeHtml(
-              match.opponent ||
-              "Partido"
-            )}
-          </strong>
+          <span class="player-match-label">
+            PRÓXIMO PARTIDO
+          </span>
 
+          <span class="player-match-status">
+            Publicado
+          </span>
 
-          <p style="margin:6px 0;">
-
-            📅 ${formatDate(
-              match.match_date
-            )}
-
-            ${
-              match.match_time
-                ? `
-                  · ⏰ ${
-                    escapeHtml(
-                      match.match_time
-                        .substring(0, 5)
-                    )
-                  }
-                `
-                : ""
-            }
-
-          </p>
+        </div>
 
 
-          <p
-            class="muted"
-            style="margin:4px 0;"
-          >
-            📍 ${
-              escapeHtml(
-                match.venue ||
-                "Lugar a confirmar"
-              )
-            }
-          </p>
+        <div class="player-match-main">
+
+          <div class="player-match-team">
+
+            <div class="player-match-team-name">
+              TU EQUIPO
+            </div>
+
+          </div>
 
 
-          <p
-            class="muted"
-            style="margin:4px 0;"
-          >
-            💰 ${money(
-              match.fee_per_player
-            )}
-          </p>
+          <div class="player-match-vs">
+            VS
+          </div>
+
+
+          <div class="player-match-team">
+
+            <div class="player-match-team-name">
+              ${escapeHtml(
+                match.opponent || "Rival"
+              )}
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="player-match-divider"></div>
+
+
+        <div class="player-match-info">
+
+
+          <div class="player-match-info-item">
+
+            <div class="player-match-info-icon">
+
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect
+                  x="3"
+                  y="4"
+                  width="18"
+                  height="17"
+                  rx="2"
+                ></rect>
+
+                <path d="M16 2v4"></path>
+                <path d="M8 2v4"></path>
+                <path d="M3 10h18"></path>
+
+              </svg>
+
+            </div>
+
+            <div>
+              <span>FECHA</span>
+              <strong>
+                ${formatDate(match.match_date)}
+              </strong>
+            </div>
+
+          </div>
+
+
+          ${
+            match.match_time
+              ? `
+
+                <div class="player-match-info-item">
+
+                  <div class="player-match-info-icon">
+
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="9"
+                      ></circle>
+
+                      <path d="M12 7v5l3 2"></path>
+
+                    </svg>
+
+                  </div>
+
+                  <div>
+                    <span>HORA</span>
+                    <strong>
+                      ${escapeHtml(
+                        match.match_time.substring(0, 5)
+                      )}
+                    </strong>
+                  </div>
+
+                </div>
+
+              `
+              : ""
+          }
+
+
+          <div class="player-match-info-item">
+
+            <div class="player-match-info-icon">
+
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0z"
+                ></path>
+
+                <circle
+                  cx="12"
+                  cy="10"
+                  r="2.5"
+                ></circle>
+
+              </svg>
+
+            </div>
+
+            <div>
+              <span>LUGAR</span>
+              <strong>
+                ${escapeHtml(
+                  match.venue || "Lugar a confirmar"
+                )}
+              </strong>
+            </div>
+
+          </div>
+
+
+        </div>
+
+
+        <div class="player-match-footer">
+
+
+          <div class="player-match-fee">
+
+            <span>VALOR POR JUGADOR</span>
+
+            <strong>
+              ${money(match.fee_per_player)}
+            </strong>
+
+          </div>
 
 
           ${
             match.notes
               ? `
-                <p
-                  class="muted"
-                  style="margin:4px 0;"
-                >
-                  📝 ${
-                    escapeHtml(
-                      match.notes
-                    )
-                  }
-                </p>
+
+                <div class="player-match-note">
+
+                  <span>NOTA</span>
+
+                  <strong>
+                    ${escapeHtml(match.notes)}
+                  </strong>
+
+                </div>
+
               `
               : ""
           }
 
+
         </div>
 
-      `).join("");
+      </div>
 
-  };
+    `).join("");
 
-
-  renderMatches(visibleMatches);
-
+};
+ 
 
   if (matches.length > 5) {
 
