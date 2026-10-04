@@ -6383,7 +6383,7 @@ if (
             post.amount
               ? `
                 <p style="margin:4px 0;">
-                  💵 ${money(post.amount)}
+               ${money(post.amount)}
                 </p>
               `
               : ""
@@ -6410,7 +6410,8 @@ ${
           class="btn-primary"
           onclick="confirmTeamPost('${post.id}')"
         >
-          ✅ Confirmar
+         >
+        Confirmar
         </button>
 
         <button
@@ -6418,7 +6419,8 @@ ${
           class="btn-danger"
           onclick="cancelTeamPost('${post.id}')"
         >
-          ❌ Cancelar
+        >
+           Cancelar
         </button>
 
       </div>
