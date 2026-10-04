@@ -6322,20 +6322,35 @@ async function loadAdminTeamPosts() {
           post.players?.name ||
           "Jugador";
 
-        let icon = "🤝";
+        let icon = "";
 
-        if (post.post_type === "money") {
-          icon = "💰";
-        }
+if (
+  post.post_type ===
+  "money"
+) {
+  icon = "APORTE";
+}
 
-        if (post.post_type === "product") {
-          icon = "🥩";
-        }
+if (
+  post.post_type ===
+  "product"
+) {
+  icon = "PRODUCTO";
+}
 
-        if (post.post_type === "service") {
-          icon = "🛠️";
-        }
+if (
+  post.post_type ===
+  "service"
+) {
+  icon = "SERVICIO";
+}
 
+if (
+  !icon
+) {
+  icon = "COMPROMISO";
+}
+        
         let statusText = "Pendiente";
         let statusClass = "status-pending";
 
