@@ -2392,19 +2392,20 @@ table:has(#playersTable) thead {
     <div id="loginError" class="error hidden"></div>
 
     <label>Email</label>
-    <input
-      id="email"
-      type="email"
-      placeholder="tu@email.com"
-    >
+<input
+  id="email"
+  type="email"
+  placeholder="tu@email.com"
+  onkeydown="if(event.key === 'Enter') handleLogin()"
+>
 
-    <label>Contraseña</label>
-    <input
-      id="password"
-      type="password"
-      placeholder="Contraseña"
-    >
-
+<label>Contraseña</label>
+<input
+  id="password"
+  type="password"
+  placeholder="Contraseña"
+  onkeydown="if(event.key === 'Enter') handleLogin()"
+>
     <button
       id="loginButton"
       class="btn-primary"
