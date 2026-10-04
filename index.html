@@ -12,6 +12,81 @@
 
   <style>
 /* =====================================================
+   NOTIFICACIONES - JUGADOR
+===================================================== */
+
+#playerNotifications {
+  width: 100%;
+}
+
+#playerNotifications > div {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 12px;
+  padding: 16px 18px 16px 20px;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 5px 16px rgba(0,0,0,.05);
+  overflow: hidden;
+}
+
+#playerNotifications > div::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #0f5132;
+}
+
+#playerNotifications strong {
+  display: block;
+  margin-bottom: 6px;
+  color: #102033;
+  font-size: 16px;
+  line-height: 1.3;
+}
+
+#playerNotifications p {
+  margin: 0;
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+#playerNotifications small {
+  display: block;
+  margin-top: 10px;
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+@media (max-width: 600px) {
+
+  #playerPage #playerNotifications {
+    margin-top: 14px !important;
+  }
+
+  #playerPage #playerNotifications > div {
+    padding: 16px 16px 16px 19px;
+    border-radius: 18px;
+    margin-bottom: 10px;
+  }
+
+  #playerPage #playerNotifications strong {
+    font-size: 15px;
+  }
+
+  #playerPage #playerNotifications p {
+    font-size: 14px;
+  }
+
+}
+    
+/* =====================================================
    TARJETAS DE PARTIDOS - JUGADOR
 ===================================================== */
 
