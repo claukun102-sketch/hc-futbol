@@ -4715,7 +4715,29 @@ if (likesError) {
           post.players?.nickname ||
           post.players?.name ||
           "Jugador";
+let icon =
+  "🤝";
 
+if (
+  post.post_type ===
+  "money"
+) {
+  icon = "💰";
+}
+
+if (
+  post.post_type ===
+  "product"
+) {
+  icon = "🥩";
+}
+
+if (
+  post.post_type ===
+  "service"
+) {
+  icon = "🛠️";
+}
 
         let statusText =
           "Pendiente";
