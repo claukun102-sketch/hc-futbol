@@ -4715,83 +4715,20 @@ if (likesError) {
           post.players?.nickname ||
           post.players?.name ||
           "Jugador";
-let icon =
-  "🤝";
-
-if (
-  post.post_type ===
-  "money"
-) {
-  icon = "💰";
-}
-
-if (
-  post.post_type ===
-  "product"
-) {
-  icon = "🥩";
-}
-
-if (
-  post.post_type ===
-  "service"
-) {
-  icon = "🛠️";
-}
+        const postTypeLabel =
+          post.post_type === "money"
+            ? "Aporte"
+            : post.post_type === "product"
+              ? "Producto"
+              : post.post_type === "service"
+                ? "Servicio"
+                : "Compromiso";
 
         let statusText =
           "Pendiente";
 
         let statusClass =
           "status-pending";
-
-
-        if (
-          post.status ===
-          "confirmed"
-        ) {
-
-          statusText =
-            "Confirmado";
-
-          statusClass =
-            "status-approved";
-
-        }
-
-
-        if (
-          post.status ===
-          "cancelled"
-        ) {
-
-          statusText =
-            "Cancelado";
-
-          statusClass =
-            "status-rejected";
-
-        }
-
-
-        const div =
-          document.createElement(
-            "div"
-          );
-
-        div.className =
-          "payment";
-
-        div.style.marginBottom =
-          "12px";
-
-
-        div.innerHTML = `
-
-          <div class="team-post-type">
-  ${escapeHtml(icon)}
-</div>
-
 <strong>
   ${escapeHtml(playerName)}
 </strong>
