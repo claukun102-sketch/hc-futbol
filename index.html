@@ -2208,89 +2208,103 @@ table:has(#playersTable) thead {
 }
 
 /* =====================================================
-   JUGADOR — HISTORIAL DE PAGOS MOBILE
+   HISTORIAL DE PAGOS — MODO MOVIL
 ===================================================== */
 
 @media (max-width: 600px) {
-
-  #playerPage .card:has(#playerPayments) {
-    padding: 18px;
-    margin-bottom: 14px;
-    border-radius: 22px;
-  }
-
-  #playerPage .card:has(#playerPayments) h2 {
-    margin: 0;
-    font-size: 20px;
-    line-height: 1.2;
-  }
 
   #playerPage #playerPayments {
     width: 100%;
     margin-top: 14px;
   }
 
-  /* Cada pago = una tarjeta */
-
   #playerPage #playerPayments .payment {
+    position: relative;
     width: 100%;
     box-sizing: border-box;
-    margin: 0 0 10px !important;
-    padding: 17px;
-    border-radius: 18px;
-    background: #f8fafc;
+    margin-bottom: 12px !important;
+    padding: 18px 18px 16px 20px;
+    border-radius: 20px;
+    background: #ffffff;
     border: 1px solid #e2e8f0;
-    box-shadow: none;
+    box-shadow: 0 6px 18px rgba(0,0,0,.06);
+    overflow: hidden;
+  }
+
+  #playerPage #playerPayments .payment::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: #0f5132;
   }
 
   #playerPage #playerPayments .payment:last-child {
     margin-bottom: 0 !important;
   }
 
-  /* Monto */
-
-  #playerPage #playerPayments .payment > strong {
+  #playerPage #playerPayments .payment strong {
     display: block;
-    margin-bottom: 10px;
-    font-size: 20px;
-    line-height: 1.2;
+    margin-bottom: 8px;
     color: #102033;
+    font-size: 21px;
+    font-weight: 800;
+    line-height: 1.2;
   }
 
-  /* Datos */
-
   #playerPage #playerPayments .payment p {
-    margin: 6px 0 !important;
+    margin: 7px 0 !important;
+    color: #64748b;
     font-size: 14px;
     line-height: 1.45;
   }
 
-  #playerPage #playerPayments .payment .muted {
-    color: #64748b;
-  }
-
-  /* Estado */
-
-  #playerPage #playerPayments .status {
-    display: inline-block;
-    margin-top: 8px;
-    padding: 5px 10px;
+  #playerPage #playerPayments .payment .status {
+    display: inline-flex;
+    align-items: center;
+    margin-top: 7px;
+    padding: 6px 10px;
     border-radius: 999px;
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 700;
+    line-height: 1;
   }
 
-  /* Ver todos */
+  #playerPage #playerPayments .payment .status-approved {
+    background: #e8f5ee;
+    color: #0f5132;
+  }
 
-  #playerPage #playerPayments .player-payments-toggle {
-    width: 100%;
-    min-height: 44px;
-    margin-top: 12px !important;
-    border-radius: 12px;
+  #playerPage #playerPayments .payment .status-pending {
+    background: #fff7e6;
+    color: #9a6700;
+  }
+
+  #playerPage #playerPayments .payment .status-rejected {
+    background: #fff1f2;
+    color: #b42318;
+  }
+
+  #playerPage #playerPayments .payment button {
+    min-height: 40px;
+    padding: 8px 12px;
+    margin-top: 8px;
+    border-radius: 11px;
     font-size: 14px;
   }
 
-}  
+  #playerPage .player-payments-toggle {
+    width: 100%;
+    min-height: 44px;
+    margin-top: 4px !important;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+}
 
 /* =====================================================
    JUGADOR — NAVEGACIÓN MOBILE
