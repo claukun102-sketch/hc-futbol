@@ -6369,10 +6369,11 @@ if (
         div.style.marginBottom = "12px";
 
         div.innerHTML = `
-          <strong>
-            ${icon}
-            ${escapeHtml(playerName)}
-          </strong>
+         <strong>
+        ${escapeHtml(
+          playerName
+        )}
+      </strong>
 
           <p style="margin:6px 0;">
             ${escapeHtml(post.description)}
