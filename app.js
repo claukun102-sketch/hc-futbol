@@ -4717,31 +4717,6 @@ if (likesError) {
           "Jugador";
 
 
-        let icon =
-          "🤝";
-
-        if (
-          post.post_type ===
-          "money"
-        ) {
-          icon = "💰";
-        }
-
-        if (
-          post.post_type ===
-          "product"
-        ) {
-          icon = "🥩";
-        }
-
-        if (
-          post.post_type ===
-          "service"
-        ) {
-          icon = "🛠️";
-        }
-
-
         let statusText =
           "Pendiente";
 
