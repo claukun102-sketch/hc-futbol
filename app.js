@@ -4543,68 +4543,6 @@ const renderMatches = (items) => {
 /* =====================================================
    ACTIVIDAD DEL EQUIPO
 ===================================================== */
-async function toggleTeamPostLike(postId) {
-
-  if (!currentPlayer) {
-    alert("No encontramos tu jugador.");
-    return;
-  }
-
-  // Verificar si ya existe el like
-  const {
-    data: existingLike,
-    error: checkError
-  } = await client
-    .from("team_post_likes")
-    .select("id")
-    .eq("post_id", postId)
-    .eq("player_id", currentPlayer.id)
-    .maybeSingle();
-
-  if (checkError) {
-    console.error("Error verificando like:", checkError);
-    alert("No se pudo comprobar el Me gusta.");
-    return;
-  }
-
-  // Si ya dio like → quitarlo
-  if (existingLike) {
-
-    const { error } = await client
-      .from("team_post_likes")
-      .delete()
-      .eq("id", existingLike.id);
-
-    if (error) {
-      console.error("Error quitando like:", error);
-      alert("No se pudo quitar el Me gusta.");
-      return;
-    }
-
-  }
-
-  // Si todavía no dio like → agregarlo
-  else {
-
-    const { error } = await client
-      .from("team_post_likes")
-      .insert({
-        post_id: postId,
-        player_id: currentPlayer.id
-      });
-
-    if (error) {
-      console.error("Error agregando like:", error);
-      alert("No se pudo agregar el Me gusta.");
-      return;
-    }
-
-  }
-
-  // Volver a cargar la actividad
-  await loadTeamPosts();
-}
-
 async function loadTeamPosts() {
 
   const container =
@@ -4680,25 +4618,29 @@ async function loadTeamPosts() {
 
   }
 
-const {
-  data: likes,
-  error: likesError
-} = await client
-  .from("team_post_likes")
-  .select("post_id, player_id")
-  .in(
-    "post_id",
-    posts.map(post => post.id)
-  );
 
-if (likesError) {
+  const {
+    data: likes,
+    error: likesError
+  } = await client
+    .from("team_post_likes")
+    .select("post_id, player_id")
+    .in(
+      "post_id",
+      posts.map(post => post.id)
+    );
 
-  console.error(
-    "Error cargando Me gusta:",
-    likesError
-  );
 
-}
+  if (likesError) {
+
+    console.error(
+      "Error cargando Me gusta:",
+      likesError
+    );
+
+  }
+
+
   const visiblePosts =
     posts.slice(0, 5);
 
@@ -4715,6 +4657,8 @@ if (likesError) {
           post.players?.nickname ||
           post.players?.name ||
           "Jugador";
+
+
         const postTypeLabel =
           post.post_type === "money"
             ? "Aporte"
@@ -4724,14 +4668,66 @@ if (likesError) {
                 ? "Servicio"
                 : "Compromiso";
 
+
         let statusText =
           "Pendiente";
 
         let statusClass =
           "status-pending";
-<strong>
-  ${escapeHtml(playerName)}
-</strong>
+
+
+        if (
+          post.status ===
+          "confirmed"
+        ) {
+
+          statusText =
+            "Confirmado";
+
+          statusClass =
+            "status-approved";
+
+        }
+
+
+        if (
+          post.status ===
+          "cancelled"
+        ) {
+
+          statusText =
+            "Cancelado";
+
+          statusClass =
+            "status-rejected";
+
+        }
+
+
+        const div =
+          document.createElement(
+            "div"
+          );
+
+
+        div.className =
+          "payment";
+
+
+        div.style.marginBottom =
+          "12px";
+
+
+        div.innerHTML = `
+
+          <div class="team-post-type">
+            ${escapeHtml(postTypeLabel)}
+          </div>
+
+          <strong>
+            ${escapeHtml(playerName)}
+          </strong>
+
           <p
             style="
               margin:6px 0;
@@ -4750,44 +4746,54 @@ if (likesError) {
                     margin:4px 0;
                   "
                 >
-       ${money(
-   post.amount
-)}
+                  ${money(
+                    post.amount
+                  )}
                 </p>
               `
               : ""
           }
 
- <span
-  class="status ${statusClass}"
->
-  ${statusText}
-</span>
+          <span
+            class="status ${statusClass}"
+          >
+            ${statusText}
+          </span>
 
-<div style="margin-top:10px;">
-  <button
-    type="button"
-    class="btn-secondary"
-    onclick="toggleTeamPostLike('${post.id}')"
-  >
-    ❤️ Me gusta
-  </button>
-</div>
-<div
-  style="
-    margin-top:10px;
-    font-size:14px;
-  "
->
-  ❤️ ${
-    likes
-      ? likes.filter(
-          like => like.post_id === post.id
-        ).length
-      : 0
-  }
-  Me gusta
-</div>
+          <div
+            style="
+              margin-top:10px;
+            "
+          >
+
+            <button
+              type="button"
+              class="btn-secondary"
+              onclick="toggleTeamPostLike('${post.id}')"
+            >
+              Me gusta
+            </button>
+
+          </div>
+
+          <div
+            style="
+              margin-top:10px;
+              font-size:14px;
+            "
+          >
+            ${
+              likes
+                ? likes.filter(
+                    like =>
+                      like.post_id ===
+                      post.id
+                  ).length
+                : 0
+            }
+            Me gusta
+          </div>
+
           <p
             class="muted"
             style="
@@ -4828,14 +4834,18 @@ if (likesError) {
         "button"
       );
 
+
     button.type =
       "button";
+
 
     button.className =
       "btn-secondary";
 
+
     button.style.marginTop =
       "3px";
+
 
     button.textContent =
       `Ver toda la actividad (${posts.length})`;
@@ -4871,6 +4881,10 @@ if (likesError) {
             `Ver toda la actividad (${posts.length})`;
 
         }
+
+        container.appendChild(
+          button
+        );
 
       };
 
