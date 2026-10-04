@@ -4791,13 +4791,13 @@ if (likesError) {
 
         div.innerHTML = `
 
-          <strong>
-            ${icon}
-            ${escapeHtml(
-              playerName
-            )}
-          </strong>
+          <div class="team-post-type">
+  ${escapeHtml(icon)}
+</div>
 
+<strong>
+  ${escapeHtml(playerName)}
+</strong>
           <p
             style="
               margin:6px 0;
@@ -4816,9 +4816,9 @@ if (likesError) {
                     margin:4px 0;
                   "
                 >
-                  💵 ${money(
-                    post.amount
-                  )}
+       ${money(
+   post.amount
+)}
                 </p>
               `
               : ""
