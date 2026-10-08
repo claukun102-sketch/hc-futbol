@@ -6029,7 +6029,43 @@ async function logout() {
 
   });
 
+let deferredInstallPrompt = null;
 
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();
+  deferredInstallPrompt = event;
+
+  const installCard = document.getElementById("playerInstallCard");
+  const installButton = document.getElementById("playerInstallButton");
+
+  if (installCard) {
+    installCard.style.display = "block";
+  }
+
+  if (installButton) {
+    installButton.style.display = "block";
+  }
+});
+
+async function installTorneoApp() {
+  if (!deferredInstallPrompt) {
+    return;
+  }
+
+  deferredInstallPrompt.prompt();
+
+  const { outcome } = await deferredInstallPrompt.userChoice;
+
+  if (outcome === "accepted") {
+    const installCard = document.getElementById("playerInstallCard");
+
+    if (installCard) {
+      installCard.style.display = "none";
+    }
+  }
+
+  deferredInstallPrompt = null;
+}
   checkExistingSession();
 
 function openTeamPostModal() {
