@@ -1,10 +1,10 @@
 {
-  "name": "Deportes Amateur",
-  "short_name": "Deportes Amateur",
-  "description": "Gestión de equipos deportivos amateur",
-  "start_url": "./",
+  "name": "Torneo Comercial",
+  "short_name": "Torneo Comercial",
+  "description": "Administración de equipos amateur",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#2563eb",
+  "theme_color": "#0f5132",
   "orientation": "portrait"
 }
