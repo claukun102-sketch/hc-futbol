@@ -343,7 +343,8 @@ if (accountError || !account) {
     if (
       account.role === "player"
     ) {
-
+    document.body.classList.add("player-session-active");
+   
       loginPage.classList.add("hidden");
       adminPage.classList.add("hidden");
       playerPage.classList.remove("hidden");
