@@ -2312,13 +2312,15 @@ table:has(#playersTable) thead {
    JUGADOR — NAVEGACIÓN MOBILE
 ===================================================== */
 
+
 #playerMobileNav {
   display: none !important;
 }
 
-#playerPage:not(.hidden) #playerMobileNav {
+body.player-session-active #playerMobileNav {
   display: grid !important;
 }
+
     
 @media (max-width:600px) {
 
