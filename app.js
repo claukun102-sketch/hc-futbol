@@ -5578,6 +5578,8 @@ async function loadPlayerAvatar() {
 }  
 async function logout() {
 
+  document.body.classList.remove("player-session-active");
+  
     await client.auth.signOut();
 
     currentUser = null;
