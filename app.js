@@ -6029,19 +6029,47 @@ async function logout() {
 
   });
 
+
 let deferredInstallPrompt = null;
+
+function setupTorneoInstallCard() {
+  const installCard = document.getElementById("playerInstallCard");
+  const installButton = document.getElementById("playerInstallButton");
+  const iosHelp = document.getElementById("playerInstallIosHelp");
+
+  if (!installCard || !installButton || !iosHelp) return;
+
+  // Si ya está instalada, no mostrar la tarjeta.
+  const isStandalone =
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true;
+
+  if (isStandalone) {
+    installCard.style.display = "none";
+    return;
+  }
+
+  // Detectar iPhone o iPad.
+  const isAppleMobile =
+    /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+  installCard.style.display = "block";
+
+  if (isAppleMobile) {
+    installButton.style.display = "none";
+    iosHelp.style.display = "block";
+  } else {
+    iosHelp.style.display = "none";
+    installButton.style.display = "block";
+  }
+}
 
 window.addEventListener("beforeinstallprompt", (event) => {
   event.preventDefault();
   deferredInstallPrompt = event;
 
-  const installCard = document.getElementById("playerInstallCard");
   const installButton = document.getElementById("playerInstallButton");
-
-  if (installCard) {
-    installCard.style.display = "block";
-  }
-
   if (installButton) {
     installButton.style.display = "block";
   }
@@ -6049,6 +6077,9 @@ window.addEventListener("beforeinstallprompt", (event) => {
 
 async function installTorneoApp() {
   if (!deferredInstallPrompt) {
+    alert(
+      "Para instalar TORNEO COMERCIAL, buscá la opción Instalar aplicación en el menú del navegador."
+    );
     return;
   }
 
@@ -6058,14 +6089,14 @@ async function installTorneoApp() {
 
   if (outcome === "accepted") {
     const installCard = document.getElementById("playerInstallCard");
-
-    if (installCard) {
-      installCard.style.display = "none";
-    }
+    if (installCard) installCard.style.display = "none";
   }
 
   deferredInstallPrompt = null;
 }
+
+window.addEventListener("DOMContentLoaded", setupTorneoInstallCard);
+
   checkExistingSession();
 
 function openTeamPostModal() {
