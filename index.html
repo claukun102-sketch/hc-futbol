@@ -3500,7 +3500,34 @@ table:has(#playersTable) thead {
 </div>
     
 <!-- MIS DATOS -->
+<div id="playerInstallCard" class="card player-install-card" style="display:none;">
+  <div class="player-install-content">
+    <div>
+      <div class="player-section-kicker">TORNEO COMERCIAL</div>
+      <h3>Instalá la aplicación</h3>
+      <p class="muted">
+        Accedé más rápido a tu equipo desde el celular.
+      </p>
+    </div>
 
+    <button
+      id="playerInstallButton"
+      type="button"
+      class="btn-primary"
+      onclick="installTorneoApp()"
+    >
+      Instalar aplicación
+    </button>
+  </div>
+
+  <div id="playerInstallIosHelp" style="display:none;">
+    <p>
+      <strong>¿Usás iPhone?</strong><br>
+      Tocá <strong>Compartir</strong> → <strong>Agregar a pantalla de inicio</strong>.
+    </p>
+  </div>
+</div>
+    
 <div class="card player-profile-card">
 
   <div class="player-profile-title">
