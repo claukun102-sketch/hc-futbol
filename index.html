@@ -2313,9 +2313,13 @@ table:has(#playersTable) thead {
 ===================================================== */
 
 #playerMobileNav {
-  display:none;
+  display: none !important;
 }
 
+#playerPage:not(.hidden) #playerMobileNav {
+  display: grid !important;
+}
+    
 @media (max-width:600px) {
 
   #playerMobileNav {
