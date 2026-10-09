@@ -2272,7 +2272,7 @@ const totalDebts =
     );
     
     renderPaymentHistory(
-    payments,
+    activePlayerPayments,
     players
     );
 
