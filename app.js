@@ -2107,12 +2107,20 @@ const registrationTotal =
     );
 
 
+```js
 const approvedPayments =
   payments.filter(
     p =>
-      p.status === "approved"
+      p.status === "approved" &&
+      activePlayerIds.includes(p.player_id)
   );
 
+const activePlayerPayments =
+  payments.filter(
+    p =>
+      activePlayerIds.includes(p.player_id)
+  );
+```
 
 const approvedTotal =
   approvedPayments.reduce(
