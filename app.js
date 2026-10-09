@@ -6408,10 +6408,10 @@ ${
         <button
           type="button"
           class="btn-primary"
-          onclick="confirmTeamPost('${post.id}')"
-        >
-         >
-        Confirmar
+         onclick="confirmTeamPost('${post.id}')"
+       >
+         Confirmar
+         
         </button>
 
         <button
