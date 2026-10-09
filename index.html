@@ -2313,14 +2313,16 @@ table:has(#playersTable) thead {
 ===================================================== */
 
 
+
 #playerMobileNav {
   display: none !important;
 }
 
-body.player-session-active #playerMobileNav {
-  display: grid !important;
+@media (max-width: 600px) {
+  body.player-session-active #playerMobileNav {
+    display: grid !important;
+  }
 }
-
     
 @media (max-width:600px) {
 
