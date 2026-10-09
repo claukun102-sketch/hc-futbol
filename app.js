@@ -4164,6 +4164,61 @@ renderPlayerPayments(
 
   }
 
+async function toggleTeamPostLike(postId) {
+  if (!currentPlayer) {
+    alert("No encontramos los datos del jugador.");
+    return;
+  }
+
+  const playerId = currentPlayer.id;
+
+  // Comprobar si este jugador ya dio Me gusta.
+  const { data: existingLike, error: searchError } = await client
+    .from("team_post_likes")
+    .select("post_id, player_id")
+    .eq("post_id", postId)
+    .eq("player_id", playerId)
+    .maybeSingle();
+
+  if (searchError) {
+    console.error("Error consultando Me gusta:", searchError);
+    alert("No pudimos consultar el Me gusta. Revisaremos los permisos.");
+    return;
+  }
+
+  if (existingLike) {
+    // Si ya existe, quitar el Me gusta.
+    const { error } = await client
+      .from("team_post_likes")
+      .delete()
+      .eq("post_id", postId)
+      .eq("player_id", playerId);
+
+    if (error) {
+      console.error("Error quitando Me gusta:", error);
+      alert("No se pudo quitar el Me gusta: " + error.message);
+      return;
+    }
+  } else {
+    // Si no existe, agregar el Me gusta.
+    const { error } = await client
+      .from("team_post_likes")
+      .insert({
+        post_id: postId,
+        player_id: playerId
+      });
+
+    if (error) {
+      console.error("Error agregando Me gusta:", error);
+      alert("No se pudo agregar el Me gusta: " + error.message);
+      return;
+    }
+  }
+
+  // Actualizar la actividad y el contador.
+  await loadTeamPosts();
+}
+
 
   /* =====================================================
      CARGOS DEL JUGADOR
