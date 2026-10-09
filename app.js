@@ -2000,7 +2000,7 @@ async function deleteMatch(matchId) {
     
     await loadMatches();
     
-    await loadAdminTeamPosts();
+   // await loadAdminTeamPosts();
 
     const {
       data: players,
