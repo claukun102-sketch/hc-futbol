@@ -6561,6 +6561,66 @@ ${
 
 }
 
+
+async function deleteTeamPost(postId) {
+  if (!currentTeam) {
+    showAdminError("No hay un equipo seleccionado.");
+    return;
+  }
+
+  const confirmed = confirm(
+    "¿Querés eliminar definitivamente este aporte o compromiso?\n\n" +
+    "Esta acción no se puede deshacer."
+  );
+
+  if (!confirmed) return;
+
+  // Primero verificamos que el registro pertenezca al equipo actual.
+  const { data: post, error: postError } = await client
+    .from("team_posts")
+    .select("id")
+    .eq("id", postId)
+    .eq("team_id", currentTeam.id)
+    .maybeSingle();
+
+  if (postError) {
+    showAdminError("No pudimos verificar el registro: " + postError.message);
+    return;
+  }
+
+  if (!post) {
+    showAdminError("No encontramos ese aporte o compromiso en el equipo actual.");
+    return;
+  }
+
+  // Eliminamos primero los Me gusta asociados.
+  const { error: likesError } = await client
+    .from("team_post_likes")
+    .delete()
+    .eq("post_id", postId);
+
+  if (likesError) {
+    showAdminError("No se pudieron eliminar los Me gusta asociados: " + likesError.message);
+    return;
+  }
+
+  // Eliminamos el aporte o compromiso.
+  const { error: deleteError } = await client
+    .from("team_posts")
+    .delete()
+    .eq("id", postId)
+    .eq("team_id", currentTeam.id);
+
+  if (deleteError) {
+    showAdminError("No se pudo eliminar el registro: " + deleteError.message);
+    return;
+  }
+
+  showAdminSuccess("Aporte o compromiso eliminado correctamente.");
+  await loadAdminTeamPosts();
+}
+
+
 async function confirmTeamPost(postId) {
 
   const confirmed = confirm(
