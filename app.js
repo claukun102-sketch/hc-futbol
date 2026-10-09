@@ -6419,7 +6419,6 @@ ${
           class="btn-danger"
           onclick="cancelTeamPost('${post.id}')"
         >
-        >
            Cancelar
         </button>
 
