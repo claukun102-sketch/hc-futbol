@@ -6482,6 +6482,17 @@ ${
     : ""
 }
 
+     
+          <div style="margin-top:10px;">
+            <button
+              type="button"
+              class="btn-danger"
+              onclick="deleteTeamPost('${post.id}')"
+            >
+              Eliminar
+            </button>
+          </div>
+
           <p
             class="muted"
             style="margin:6px 0 0;"
@@ -6492,6 +6503,7 @@ ${
                 : null
             )}
           </p>
+
         `;
 
         container.appendChild(div);
