@@ -2130,11 +2130,11 @@ const approvedTotal =
   );
 
 
-const pendingPayments =
-  payments.filter(
-    p =>
-      p.status === "pending"
-  );
+const pendingPayments = payments.filter(
+  p =>
+    p.status === "pending" &&
+    activePlayerIds.includes(p.player_id)
+);
 
 const activeConceptAmounts =
   activeConcepts.reduce(
