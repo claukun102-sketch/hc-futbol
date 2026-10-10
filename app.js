@@ -2106,8 +2106,6 @@ const registrationTotal =
       0
     );
 
-
-```js
 const approvedPayments =
   payments.filter(
     p =>
@@ -2120,15 +2118,12 @@ const activePlayerPayments =
     p =>
       activePlayerIds.includes(p.player_id)
   );
-```
-
 const approvedTotal =
   approvedPayments.reduce(
     (sum, p) =>
       sum + Number(p.amount || 0),
     0
   );
-
 
 const pendingPayments = payments.filter(
   p =>
