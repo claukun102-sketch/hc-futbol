@@ -2987,7 +2987,50 @@ async function deactivatePlayerCharge(chargeId) {
 
   await loadAdminDashboard();
 }
-    
+
+
+async function deletePlayerCharge(chargeId) {
+  if (!currentTeam) {
+    showAdminError("No hay un equipo seleccionado.");
+    return;
+  }
+
+  const confirmed = confirm(
+    "¿Eliminar definitivamente este compromiso de prueba?\n\n" +
+    "Esta acción no se puede deshacer. " +
+    "Solo se eliminará este cargo; los pagos no se modificarán."
+  );
+
+  if (!confirmed) return;
+
+  const { error } = await client
+    .from("charges")
+    .delete()
+    .eq("id", chargeId)
+    .eq("team_id", currentTeam.id);
+
+  if (error) {
+    console.error("ERROR AL ELIMINAR CARGO:", error);
+    showAdminError(
+      "No se pudo eliminar el cargo: " + error.message
+    );
+    return;
+  }
+
+  showAdminSuccess("Compromiso eliminado correctamente.");
+
+  const modal = document.getElementById("playerChargesModal");
+  const playerId = modal?.dataset.playerId;
+  const playerName = modal?.dataset.playerName || "Jugador";
+
+  if (playerId) {
+    await managePlayerCharges(playerId, playerName);
+  }
+
+  await loadAdminDashboard();
+}
+
+
  function closePlayerChargesModal() {
   const modal =
     document.getElementById("playerChargesModal");
