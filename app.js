@@ -2912,13 +2912,23 @@ async function managePlayerCharges(
                 text-align:right;
               "
             >
-              <button
-                class="btn-danger-small"
-                type="button"
-                onclick="deactivatePlayerCharge('${charge.id}')"
-              >
-                🗑️ Anular
-              </button>
+             <div style="display:flex; gap:8px; justify-content:flex-end;">
+  <button
+    class="btn-danger-small"
+    type="button"
+    onclick="deactivatePlayerCharge('${charge.id}')"
+  >
+    Anular
+  </button>
+
+  <button
+    class="btn-danger-small"
+    type="button"
+    onclick="deletePlayerCharge('${charge.id}')"
+  >
+    🗑️ Eliminar
+  </button>
+</div>
             </div>
 
           </div>
