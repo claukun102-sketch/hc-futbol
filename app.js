@@ -3204,6 +3204,12 @@ const chargeType =
   selectedConceptId === "5db34dfe-e600-47a4-9dc9-0cc290468047"
     ? "registration"
     : "concept";
+
+  alert(
+  "ID seleccionado: " + selectedConceptId +
+  "\nNombre: " + (selectedOption?.dataset.name || "") +
+  "\nTipo que se guardará: " + chargeType
+);
   
 alert(
   "Datos recibidos:\n\n" +
