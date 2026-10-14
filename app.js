@@ -6168,7 +6168,6 @@ async function logout() {
   /* =====================================================
      SESIÓN EXISTENTE
   ===================================================== */
-```javascript
 async function initializePlayerAccessLink() {
   const url = new URL(window.location.href);
   const token = url.searchParams.get("access");
