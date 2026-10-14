@@ -2704,6 +2704,16 @@ const playerChargesList =
 >
   💰 Cargos
 </button>
+
+
+      <button
+        class="btn-secondary"
+        type="button"
+        onclick="createPlayerAccessLink('${player.id}')"
+      >
+        🔗 Acceso jugador
+      </button>
+
       <button
         class="btn-danger-small"
         type="button"
