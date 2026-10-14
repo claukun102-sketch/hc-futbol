@@ -2298,120 +2298,59 @@ const totalDebts =
     }
   }
 
- async function addPlayer() {
-
+ 
+async function addPlayer() {
   if (!currentTeam) {
     showAdminError("No hay un equipo seleccionado.");
     return;
   }
 
-  const name =
-    document.getElementById("newPlayerName")
-      .value
-      .trim();
-
-  const nickname =
-    document.getElementById("newPlayerNickname")
-      .value
-      .trim();
-
-  const dni =
-    document.getElementById("newPlayerDni")
-      .value
-      .trim();
+  const name = document.getElementById("newPlayerName").value.trim();
+  const nickname = document.getElementById("newPlayerNickname").value.trim();
+  const dni = document.getElementById("newPlayerDni").value.trim();
 
   if (!name) {
+    showAdminError("Ingresá el nombre del jugador.");
+    return;
+  }
+
+  const { data, error } = await client.rpc(
+    "admin_add_player_with_registration",
+    {
+      p_team_id: currentTeam.id,
+      p_name: name,
+      p_nickname: nickname || null,
+      p_dni: dni || null
+    }
+  );
+
+  if (error) {
     showAdminError(
-      "Ingresá el nombre del jugador."
+      "No se pudo agregar el jugador con su inscripción: " +
+      error.message
     );
     return;
   }
 
-  const {
-    count,
-    error: countError
-  } = await client
-    .from("players")
-    .select("id", {
-      count: "exact",
-      head: true
-    })
-    .eq("team_id", currentTeam.id)
-    .eq("active", true);
+  document.getElementById("newPlayerName").value = "";
+  document.getElementById("newPlayerNickname").value = "";
+  document.getElementById("newPlayerDni").value = "";
+  document.getElementById("addPlayerForm").style.display = "none";
 
-  if (countError) {
-    showAdminError(
-      "No pudimos comprobar la cantidad de jugadores: " +
-      countError.message
-    );
-    return;
-  }
-
-  if ((count || 0) >= 50) {
-    showAdminError(
-      "Este equipo ya alcanzó el máximo de 50 jugadores."
-    );
-    return;
-  }
-
-
-  /*
-   * 1. Crear jugador
-   */
-
-  const {
-    data: newPlayer,
-    error: playerError
-  } = await client
-    .from("players")
-    .insert({
-      team_id: currentTeam.id,
-      name: name,
-      nickname: nickname || null,
-      dni: dni || null,
-      active: true
-    })
-    .select()
-    .single();
-
-  if (playerError) {
-    showAdminError(
-      "No se pudo agregar el jugador: " +
-      playerError.message
-    );
-    return;
-  }
-
-
-  
-
-  /*
-   * 4. Limpiar formulario
-   */
-
-  document.getElementById(
-    "newPlayerName"
-  ).value = "";
-
-  document.getElementById(
-    "newPlayerNickname"
-  ).value = "";
-
-  document.getElementById(
-    "newPlayerDni"
-  ).value = "";
-
-  document.getElementById(
-    "addPlayerForm"
-  ).style.display = "none";
-
+  const amount = Number(data?.registration_amount || 0);
 
   showAdminSuccess(
-    "Jugador agregado correctamente."
+    "Jugador e inscripción registrados correctamente: " +
+    amount.toLocaleString("es-AR", {
+      style: "currency",
+      currency: "ARS",
+      maximumFractionDigits: 0
+    })
   );
 
   await loadAdminDashboard();
 }
+
   async function editPlayerName(playerId, currentName) {
 
     const newName = prompt("Modificar nombre del jugador:", currentName);
