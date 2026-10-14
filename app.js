@@ -344,7 +344,9 @@ if (accountError || !account) {
       account.role === "player"
     ) {
     document.body.classList.add("player-session-active");
-   
+      
+    document.getElementById("playerActivationPage")?.classList.add("hidden");
+      
       loginPage.classList.add("hidden");
       adminPage.classList.add("hidden");
       playerPage.classList.remove("hidden");
