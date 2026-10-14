@@ -2560,7 +2560,54 @@ async function removePlayer(playerId, playerName) {
     await loadAdminDashboard();
   }
 
+```javascript
+async function createPlayerAccessLink(playerId) {
+  if (!currentTeam || !playerId) {
+    alert("No hay un equipo o jugador seleccionado.");
+    return;
+  }
 
+  const confirmed = confirm(
+    "¿Generar un enlace de acceso individual para este jugador? El enlace vence en 7 días y solo puede utilizarse una vez."
+  );
+
+  if (!confirmed) return;
+
+  const { data, error } = await client.rpc("create_player_access_link", {
+    p_player_id: playerId
+  });
+
+  if (error) {
+    console.error("Error generando enlace:", error);
+    alert("No se pudo generar el enlace: " + error.message);
+    return;
+  }
+
+  const token = data?.token;
+
+  if (!token) {
+    alert("No se recibió el token de acceso.");
+    return;
+  }
+
+  const link = new URL(window.location.pathname, window.location.origin);
+  link.searchParams.set("access", token);
+  const accessUrl = link.toString();
+
+  try {
+    await navigator.clipboard.writeText(accessUrl);
+    alert(
+      "Enlace generado y copiado.\n\nVence: " +
+      new Date(data.expires_at).toLocaleString("es-AR") +
+      "\n\nEnviáselo únicamente a este jugador."
+    );
+  } catch (err) {
+    prompt("Copiá este enlace y enviáselo al jugador:", accessUrl);
+  }
+}
+
+window.createPlayerAccessLink = createPlayerAccessLink;
+```
   /* =====================================================
      TABLA JUGADORES ADMIN
   ===================================================== */
