@@ -3192,7 +3192,17 @@ const amount =
   Number(amountInput?.value) ||
   Number(selectedOption?.dataset.amount || 0);
 
-const chargeType = "concept";
+
+const normalizedDescription = description
+  .normalize("NFD")
+  .replace(/[\u0300-\u036f]/g, "")
+  .trim()
+  .toLowerCase();
+
+const chargeType = normalizedDescription.startsWith("inscripcion")
+  ? "registration"
+  : "concept";
+
   
 alert(
   "Datos recibidos:\n\n" +
