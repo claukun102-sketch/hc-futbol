@@ -5718,18 +5718,20 @@ async function logout() {
      MOSTRAR LOGIN
   ===================================================== */
 
-  function showLogin() {
+ 
+function showLogin() {
+  document.body.classList.remove("player-session-active");
 
-    loginPage.classList.remove("hidden");
+  loginPage.classList.remove("hidden");
 
-    registerPage.classList.add("hidden");
-    passwordRecoveryPage.classList.add("hidden");
-    passwordResetPage.classList.add("hidden");
-    onboardingPage.classList.add("hidden");
-    adminPage.classList.add("hidden");
-    playerPage.classList.add("hidden");
-
-  }
+  registerPage.classList.add("hidden");
+  passwordRecoveryPage.classList.add("hidden");
+  passwordResetPage.classList.add("hidden");
+  onboardingPage.classList.add("hidden");
+  adminPage.classList.add("hidden");
+  playerPage.classList.add("hidden");
+  document.getElementById("playerActivationPage")?.classList.add("hidden");
+}
 
 
   function showRegister() {
