@@ -6337,7 +6337,7 @@ async function installTorneoApp() {
 
 window.addEventListener("DOMContentLoaded", setupTorneoInstallCard);
 
-  checkExistingSession();
+ initializePlayerAccessLink();
 
 function openTeamPostModal() {
   const modal = document.getElementById("teamPostModal");
