@@ -2560,7 +2560,7 @@ async function removePlayer(playerId, playerName) {
     await loadAdminDashboard();
   }
 
-```javascript
+
 async function createPlayerAccessLink(playerId) {
   if (!currentTeam || !playerId) {
     alert("No hay un equipo o jugador seleccionado.");
