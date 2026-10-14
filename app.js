@@ -2091,18 +2091,16 @@ async function deleteMatch(matchId) {
     player => player.id
   );
 
+
 const registrationTotal =
   charges
-    .filter(
-      c =>
-        c.charge_type === "registration" &&
-        activePlayerIds.includes(
-          c.player_id
-        )
+    .filter(c =>
+      c.charge_type === "registration" &&
+      c.active !== false &&
+      activePlayerIds.includes(c.player_id)
     )
     .reduce(
-      (sum, c) =>
-        sum + Number(c.amount || 0),
+      (sum, c) => sum + Number(c.amount || 0),
       0
     );
 
