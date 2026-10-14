@@ -2701,8 +2701,8 @@ const playerChargesList =
       row.innerHTML = `
   <td>
     ${escapeHtml(player.name)}
-    ${player.nickname ? `<span class="muted"> (${escapeHtml(player.nickname)})</span>` : ""}
-  </td>
+    ${player.nickname ? '<span class="muted"> (' + escapeHtml(player.nickname) + ')</span>' : ""}
+    </td>
 
   <td>
     ${escapeHtml(player.dni || "-")}
