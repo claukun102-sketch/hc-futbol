@@ -3194,7 +3194,12 @@ const amount =
 
 
 const selectedConceptId = selectedOption?.value || "";
-
+alert(
+  "ID seleccionado: " + selectedConceptId +
+  "\nNombre: " + (selectedOption?.dataset.name || "") +
+  "\nTipo que se guardará: " + chargeType
+);
+  
 const chargeType =
   selectedConceptId === "5db34dfe-e600-47a4-9dc9-0cc290468047"
     ? "registration"
