@@ -6168,6 +6168,182 @@ async function logout() {
   /* =====================================================
      SESIÓN EXISTENTE
   ===================================================== */
+
+function showPlayerActivation(message = "", success = false) {
+  const pageIds = [
+    "loginPage",
+    "registerPage",
+    "passwordRecoveryPage",
+    "passwordResetPage",
+    "onboardingPage",
+    "adminPage",
+    "playerPage"
+  ];
+
+  pageIds.forEach(id => {
+    document.getElementById(id)?.classList.add("hidden");
+  });
+
+  const page = document.getElementById("playerActivationPage");
+
+  if (!page) {
+    console.error("No se encontró playerActivationPage en index.html");
+    return;
+  }
+
+  page.classList.remove("hidden");
+
+  const errorBox = document.getElementById("playerActivationError");
+  const successBox = document.getElementById("playerActivationSuccess");
+
+  errorBox.classList.add("hidden");
+  successBox.classList.add("hidden");
+
+  if (message) {
+    const target = success ? successBox : errorBox;
+    target.textContent = message;
+    target.classList.remove("hidden");
+  }
+}
+
+
+async function finishPlayerActivation(token) {
+  const { data, error } = await client.rpc(
+    "activate_player_account_from_invite",
+    { p_token: token }
+  );
+
+  if (error) throw error;
+
+  if (data?.accepted !== true) {
+    throw new Error("No se pudo activar la cuenta del jugador.");
+  }
+
+  const url = new URL(window.location.href);
+  url.searchParams.delete("access");
+
+  window.history.replaceState(
+    {},
+    document.title,
+    url.pathname + url.search + url.hash
+  );
+
+  await loadApplication();
+}
+
+
+async function handlePlayerActivation() {
+  const token = new URL(window.location.href)
+    .searchParams.get("access");
+
+  const name = document.getElementById("activationName").value.trim();
+  const dni = document.getElementById("activationDni").value.trim();
+  const email = document.getElementById("activationEmail").value.trim().toLowerCase();
+  const password = document.getElementById("activationPassword").value;
+  const passwordConfirm = document.getElementById("activationPasswordConfirm").value;
+
+  const button = document.getElementById("playerActivationButton");
+
+  showPlayerActivation();
+
+  if (!token) {
+    showPlayerActivation("El enlace de invitación no contiene un token válido.");
+    return;
+  }
+
+  if (!name || !dni || !email || !password || !passwordConfirm) {
+    showPlayerActivation("Completá todos los campos.");
+    return;
+  }
+
+  if (password.length < 6) {
+    showPlayerActivation("La contraseña debe tener al menos 6 caracteres.");
+    return;
+  }
+
+  if (password !== passwordConfirm) {
+    showPlayerActivation("Las contraseñas no coinciden.");
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "Procesando...";
+
+  try {
+    const { data: sessionData, error: sessionError } =
+      await client.auth.getSession();
+
+    if (sessionError) throw sessionError;
+
+    const existingUser = sessionData.session?.user;
+
+    if (existingUser) {
+      const metadata = existingUser.user_metadata || {};
+
+      if (metadata.player_activation_token === token) {
+        await finishPlayerActivation(token);
+        return;
+      }
+
+      if (existingUser.is_anonymous) {
+        const { error: signOutError } = await client.auth.signOut();
+        if (signOutError) throw signOutError;
+      } else {
+        throw new Error(
+          "Ya hay otra cuenta iniciada en este navegador. Abrí el enlace de invitación en una ventana privada para activar al jugador sin afectar esa sesión."
+        );
+      }
+    }
+
+    const { data, error } = await client.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo:
+          window.location.origin +
+          window.location.pathname +
+          "?access=" + encodeURIComponent(token),
+
+        data: {
+          player_activation_token: token,
+          player_activation_name: name,
+          player_activation_dni: dni
+        }
+      }
+    });
+
+    if (error) throw error;
+
+    if (data.user && data.user.identities?.length === 0) {
+      throw new Error(
+        "Ese correo ya está registrado. Ingresá con tu cuenta existente o recuperá tu contraseña."
+      );
+    }
+
+    if (data.session) {
+      await finishPlayerActivation(token);
+      return;
+    }
+
+    showPlayerActivation(
+      "Cuenta creada. Revisá tu correo y confirmá la dirección usando el enlace que recibiste. Después podrás ingresar con tu correo y contraseña.",
+      true
+    );
+
+  } catch (error) {
+    console.error("Error al activar la cuenta del jugador:", error);
+
+    showPlayerActivation(
+      error.message || "No se pudo activar la cuenta. Revisá los datos e intentá nuevamente."
+    );
+
+  } finally {
+    button.disabled = false;
+    button.textContent = "Activar mi cuenta";
+  }
+}
+
+
 async function initializePlayerAccessLink() {
   const url = new URL(window.location.href);
   const token = url.searchParams.get("access");
@@ -6178,63 +6354,49 @@ async function initializePlayerAccessLink() {
   }
 
   try {
-    const { data: sessionData, error: sessionError } =
-      await client.auth.getSession();
+    const { data, error } = await client.auth.getSession();
 
-    if (sessionError) throw sessionError;
+    if (error) throw error;
 
-    let user = sessionData.session?.user;
+    const user = data.session?.user;
+
+    if (
+      user &&
+      user.user_metadata?.player_activation_token === token
+    ) {
+      try {
+        await finishPlayerActivation(token);
+      } catch (activationError) {
+        console.error("Error finalizando activación:", activationError);
+
+        showPlayerActivation(
+          activationError.message ||
+          "No se pudo finalizar la activación. Verificá que hayas confirmado tu correo."
+        );
+      }
+
+      return;
+    }
 
     if (user && !user.is_anonymous) {
-      showLoginError(
-        "Para acceder con este enlace, abrilo en una ventana privada o en otro navegador donde no hayas iniciado sesión."
+      showPlayerActivation(
+        "Hay otra cuenta iniciada en este navegador. Para activar al jugador, abrí este enlace en una ventana privada."
       );
       return;
     }
 
-    if (!user) {
-      const { data, error } = await client.auth.signInAnonymously();
-
-      if (error) throw error;
-
-      user = data.user;
-    }
-
-    const { data: result, error: redeemError } = await client.rpc(
-      "redeem_player_access_link",
-      { p_token: token }
-    );
-
-    if (redeemError) throw redeemError;
-
-    if (result?.accepted !== true) {
-      throw new Error(
-        "El enlace no pudo validarse o ya fue utilizado."
-      );
-    }
-
-    url.searchParams.delete("access");
-
-    window.history.replaceState(
-      {},
-      document.title,
-      url.pathname + url.search + url.hash
-    );
-
-    await loadApplication();
+    showPlayerActivation();
 
   } catch (error) {
-    console.error("Error usando enlace de jugador:", error);
+    console.error("Error preparando la activación:", error);
 
-    await client.auth.signOut();
-
-    showLoginError(
-      "No se pudo abrir el acceso del jugador. El enlace puede haber vencido o haber sido utilizado. Detalle: " +
-      error.message
+    showPlayerActivation(
+      "No se pudo preparar la activación. Recargá la página e intentá nuevamente."
     );
   }
 }
 
+window.handlePlayerActivation = handlePlayerActivation;
 window.initializePlayerAccessLink = initializePlayerAccessLink;
 
   async function checkExistingSession() {
