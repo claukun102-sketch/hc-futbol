@@ -6236,7 +6236,7 @@ async function initializePlayerAccessLink() {
 }
 
 window.initializePlayerAccessLink = initializePlayerAccessLink;
-```
+
   async function checkExistingSession() {
 
     const {
