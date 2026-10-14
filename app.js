@@ -6168,7 +6168,76 @@ async function logout() {
   /* =====================================================
      SESIÓN EXISTENTE
   ===================================================== */
+```javascript
+async function initializePlayerAccessLink() {
+  const url = new URL(window.location.href);
+  const token = url.searchParams.get("access");
 
+  if (!token) {
+    await checkExistingSession();
+    return;
+  }
+
+  try {
+    const { data: sessionData, error: sessionError } =
+      await client.auth.getSession();
+
+    if (sessionError) throw sessionError;
+
+    let user = sessionData.session?.user;
+
+    if (user && !user.is_anonymous) {
+      showLoginError(
+        "Para acceder con este enlace, abrilo en una ventana privada o en otro navegador donde no hayas iniciado sesión."
+      );
+      return;
+    }
+
+    if (!user) {
+      const { data, error } = await client.auth.signInAnonymously();
+
+      if (error) throw error;
+
+      user = data.user;
+    }
+
+    const { data: result, error: redeemError } = await client.rpc(
+      "redeem_player_access_link",
+      { p_token: token }
+    );
+
+    if (redeemError) throw redeemError;
+
+    if (result?.accepted !== true) {
+      throw new Error(
+        "El enlace no pudo validarse o ya fue utilizado."
+      );
+    }
+
+    url.searchParams.delete("access");
+
+    window.history.replaceState(
+      {},
+      document.title,
+      url.pathname + url.search + url.hash
+    );
+
+    await loadApplication();
+
+  } catch (error) {
+    console.error("Error usando enlace de jugador:", error);
+
+    await client.auth.signOut();
+
+    showLoginError(
+      "No se pudo abrir el acceso del jugador. El enlace puede haber vencido o haber sido utilizado. Detalle: " +
+      error.message
+    );
+  }
+}
+
+window.initializePlayerAccessLink = initializePlayerAccessLink;
+```
   async function checkExistingSession() {
 
     const {
