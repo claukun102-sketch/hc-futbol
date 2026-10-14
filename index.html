@@ -2438,6 +2438,89 @@ table:has(#playersTable) thead {
 </div>
 
 <!-- =====================================================
+     ACTIVACIÓN DE CUENTA DE JUGADOR
+===================================================== -->
+
+<div id="playerActivationPage" class="hidden">
+
+  <div class="login-box">
+
+    <h1>🏆 Activar mi cuenta</h1>
+
+    <p class="muted">
+      Completá tus datos para acceder a tu panel de jugador.
+    </p>
+
+    <div id="playerActivationError" class="error hidden"></div>
+    <div id="playerActivationSuccess" class="success hidden"></div>
+
+    <label>Nombre y apellido</label>
+    <input
+      id="activationName"
+      type="text"
+      placeholder="Como figura en el equipo"
+      autocomplete="name"
+      required
+    >
+
+    <label>DNI</label>
+    <input
+      id="activationDni"
+      type="text"
+      inputmode="numeric"
+      placeholder="Tu número de DNI"
+      autocomplete="off"
+      required
+    >
+
+    <label>Correo electrónico</label>
+    <input
+      id="activationEmail"
+      type="email"
+      placeholder="tu@email.com"
+      autocomplete="email"
+      required
+    >
+
+    <label>Crear contraseña</label>
+    <input
+      id="activationPassword"
+      type="password"
+      placeholder="Mínimo 6 caracteres"
+      autocomplete="new-password"
+      required
+    >
+
+    <label>Repetir contraseña</label>
+    <input
+      id="activationPasswordConfirm"
+      type="password"
+      placeholder="Repetí tu contraseña"
+      autocomplete="new-password"
+      required
+    >
+
+    <button
+      id="playerActivationButton"
+      class="btn-primary"
+      type="button"
+      onclick="handlePlayerActivation()"
+      style="width:100%; margin-top:16px;"
+    >
+      Activar mi cuenta
+    </button>
+
+    <p class="muted" style="font-size:13px; margin-top:14px;">
+      Después recibirás un correo para confirmar tu dirección
+      y habilitar el acceso.
+    </p>
+
+  </div>
+
+</div>
+</escape>
+
+<!-- =====================================================
      REGISTRO
 ===================================================== -->
 
