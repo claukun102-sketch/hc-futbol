@@ -2607,7 +2607,7 @@ async function createPlayerAccessLink(playerId) {
 }
 
 window.createPlayerAccessLink = createPlayerAccessLink;
-```
+
   /* =====================================================
      TABLA JUGADORES ADMIN
   ===================================================== */
